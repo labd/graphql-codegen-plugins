@@ -14,32 +14,26 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-
-      - name: Set up PNPM
-        uses: pnpm/action-setup@c3b53f6a16e57305370b4ae5a540c2077a1d50dd #v2.2.4
-
-      - name: Use Node
-        uses: actions/setup-node@v1
+      # 1) Install and cache dependencies
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: 18
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-store-
+      - run: pnpm install --frozen-lockfile
 
-      - name: Git Identity
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build package
+      # 2) Build and Publish
+      - name: Test
         run: pnpm build
 
-      - name: Publish
-        run: pnpm lerna publish --no-private patch -y
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: Publish
+      #   run: npm publish --no-private patch -y
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

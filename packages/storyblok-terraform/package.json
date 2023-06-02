@@ -1,5 +1,5 @@
 {
-  "name": "storyblok-graphql-codegen",
+  "name": "storyblok-graphql-codegen-terraform",
   "author": "Lab digital",
   "private": true,
   "license": "MIT",
@@ -35,7 +35,6 @@
     "eslint": "^8.41.0",
     "graphql": "^16.6.0",
     "husky": "^8.0.3",
-    "lerna": "^6.6.2",
     "prettier": "^2.8.8",
     "size-limit": "^8.2.4",
     "tslib": "^2.5.2",

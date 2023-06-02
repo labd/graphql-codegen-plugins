@@ -1,0 +1,30 @@
+type DefaultNest {
+  name: String!
+}
+
+type Test @storyblok {
+  name: String
+}
+
+type ContentType @storyblok(type: contentType) {
+  name: String
+}
+
+type Nestable @storyblok(type: nested) {
+  name: String
+}
+
+type Universal @storyblok(type: universal) {
+  name: String
+}
+
+type Group
+  @storyblok(
+    componentGroup: "TestGroup"
+    image: "https://www.example.com/image.jpg"
+    icon: block_email
+    color: "#ff0000"
+    preview: "https://www.example.com/preview.jpg"
+  ) {
+  name: String
+}

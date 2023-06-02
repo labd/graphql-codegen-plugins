@@ -1,0 +1,53 @@
+interface PageMeta {
+  seoTitle: String
+  seoDescription: String
+}
+
+type Page @storyblok implements PageMeta {
+  seoTitle: String
+  seoDescription: String
+
+  title: String
+}
+
+type Base @storyblok {
+  text: String! @storyblokField(maxLength: 4)
+  textarea: String! @storyblokField(format: textarea)
+  markdown: String! @storyblokField(format: markdown)
+  richtext: String! @storyblokField(format: richtext)
+
+  optionalRegexText: String @storyblokField(regex: "/[\\w\\-]+")
+  integer: Int! @storyblokField(minValue: 0, maxValue: 10)
+  optionalInteger: Int
+  float: Float! @storyblokField(minValue: 0, maxValue: 10)
+  optionalFloat: Float
+  boolean: Boolean!
+  optionalBoolean: Boolean
+
+  date: Date
+  dateTime: DateTime
+
+  image: StoryblokAsset! @storyblokField(filetypes: [images])
+  assets: [StoryblokAsset!]
+  option: Option
+  options: [Option!]
+  blok: A
+  bloks: [B]
+  unionBlok: Union
+  unionBloks: [Union!]
+}
+
+enum Option {
+  a
+  b
+}
+
+union Union = A | B
+
+type A @storyblok {
+  a: String!
+}
+
+type B @storyblok {
+  b: String!
+}

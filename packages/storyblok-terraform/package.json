@@ -1,0 +1,62 @@
+{
+  "name": "storyblok-graphql-codegen",
+  "author": "Lab digital",
+  "private": true,
+  "license": "MIT",
+  "module": "dist/index.mjs",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "packageManager": "pnpm@8.5.1",
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "start": "tsup --watch",
+    "build": "tsup",
+    "test": "vitest",
+    "postbuild": "cp package.json dist",
+    "lint": "eslint",
+    "example": "pnpm build && graphql-codegen --config examples/codegen.yml"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "eslint"
+    }
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^4",
+    "@labdigital/eslint-config-node": "^0.0.5",
+    "@size-limit/preset-small-lib": "^8.2.4",
+    "@types/node": "^20.2.5",
+    "eslint": "^8.41.0",
+    "graphql": "^16.6.0",
+    "husky": "^8.0.3",
+    "lerna": "^6.6.2",
+    "prettier": "^2.8.8",
+    "size-limit": "^8.2.4",
+    "tslib": "^2.5.2",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4",
+    "vitest": "^0.31.3"
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "^5.0.0",
+    "change-case": "^4.1.2",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
+    "terraform-generator": "^5.3.1",
+    "vite": "^4.3.9"
+  },
+  "pnpm": {
+    "overrides": {
+      "graphql": "16.6.0"
+    }
+  },
+  "resolutions": {
+    "graphql": "16.6.0"
+  }
+}

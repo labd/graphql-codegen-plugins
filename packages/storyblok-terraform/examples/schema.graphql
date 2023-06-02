@@ -1,0 +1,39 @@
+# An interface creates a section in Storyblok
+interface PageMeta {
+  seoTitle: String
+  seoDescription: String
+  slug: String
+}
+
+# For root content types, add the `@storyblok(type: contentType)` directive
+type Page implements PageMeta @storyblok(type: contentType) {
+  # Add a `@storyblokField` directive to add extra configuration for a field such as translations
+  seoTitle: String @storyblokField(translatable: true)
+  seoDescription: String @storyblokField(translatable: true)
+  slug: String @storyblokField(translatable: true)
+
+  blocks: [Block]
+}
+
+union Block = MarkdownBlock | BannerBlock
+
+# By default a type is a nested Storyblok component
+type MarkdownBlock {
+  content: String @storyblokField(format: markdown, translatable: true)
+}
+
+type BannerBlock @storyblok(icon: block_image) {
+  title: String @storyblokField(translatable: true)
+  link: StoryblokLink
+  image: StoryblokAsset! @storyblokField(filetypes: [image])
+}
+
+type ProductListBlock {
+  title: String @storyblokField(translatable: true)
+}
+
+type Article {
+  date: Date
+  author: String
+  content: String @storyblokField(format: markdown, translatable: true)
+}

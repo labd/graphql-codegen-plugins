@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - ./dist/index.js # storyblok-graphql-codegen-terraform
+  - ./storyblok-base.graphql # node_modules/storyblok-graphql-codegen-terraform/storyblok-base.graphql
   - ./examples/example.graphql
 hooks:
   afterAllFileWrite:

@@ -6,13 +6,13 @@ interface PageMeta {
 }
 
 # For root content types, add the `@storyblok(type: contentType)` directive
-type Page implements PageMeta @storyblok(type: contentType) {
+type ContentPage implements PageMeta @storyblok(type: contentType) {
   # Add a `@storyblokField` directive to add extra configuration for a field such as translations
   seoTitle: String @storyblokField(translatable: true)
   seoDescription: String @storyblokField(translatable: true)
   slug: String @storyblokField(translatable: true)
 
-  blocks: [Block]
+  body: [Block]
 }
 
 union Block = MarkdownBlock | BannerBlock

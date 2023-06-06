@@ -13,7 +13,7 @@ import {
   isObjectType,
   isUnionType,
 } from 'graphql'
-import { Resource } from 'terraform-generator'
+import { Resource, map } from 'terraform-generator'
 import {
   maybeDirective,
   maybeDirectiveValue,
@@ -65,7 +65,7 @@ export const toComponent = (
     image: maybeDirectiveValue<StringValueNode>(directive, 'image')?.value,
   })),
   component_group_uuid: componentGroup?.attr('uuid'),
-  schema: toSchema(node, schema),
+  schema: map(toSchema(node, schema)),
 })
 
 const toIconValue = (value: string) =>
@@ -78,7 +78,7 @@ export const toSchema = (
   Object.fromEntries(
     node.fields?.map((field, pos) => [
       field.name.value,
-      {
+      map({
         pos,
         ...ifValue(maybeDirective(field, 'storyblokField'), (directive) => ({
           translatable: maybeDirectiveValue<BooleanValueNode>(
@@ -93,7 +93,7 @@ export const toSchema = (
           ifArray: (subType) => toArrayComponentField(field, subType, schema),
           other: (type) => toComponentField(field, type, schema),
         }),
-      },
+      }),
     ]) ?? []
   )
 

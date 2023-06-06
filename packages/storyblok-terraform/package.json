@@ -1,12 +1,23 @@
 {
   "name": "storyblok-graphql-codegen-terraform",
-  "author": "Lab digital",
-  "private": true,
+  "author": "Lab Digital",
+  "private": false,
   "license": "MIT",
   "module": "dist/index.mjs",
+  "files": [
+    "dist",
+    "storyblok-base.graphql"
+  ],
+  "version": "0.0.1",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "packageManager": "pnpm@8.5.1",
+  "keywords": [
+    "graphql",
+    "codegen",
+    "terraform",
+    "storyblok"
+  ],
   "engines": {
     "node": ">=16"
   },

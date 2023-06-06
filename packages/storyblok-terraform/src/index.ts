@@ -6,7 +6,7 @@ import {
 } from '@graphql-codegen/plugin-helpers'
 import { GraphQLSchema, visit } from 'graphql'
 import { extname } from 'path'
-import { map, Resource, TerraformGenerator } from 'terraform-generator'
+import { Resource, TerraformGenerator } from 'terraform-generator'
 import { PluginConfig } from './lib/config'
 import schemaPrepend from './lib/directives'
 import { createObjectTypeVisitor } from './lib/visitor'
@@ -23,9 +23,7 @@ export const plugin: PluginFunction<PluginConfig> = (
   const astNode = getCachedDocumentNodeFromSchema(schema)
 
   // This class can build a terraform file string.
-  const tfg = new TerraformGenerator({
-    required_providers: { storyblok: map({ source: 'labd/storyblok' }) },
-  })
+  const tfg = new TerraformGenerator()
 
   const componentGroups: Resource[] = []
 

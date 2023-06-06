@@ -12,8 +12,8 @@ display_name = "Default nest"
 space_id = 123
 is_root = false
 is_nestable = true
-schema {
-name {
+schema = {
+name = {
 pos = 0
 display_name = "Name"
 required = true
@@ -28,8 +28,8 @@ display_name = "Test"
 space_id = 123
 is_root = false
 is_nestable = true
-schema {
-name {
+schema = {
+name = {
 pos = 0
 display_name = "Name"
 required = false
@@ -44,8 +44,8 @@ display_name = "Content type"
 space_id = 123
 is_root = true
 is_nestable = false
-schema {
-name {
+schema = {
+name = {
 pos = 0
 display_name = "Name"
 required = false
@@ -60,8 +60,8 @@ display_name = "Nestable"
 space_id = 123
 is_root = false
 is_nestable = true
-schema {
-name {
+schema = {
+name = {
 pos = 0
 display_name = "Name"
 required = false
@@ -76,8 +76,8 @@ display_name = "Universal"
 space_id = 123
 is_root = true
 is_nestable = true
-schema {
-name {
+schema = {
+name = {
 pos = 0
 display_name = "Name"
 required = false
@@ -101,8 +101,8 @@ icon = "block-email"
 color = "#ff0000"
 image = "https://www.example.com/image.jpg"
 component_group_uuid = storyblok_component_group.test_group.uuid
-schema {
-name {
+schema = {
+name = {
 pos = 0
 display_name = "Name"
 required = false

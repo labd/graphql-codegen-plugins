@@ -5,7 +5,8 @@
   "license": "MIT",
   "module": "dist/index.mjs",
   "files": [
-    "dist"
+    "dist",
+    "storyblok-base.graphql"
   ],
   "version": "0.0.1",
   "main": "dist/index.js",

@@ -46,23 +46,22 @@ export const toComponent = (
   schema: GraphQLSchema
 ) => ({
   name: snakeCase(node.name.value),
-  display_name: sentenceCase(node.name.value),
   space_id: spaceId,
   is_root: false,
   is_nestable: true,
   ...ifValue(maybeDirective(node, 'storyblok'), (directive) => ({
-    icon: ifValue(
-      maybeDirectiveValue<EnumValueNode>(directive, 'icon')?.value,
-      toIconValue
-    ),
-    color: maybeDirectiveValue<StringValueNode>(directive, 'color')?.value,
+    // icon: ifValue(
+    //   maybeDirectiveValue<EnumValueNode>(directive, 'icon')?.value,
+    //   toIconValue
+    // ),
+    // color: maybeDirectiveValue<StringValueNode>(directive, 'color')?.value,
     is_nestable:
       maybeDirectiveValue<EnumValueNode>(directive, 'type')?.value !==
       'contentType',
     is_root: ['contentType', 'universal'].includes(
       maybeDirectiveValue<EnumValueNode>(directive, 'type')?.value ?? ''
     ),
-    image: maybeDirectiveValue<StringValueNode>(directive, 'image')?.value,
+    // image: maybeDirectiveValue<StringValueNode>(directive, 'image')?.value,
   })),
   component_group_uuid: componentGroup?.attr('uuid'),
   schema: map(toSchema(node, schema)),
@@ -76,10 +75,10 @@ export const toSchema = (
   schema: GraphQLSchema
 ) =>
   Object.fromEntries(
-    node.fields?.map((field, pos) => [
+    node.fields?.map((field, position) => [
       field.name.value,
       map({
-        pos,
+        position,
         ...ifValue(maybeDirective(field, 'storyblokField'), (directive) => ({
           translatable: maybeDirectiveValue<BooleanValueNode>(
             directive,

@@ -1,9 +1,10 @@
-import { sentenceCase, snakeCase } from 'change-case'
+import { camelCase, sentenceCase, snakeCase } from 'change-case'
 import {
   BooleanValueNode,
   ConstListValueNode,
   EnumValueNode,
   FieldDefinitionNode,
+  GraphQLInterfaceType,
   GraphQLSchema,
   IntValueNode,
   ObjectTypeDefinitionNode,
@@ -13,7 +14,7 @@ import {
   isObjectType,
   isUnionType,
 } from 'graphql'
-import { Resource, map } from 'terraform-generator'
+import { Resource, list, map } from 'terraform-generator'
 import {
   maybeDirective,
   maybeDirectiveValue,
@@ -24,6 +25,7 @@ import {
   AssetComponentField,
   BloksComponentField,
   BooleanComponentField,
+  Component,
   ComponentField,
   CustomComponentField,
   DatetimeComponentField,
@@ -37,30 +39,33 @@ import {
   TextComponentField,
   TextareaComponentField,
 } from './types'
-import { ifValue, isValue } from './util'
+import { ifValue, isValue } from './value'
 
 export const toComponent = (
   node: ObjectTypeDefinitionNode,
   spaceId: number,
   componentGroup: Resource | undefined,
   schema: GraphQLSchema
-) => ({
+): Component => ({
   name: snakeCase(node.name.value),
   space_id: spaceId,
   is_root: false,
   is_nestable: true,
   ...ifValue(maybeDirective(node, 'storyblok'), (directive) => ({
-    // icon: ifValue(
-    //   maybeDirectiveValue<EnumValueNode>(directive, 'icon')?.value,
-    //   toIconValue
-    // ),
-    // color: maybeDirectiveValue<StringValueNode>(directive, 'color')?.value,
     is_nestable:
       maybeDirectiveValue<EnumValueNode>(directive, 'type')?.value !==
       'contentType',
     is_root: ['contentType', 'universal'].includes(
       maybeDirectiveValue<EnumValueNode>(directive, 'type')?.value ?? ''
     ),
+    // Disabled until supported by the terraform provider:
+    //
+    // icon: ifValue(
+    //   maybeDirectiveValue<EnumValueNode>(directive, 'icon')?.value,
+    //   toIconValue
+    // ),
+    // preview: maybeDirectiveValue<StringValueNode>(directive, 'preview')?.value,
+    // color: maybeDirectiveValue<StringValueNode>(directive, 'color')?.value,
     // image: maybeDirectiveValue<StringValueNode>(directive, 'image')?.value,
   })),
   component_group_uuid: componentGroup?.attr('uuid'),
@@ -74,8 +79,8 @@ export const toSchema = (
   node: ObjectTypeDefinitionNode,
   schema: GraphQLSchema
 ) =>
-  Object.fromEntries(
-    node.fields?.map((field, position) => [
+  Object.fromEntries([
+    ...(node.fields?.map((field, position) => [
       field.name.value,
       map({
         position,
@@ -83,6 +88,14 @@ export const toSchema = (
           translatable: maybeDirectiveValue<BooleanValueNode>(
             directive,
             'translatable'
+          )?.value,
+          default_value: maybeDirectiveValue<StringValueNode>(
+            directive,
+            'default'
+          )?.value,
+          no_translate: maybeDirectiveValue<StringValueNode>(
+            directive,
+            'excludeFromExport'
           )?.value,
         })),
         display_name: sentenceCase(field.name.value),
@@ -93,8 +106,24 @@ export const toSchema = (
           other: (type) => toComponentField(field, type, schema),
         }),
       }),
-    ]) ?? []
-  )
+    ]) ?? []),
+    ...(node.interfaces?.map((i) => [
+      camelCase(i.name.value),
+      map(
+        toSectionComponentField(
+          schema.getType(i.name.value) as GraphQLInterfaceType
+        )
+      ),
+    ]) ?? []),
+  ])
+
+const toSectionComponentField = (
+  node: GraphQLInterfaceType
+): SectionComponentField => ({
+  type: 'section',
+  display_name: sentenceCase(node.name),
+  keys: node.astNode?.fields?.map((f) => f.name.value) ?? [],
+})
 
 const toArrayComponentField = (
   prop: FieldDefinitionNode,
@@ -109,16 +138,30 @@ const toArrayComponentField = (
       component_whitelist: isUnionType(node)
         ? node.astNode?.types?.map((type) => snakeCase(typeName(type)))
         : [snakeCase(node.name)],
+      ...ifValue(maybeDirective(prop, 'storyblokField'), (d) => ({
+        minimum: ifValue(
+          maybeDirectiveValue<IntValueNode>(d, 'minimum')?.value,
+          Number
+        ),
+        maximum: ifValue(
+          maybeDirectiveValue<IntValueNode>(d, 'maximum')?.value,
+          Number
+        ),
+      })),
     }
   }
 
   if (isEnumType(node) && node.astNode) {
     return {
       type: 'options',
-      options: node.astNode.values!.map((value) => ({
-        name: value.name.value,
-        value: value.name.value,
-      })),
+      options: list(
+        node.astNode.values!.map((value) =>
+          map({
+            name: value.name.value,
+            value: value.name.value,
+          })
+        )
+      ),
     }
   }
 
@@ -127,7 +170,7 @@ const toArrayComponentField = (
       type: 'multiasset',
       ...ifValue(maybeDirective(prop, 'storyblokField'), (d) => ({
         filetypes:
-          maybeDirectiveValue<ConstListValueNode>(d, 'format')
+          maybeDirectiveValue<ConstListValueNode>(d, 'filetypes')
             ?.values.map((v) =>
               v.kind === 'StringValue' ? (v.value as 'images') : undefined
             )
@@ -162,10 +205,14 @@ const toComponentField = (
     if (isEnumType(node) && node.astNode) {
       return {
         type: 'option',
-        options: node.astNode.values!.map((value) => ({
-          name: value.name.value,
-          value: value.name.value,
-        })),
+        options: list(
+          node.astNode.values!.map((value) =>
+            map({
+              name: value.name.value,
+              value: value.name.value,
+            })
+          )
+        ),
       }
     }
 
@@ -205,6 +252,7 @@ const toComponentField = (
         component_whitelist: isUnionType(node)
           ? node.astNode?.types?.map((type) => snakeCase(typeName(type)))
           : [snakeCase(node.name)],
+        minimum: prop.type.kind === 'NonNullType' ? 1 : 0,
         maximum: 1,
       }
     }
@@ -220,11 +268,23 @@ const toComponentField = (
         }
       }
 
-      const stringType =
-        maybeDirectiveValue<StringValueNode>(directive, 'format')?.value ??
-        'text'
+      const stringType = maybeDirectiveValue<StringValueNode>(
+        directive,
+        'format'
+      )?.value
 
       switch (stringType) {
+        case 'richtext': {
+          return {
+            type: 'markdown',
+            rtl: maybeDirectiveValue<BooleanValueNode>(directive, 'rtl')?.value,
+            max_length: ifValue(
+              maybeDirectiveValue<IntValueNode>(directive, 'max')?.value,
+              Number
+            ),
+            rich_markdown: true,
+          }
+        }
         case 'markdown': {
           return {
             type: 'markdown',
@@ -233,10 +293,6 @@ const toComponentField = (
               maybeDirectiveValue<IntValueNode>(directive, 'max')?.value,
               Number
             ),
-            rich_markdown: maybeDirectiveValue<BooleanValueNode>(
-              directive,
-              'richMarkdown'
-            )?.value,
           }
         }
         case 'textarea': {
@@ -272,7 +328,14 @@ const toComponentField = (
       return {
         type: 'number',
         ...ifValue(maybeDirective(prop, 'storyblokField'), (d) => ({
-          format: maybeDirectiveValue<StringValueNode>(d, 'format')?.value,
+          decimals_value: ifValue(
+            maybeDirectiveValue<StringValueNode>(d, 'decimals')?.value,
+            Number
+          ),
+          steps_value: ifValue(
+            maybeDirectiveValue<StringValueNode>(d, 'steps')?.value,
+            Number
+          ),
           min_value: ifValue(
             maybeDirectiveValue<IntValueNode>(d, 'min')?.value,
             Number

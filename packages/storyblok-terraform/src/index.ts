@@ -8,12 +8,7 @@ import { GraphQLSchema, visit } from 'graphql'
 import { extname } from 'path'
 import { Resource, TerraformGenerator } from 'terraform-generator'
 import { PluginConfig } from './lib/config'
-import schemaPrepend from './lib/directives'
 import { createObjectTypeVisitor } from './lib/visitor'
-
-// export const addToSchema = schemaPrepend.loc?.source.body ?? ''
-
-export const schema = schemaPrepend.loc?.source.body ?? ''
 
 export const plugin: PluginFunction<PluginConfig> = (
   schema: GraphQLSchema,
@@ -26,8 +21,6 @@ export const plugin: PluginFunction<PluginConfig> = (
   const tfg = new TerraformGenerator()
 
   const componentGroups: Resource[] = []
-
-  // root items
 
   // For each GraphQl object type, add corresponding resources to the terraform generator.
   visit(astNode, {

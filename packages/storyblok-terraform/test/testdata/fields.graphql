@@ -1,25 +1,13 @@
-interface PageMeta {
-  seoTitle: String
-  seoDescription: String
-}
-
-type Page @storyblok implements PageMeta {
-  seoTitle: String
-  seoDescription: String
-
-  title: String
-}
-
 type Base @storyblok {
-  text: String! @storyblokField(maxLength: 4)
+  text: String! @storyblokField(max: 4)
   textarea: String! @storyblokField(format: textarea)
   markdown: String! @storyblokField(format: markdown)
   richtext: String! @storyblokField(format: richtext)
 
   optionalRegexText: String @storyblokField(regex: "/[\\w\\-]+")
-  integer: Int! @storyblokField(minValue: 0, maxValue: 10)
+  integer: Int! @storyblokField(min: 2, max: 10)
   optionalInteger: Int
-  float: Float! @storyblokField(minValue: 0, maxValue: 10)
+  float: Float! @storyblokField(min: 0, max: 10)
   optionalFloat: Float
   boolean: Boolean!
   optionalBoolean: Boolean

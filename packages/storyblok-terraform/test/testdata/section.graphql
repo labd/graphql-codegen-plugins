@@ -1,0 +1,9 @@
+interface Section {
+  sectionProp: String
+}
+
+type A implements Section {
+  sectionProp: String
+
+  title: String
+}

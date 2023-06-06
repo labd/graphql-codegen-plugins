@@ -1,33 +1,35 @@
-import fs from 'fs'
 import { buildSchema } from 'graphql'
-import path from 'path'
 import { expect, it } from 'vitest'
 import { plugin } from '../src/index'
-
-const readFileSync = (filePath: string) =>
-  fs.readFileSync(path.join(__dirname, filePath), 'utf8')
+import { readFileSync, writeFileSync } from './file'
 
 const storyblokBase = readFileSync('../storyblok-base.graphql')
 
-it.each([{ graphqlFile: 'base' }])(
-  'correct Terraform file for $graphqlFile',
-  async ({ graphqlFile }) => {
+it.each(['component', 'section', 'fields'])(
+  'has a correct Terraform file for $0',
+  (graphqlFile) => {
     const schema = buildSchema(
       storyblokBase + readFileSync(`./testdata/${graphqlFile}.graphql`)
     )
-    const expected = readFileSync(`./testdata/expected/${graphqlFile}.tf`)
 
-    const terraformResult = await plugin(schema, [], {
+    // The terraform generator does output the terraform code with ugly formatting.
+    // Therefore we have to remove some white space from the expected output.
+    const expected = readFileSync(`./testdata/expected/${graphqlFile}.tf`)
+      .replace(/^ +/gm, '') // remove starting spaces
+      .replace(/  +/g, ' ') // remove double spaces
+      .replace(/" \{/g, '"{') // remove last space of a resource line
+      .trim() // remove ending white space
+
+    const terraformResult = plugin(schema, [], {
       space_id: 123,
     })
+      .toString()
+      .trim()
 
-    // Note: the terraform generator does output the terraform code with ugly formatting.
-    // Normally we can deal with this by configuring "prettier" in the codegen config.
-    // But in this unittest we test the raw result.
-    // Therefore the expected output is also formatted ugly.
+    if (process.env.UPDATE_SNAPSHOTS) {
+      writeFileSync(`./testdata/expected/${graphqlFile}.tf`, terraformResult)
+    }
 
-    expect(terraformResult.toString().replace(/\r/g, '')).toBe(
-      expected.replace(/\r/g, '') + '\n'
-    )
+    expect(terraformResult).toBe(expected)
   }
 )

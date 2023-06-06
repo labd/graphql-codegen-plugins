@@ -83,6 +83,9 @@ directive @storyblokField(
   regex: String
   filetypes: [AssetFileTypes!]
   custom: String
+  excludeFromExport: Boolean
+  steps: Int
+  decimals: Int
 ) on FIELD_DEFINITION
 
 type StoryblokAsset {

@@ -1,3 +1,4 @@
+import { execSync } from 'child_process'
 import { buildSchema } from 'graphql'
 import { expect, it } from 'vitest'
 import { plugin } from '../src/index'
@@ -28,6 +29,7 @@ it.each(['component', 'section', 'fields'])(
 
     if (process.env.UPDATE_SNAPSHOTS) {
       writeFileSync(`./testdata/expected/${graphqlFile}.tf`, terraformResult)
+      execSync(`terraform fmt test/testdata/expected`)
     }
 
     expect(terraformResult).toBe(expected)

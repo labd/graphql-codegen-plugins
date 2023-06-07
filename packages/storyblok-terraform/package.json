@@ -8,7 +8,7 @@
     "dist",
     "storyblok-base.graphql"
   ],
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "packageManager": "pnpm@8.5.1",
@@ -26,7 +26,7 @@
     "build": "tsup",
     "test": "vitest",
     "postbuild": "cp package.json dist",
-    "lint": "eslint",
+    "lint": "eslint src/**/*.ts test/**/*.ts",
     "example": "pnpm build && graphql-codegen --config examples/codegen.yml"
   },
   "prettier": {

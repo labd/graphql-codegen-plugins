@@ -15,8 +15,6 @@ jobs:
         with:
           node-version: 18
       - uses: pnpm/action-setup@v2
-        with:
-          version: 7
       - uses: actions/cache@v3
         with:
           path: '**/node_modules'
@@ -26,7 +24,7 @@ jobs:
 
       # 2) Run linting, unit tests, and e2e tests
       - name: Lint
-        run: pnpm eslint src
+        run: pnpm lint
 
       - name: Test
         run: pnpm vitest

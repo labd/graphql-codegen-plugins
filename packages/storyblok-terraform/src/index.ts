@@ -16,7 +16,6 @@ export const plugin: PluginFunction<PluginConfig> = (
   { space_id }
 ) => {
   const astNode = getCachedDocumentNodeFromSchema(schema)
-
   // This class can build a terraform file string.
   const tfg = new TerraformGenerator()
 

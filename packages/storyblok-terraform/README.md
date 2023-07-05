@@ -53,23 +53,25 @@ type Page implements PageMeta @storyblok(type: contentType) {
 union Block = MarkdownBlock | BannerBlock
 
 # By default a type is a nested Storyblok component
-type MarkdownBlock {
+type MarkdownBlock @storyblok {
   content: String @storyblokField(format: markdown, translatable: true)
 }
 
 type BannerBlock @storyblok(icon: block_image) {
   title: String @storyblokField(translatable: true)
-  link: StoryblokLink
+  link: StoryblokLink @storyblokField
   image: StoryblokAsset! @storyblokField(filetypes: [image])
 }
 
-type ProductListBlock {
+type ProductListBlock @storyblok {
   title: String @storyblokField(translatable: true)
 }
 
-type Article {
-  date: Date
-  author: String
+type Article @storyblok {
+  # This field will be ignored
+  systemField: String
+  date: Date @storyblokField
+  author: String @storyblokField
   content: String @storyblokField(format: markdown, translatable: true)
 }
 ```

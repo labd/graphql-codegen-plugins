@@ -1,21 +1,21 @@
-type DefaultNest {
-  name: String!
+type DefaultNest @storyblok {
+  name: String! @storyblokField
 }
 
 type Test @storyblok {
-  name: String
+  name: String @storyblokField
 }
 
 type ContentType @storyblok(type: contentType) {
-  name: String
+  name: String @storyblokField
 }
 
 type Nestable @storyblok(type: nested) {
-  name: String
+  name: String @storyblokField
 }
 
 type Universal @storyblok(type: universal) {
-  name: String
+  name: String @storyblokField
 }
 
 type Group
@@ -26,5 +26,5 @@ type Group
     color: "#ff0000"
     preview: "https://www.example.com/preview.jpg"
   ) {
-  name: String
+  name: String @storyblokField
 }

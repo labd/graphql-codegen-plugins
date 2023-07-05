@@ -16,6 +16,7 @@ import {
 } from 'graphql'
 import { Resource, list, map } from 'terraform-generator'
 import {
+  hasDirective,
   maybeDirective,
   maybeDirectiveValue,
   switchArray,
@@ -80,33 +81,35 @@ export const toSchema = (
   schema: GraphQLSchema
 ) =>
   Object.fromEntries([
-    ...(node.fields?.map((field, position) => [
-      field.name.value,
-      map({
-        position,
-        ...ifValue(maybeDirective(field, 'storyblokField'), (directive) => ({
-          translatable: maybeDirectiveValue<BooleanValueNode>(
-            directive,
-            'translatable'
-          )?.value,
-          default_value: maybeDirectiveValue<StringValueNode>(
-            directive,
-            'default'
-          )?.value,
-          no_translate: maybeDirectiveValue<StringValueNode>(
-            directive,
-            'excludeFromExport'
-          )?.value,
-        })),
-        display_name: sentenceCase(field.name.value),
-        required: field.type.kind === 'NonNullType',
-        description: field.description?.value,
-        ...switchArray<ComponentField>(field.type, {
-          ifArray: (subType) => toArrayComponentField(field, subType, schema),
-          other: (type) => toComponentField(field, type, schema),
+    ...(node.fields
+      ?.filter((field) => hasDirective(field, 'storyblokField'))
+      .map((field, position) => [
+        field.name.value,
+        map({
+          position,
+          ...ifValue(maybeDirective(field, 'storyblokField'), (directive) => ({
+            translatable: maybeDirectiveValue<BooleanValueNode>(
+              directive,
+              'translatable'
+            )?.value,
+            default_value: maybeDirectiveValue<StringValueNode>(
+              directive,
+              'default'
+            )?.value,
+            no_translate: maybeDirectiveValue<StringValueNode>(
+              directive,
+              'excludeFromExport'
+            )?.value,
+          })),
+          display_name: sentenceCase(field.name.value),
+          required: field.type.kind === 'NonNullType',
+          description: field.description?.value,
+          ...switchArray<ComponentField>(field.type, {
+            ifArray: (subType) => toArrayComponentField(field, subType, schema),
+            other: (type) => toComponentField(field, type, schema),
+          }),
         }),
-      }),
-    ]) ?? []),
+      ]) ?? []),
     ...(node.interfaces?.map((i) => [
       camelCase(i.name.value),
       map(

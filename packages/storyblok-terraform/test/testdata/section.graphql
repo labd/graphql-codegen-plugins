@@ -1,9 +1,9 @@
 interface Section {
-  sectionProp: String
+  sectionProp: String @storyblokField
 }
 
-type A implements Section {
-  sectionProp: String
+type A implements Section @storyblok {
+  sectionProp: String @storyblokField
 
-  title: String
+  title: String @storyblokField
 }

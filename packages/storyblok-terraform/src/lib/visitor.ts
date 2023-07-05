@@ -29,11 +29,12 @@ export const createObjectTypeVisitor =
   ) =>
   (node: ObjectTypeDefinitionNode) => {
     const directive = maybeDirective(node, 'storyblok')
-    if (node.name.value.startsWith('Storyblok')) return null
+    if (node.name.value.startsWith('Storyblok') || !directive) return null
 
-    const componentGroupName = directive
-      ? maybeDirectiveValue<StringValueNode>(directive, 'componentGroup')?.value
-      : undefined
+    const componentGroupName = maybeDirectiveValue<StringValueNode>(
+      directive,
+      'componentGroup'
+    )?.value
 
     let componentGroup = componentGroupName
       ? componentGroups.find(

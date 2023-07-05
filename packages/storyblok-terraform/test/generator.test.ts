@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync } from './file'
 const storyblokBase = readFileSync('../storyblok-base.graphql')
 
 it.each(['component', 'section', 'fields'])(
-  'has a correct Terraform file for $0',
+  'has a correct Terraform file for %s',
   (graphqlFile) => {
     const schema = buildSchema(
       storyblokBase + readFileSync(`./testdata/${graphqlFile}.graphql`)

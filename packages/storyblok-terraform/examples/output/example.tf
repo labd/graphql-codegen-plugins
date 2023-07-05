@@ -55,38 +55,44 @@ resource "storyblok_component" "banner_block" {
   }
 }
 
-resource "storyblok_component" "content_page" {
-  name        = "content_page"
+resource "storyblok_component" "markdown_block" {
+  name        = "markdown_block"
+  space_id    = 123
+  is_root     = false
+  is_nestable = true
+  schema = {
+    content = {
+      position     = 0
+      translatable = true
+      display_name = "Content"
+      required     = false
+      type         = "markdown"
+    }
+  }
+}
+
+resource "storyblok_component" "page" {
+  name        = "page"
   space_id    = 123
   is_root     = true
   is_nestable = false
   schema = {
-    body = {
-      position     = 0
-      display_name = "Body"
-      required     = false
-      type         = "bloks"
-      component_whitelist = [
-        "markdown_block",
-        "banner_block"
-      ]
-    }
     seoDescription = {
-      position     = 1
+      position     = 0
       translatable = true
       display_name = "Seo description"
       required     = false
       type         = "text"
     }
     seoTitle = {
-      position     = 2
+      position     = 1
       translatable = true
       display_name = "Seo title"
       required     = false
       type         = "text"
     }
     slug = {
-      position     = 3
+      position     = 2
       translatable = true
       display_name = "Slug"
       required     = false
@@ -100,22 +106,6 @@ resource "storyblok_component" "content_page" {
         "seoDescription",
         "slug"
       ]
-    }
-  }
-}
-
-resource "storyblok_component" "markdown_block" {
-  name        = "markdown_block"
-  space_id    = 123
-  is_root     = false
-  is_nestable = true
-  schema = {
-    content = {
-      position     = 0
-      translatable = true
-      display_name = "Content"
-      required     = false
-      type         = "markdown"
     }
   }
 }

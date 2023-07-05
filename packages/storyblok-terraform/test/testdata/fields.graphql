@@ -6,23 +6,24 @@ type Base @storyblok {
 
   optionalRegexText: String @storyblokField(regex: "/[\\w\\-]+")
   integer: Int! @storyblokField(min: 2, max: 10)
-  optionalInteger: Int
+  optionalInteger: Int @storyblokField
   float: Float! @storyblokField(min: 0, max: 10)
-  optionalFloat: Float
-  boolean: Boolean!
-  optionalBoolean: Boolean
+  optionalFloat: Float @storyblokField
+  boolean: Boolean! @storyblokField
+  optionalBoolean: Boolean @storyblokField
 
-  date: Date
-  dateTime: DateTime
+  date: Date @storyblokField
+  dateTime: DateTime @storyblokField
 
   image: StoryblokAsset! @storyblokField(filetypes: [images])
-  assets: [StoryblokAsset!]
-  option: Option
-  options: [Option!]
-  blok: A
-  bloks: [B]
-  unionBlok: Union
-  unionBloks: [Union!]
+  assets: [StoryblokAsset!] @storyblokField
+  option: Option @storyblokField
+  options: [Option!] @storyblokField
+  blok: A @storyblokField
+  bloks: [B] @storyblokField
+  unionBlok: Union @storyblokField
+  unionBloks: [Union!] @storyblokField
+  ignored: String
 }
 
 enum Option {
@@ -33,9 +34,9 @@ enum Option {
 union Union = A | B
 
 type A @storyblok {
-  a: String!
+  a: String! @storyblokField
 }
 
 type B @storyblok {
-  b: String!
+  b: String! @storyblokField
 }

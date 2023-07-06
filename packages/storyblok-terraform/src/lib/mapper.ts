@@ -141,6 +141,7 @@ const toArrayComponentField = (
       component_whitelist: isUnionType(node)
         ? node.astNode?.types?.map((type) => snakeCase(typeName(type)))
         : [snakeCase(node.name)],
+      restrict_components: true,
       ...ifValue(maybeDirective(prop, 'storyblokField'), (d) => ({
         minimum: ifValue(
           maybeDirectiveValue<IntValueNode>(d, 'minimum')?.value,
@@ -255,6 +256,7 @@ const toComponentField = (
         component_whitelist: isUnionType(node)
           ? node.astNode?.types?.map((type) => snakeCase(typeName(type)))
           : [snakeCase(node.name)],
+        restrict_components: true,
         minimum: prop.type.kind === 'NonNullType' ? 1 : 0,
         maximum: 1,
       }

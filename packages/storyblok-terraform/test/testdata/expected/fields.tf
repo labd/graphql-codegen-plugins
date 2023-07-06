@@ -104,6 +104,7 @@ resource "storyblok_component" "base" {
       component_whitelist = [
         "storyblok_asset"
       ]
+      restrict_components = true
     }
     option = {
       position     = 15
@@ -149,6 +150,7 @@ resource "storyblok_component" "base" {
       component_whitelist = [
         "a"
       ]
+      restrict_components = true
       minimum = 0
       maximum = 1
     }
@@ -160,6 +162,7 @@ resource "storyblok_component" "base" {
       component_whitelist = [
         "b"
       ]
+      restrict_components = true
     }
     unionBlok = {
       position     = 19
@@ -170,6 +173,7 @@ resource "storyblok_component" "base" {
         "a",
         "b"
       ]
+      restrict_components = true
       minimum = 0
       maximum = 1
     }
@@ -182,6 +186,7 @@ resource "storyblok_component" "base" {
         "a",
         "b"
       ]
+      restrict_components = true
     }
   }
 }

@@ -4,24 +4,32 @@ resource "storyblok_component" "a" {
   is_root     = false
   is_nestable = true
   schema = {
-    sectionProp = {
+    tabAProp = {
       position     = 0
-      display_name = "Section prop"
+      display_name = "Tab a prop"
       required     = false
       type         = "text"
     }
-    title = {
+    tabBProp = {
       position     = 1
-      display_name = "Title"
+      display_name = "Tab b prop"
       required     = false
       type         = "text"
     }
-    section = {
+    tabA = {
       position     = 2
-      type         = "section"
-      display_name = "Section"
+      type         = "tab"
+      display_name = "A"
       keys = [
-        "sectionProp"
+        "tabAProp"
+      ]
+    }
+    tabB = {
+      position     = 3
+      type         = "tab"
+      display_name = "B"
+      keys = [
+        "tabBProp"
       ]
     }
   }

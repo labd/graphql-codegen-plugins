@@ -151,8 +151,8 @@ resource "storyblok_component" "base" {
         "a"
       ]
       restrict_components = true
-      minimum = 0
-      maximum = 1
+      minimum             = 0
+      maximum             = 1
     }
     bloks = {
       position     = 18
@@ -174,8 +174,8 @@ resource "storyblok_component" "base" {
         "b"
       ]
       restrict_components = true
-      minimum = 0
-      maximum = 1
+      minimum             = 0
+      maximum             = 1
     }
     unionBloks = {
       position     = 20

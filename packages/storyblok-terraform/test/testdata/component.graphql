@@ -24,7 +24,7 @@ type Group
     image: "https://www.example.com/image.jpg"
     icon: block_email
     color: "#ff0000"
-    preview: "https://www.example.com/preview.jpg"
+    preview: "{{ name }}"
   ) {
   name: String @storyblokField
 }

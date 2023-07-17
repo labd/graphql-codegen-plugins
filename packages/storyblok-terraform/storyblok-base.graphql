@@ -86,6 +86,7 @@ directive @storyblokField(
   excludeFromExport: Boolean
   steps: Int
   decimals: Int
+  tab: String
 ) on FIELD_DEFINITION
 
 type StoryblokAsset {

@@ -40,7 +40,7 @@ import {
   TextComponentField,
   TextareaComponentField,
 } from './types'
-import { ifValue, isValue } from './value'
+import { ifValue, isValue, uniqueBy } from './value'
 
 export const toComponent = (
   node: ObjectTypeDefinitionNode,
@@ -61,13 +61,13 @@ export const toComponent = (
     ),
     // Disabled until supported by the terraform provider:
     //
-    // icon: ifValue(
-    //   maybeDirectiveValue<EnumValueNode>(directive, 'icon')?.value,
-    //   toIconValue
-    // ),
-    // preview: maybeDirectiveValue<StringValueNode>(directive, 'preview')?.value,
-    // color: maybeDirectiveValue<StringValueNode>(directive, 'color')?.value,
-    // image: maybeDirectiveValue<StringValueNode>(directive, 'image')?.value,
+    icon: ifValue(
+      maybeDirectiveValue<EnumValueNode>(directive, 'icon')?.value,
+      toIconValue
+    ),
+    preview: maybeDirectiveValue<StringValueNode>(directive, 'preview')?.value,
+    color: maybeDirectiveValue<StringValueNode>(directive, 'color')?.value,
+    image: maybeDirectiveValue<StringValueNode>(directive, 'image')?.value,
   })),
   component_group_uuid: componentGroup?.attr('uuid'),
   schema: map(toSchema(node, schema)),
@@ -81,6 +81,7 @@ export const toSchema = (
   schema: GraphQLSchema
 ) =>
   Object.fromEntries([
+    // Normal fields
     ...(node.fields
       ?.filter((field) => hasDirective(field, 'storyblokField'))
       .map((field, position) => [
@@ -110,15 +111,51 @@ export const toSchema = (
           }),
         }),
       ]) ?? []),
-    ...(node.interfaces?.map((i) => [
+    // Sections
+    ...(node.interfaces?.map((i, position) => [
       camelCase(i.name.value),
-      map(
-        toSectionComponentField(
+      map({
+        position: position + (node.fields?.length ?? 0),
+        ...toSectionComponentField(
           schema.getType(i.name.value) as GraphQLInterfaceType
-        )
-      ),
+        ),
+      }),
+    ]) ?? []),
+    // Tabs
+    ...(getTabNames(node)?.map((tabName, position) => [
+      camelCase(`tab ${tabName}`),
+      map({
+        position:
+          position +
+          (node.interfaces?.length ?? 0) +
+          (node.fields?.length ?? 0),
+        type: 'tab',
+        display_name: sentenceCase(tabName),
+        keys: node.fields
+          ?.filter((field) =>
+            ifValue(
+              maybeDirective(field, 'storyblokField'),
+              (directive) =>
+                maybeDirectiveValue<StringValueNode>(directive, 'tab')
+                  ?.value === tabName
+            )
+          )
+          .map((field) => field.name.value),
+      }),
     ]) ?? []),
   ])
+
+const getTabNames = (node: ObjectTypeDefinitionNode) =>
+  node.fields
+    ?.map((field) =>
+      ifValue(
+        maybeDirective(field, 'storyblokField'),
+        (directive) =>
+          maybeDirectiveValue<StringValueNode>(directive, 'tab')?.value
+      )
+    )
+    .filter(uniqueBy((x) => x))
+    .filter(isValue)
 
 const toSectionComponentField = (
   node: GraphQLInterfaceType

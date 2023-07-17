@@ -83,6 +83,10 @@ resource "storyblok_component" "group" {
   space_id             = 123
   is_root              = false
   is_nestable          = true
+  icon                 = "block-email"
+  preview              = "{{ name }}"
+  color                = "#ff0000"
+  image                = "https://www.example.com/image.jpg"
   component_group_uuid = storyblok_component_group.test_group.uuid
   schema = {
     name = {

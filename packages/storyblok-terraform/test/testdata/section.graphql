@@ -1,9 +1,5 @@
-interface Section {
-  sectionProp: String @storyblokField
-}
-
-type A implements Section @storyblok {
-  sectionProp: String @storyblokField
+type A @storyblok {
+  sectionProp: String @storyblokField(section: "Section")
 
   title: String @storyblokField
 }

@@ -1,18 +1,10 @@
-# An interface creates a section in Storyblok
-interface PageMeta {
-  seoTitle: String
-  seoDescription: String
-  slug: String
-}
-
 # For root content types, add the `@storyblok(type: contentType)` directive
 type Page implements PageMeta @storyblok(type: contentType) {
   # Add a `@storyblokField` directive to add extra configuration for a field such as translations
-  seoTitle: String @storyblokField(translatable: true)
-  seoDescription: String @storyblokField(translatable: true)
-  slug: String @storyblokField(translatable: true)
+  seoTitle: String @storyblokField(translatable: true, section: "SEO")
+  seoDescription: String @storyblokField(translatable: true, section: "SEO")
 
-  blocks: [Block]
+  blocks: [Block] @storyblokField
 }
 
 union Block = MarkdownBlock | BannerBlock

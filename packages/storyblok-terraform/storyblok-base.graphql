@@ -87,6 +87,7 @@ directive @storyblokField(
   steps: Int
   decimals: Int
   tab: String
+  section: String
 ) on FIELD_DEFINITION
 
 type StoryblokAsset {

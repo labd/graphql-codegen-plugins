@@ -4,7 +4,6 @@ import {
   ConstListValueNode,
   EnumValueNode,
   FieldDefinitionNode,
-  GraphQLInterfaceType,
   GraphQLSchema,
   IntValueNode,
   ObjectTypeDefinitionNode,
@@ -37,6 +36,7 @@ import {
   OptionComponentField,
   OptionsComponentField,
   SectionComponentField,
+  TabComponentField,
   TextComponentField,
   TextareaComponentField,
 } from './types'
@@ -112,57 +112,60 @@ export const toSchema = (
         }),
       ]) ?? []),
     // Sections
-    ...(node.interfaces?.map((i, position) => [
-      camelCase(i.name.value),
+    ...(getUniqueDirectiveProps(node, 'section')?.map((tabName, position) => [
+      camelCase(`section ${tabName}`),
       map({
         position: position + (node.fields?.length ?? 0),
-        ...toSectionComponentField(
-          schema.getType(i.name.value) as GraphQLInterfaceType
-        ),
+        ...toFieldGroupComponentField(node, 'section', tabName),
       }),
     ]) ?? []),
     // Tabs
-    ...(getTabNames(node)?.map((tabName, position) => [
+    ...(getUniqueDirectiveProps(node, 'tab')?.map((tabName, position) => [
       camelCase(`tab ${tabName}`),
       map({
         position:
           position +
-          (node.interfaces?.length ?? 0) +
+          (getUniqueDirectiveProps(node, 'section')?.length ?? 0) +
           (node.fields?.length ?? 0),
-        type: 'tab',
-        display_name: sentenceCase(tabName),
-        keys: node.fields
-          ?.filter((field) =>
-            ifValue(
-              maybeDirective(field, 'storyblokField'),
-              (directive) =>
-                maybeDirectiveValue<StringValueNode>(directive, 'tab')
-                  ?.value === tabName
-            )
-          )
-          .map((field) => field.name.value),
+        ...toFieldGroupComponentField(node, 'tab', tabName),
       }),
     ]) ?? []),
   ])
 
-const getTabNames = (node: ObjectTypeDefinitionNode) =>
+const getUniqueDirectiveProps = (
+  node: ObjectTypeDefinitionNode,
+  directiveProp: 'tab' | 'section'
+) =>
   node.fields
     ?.map((field) =>
       ifValue(
         maybeDirective(field, 'storyblokField'),
         (directive) =>
-          maybeDirectiveValue<StringValueNode>(directive, 'tab')?.value
+          maybeDirectiveValue<StringValueNode>(directive, directiveProp)?.value
       )
     )
     .filter(uniqueBy((x) => x))
     .filter(isValue)
 
-const toSectionComponentField = (
-  node: GraphQLInterfaceType
-): SectionComponentField => ({
-  type: 'section',
-  display_name: sentenceCase(node.name),
-  keys: node.astNode?.fields?.map((f) => f.name.value) ?? [],
+const toFieldGroupComponentField = (
+  node: ObjectTypeDefinitionNode,
+  directiveProp: 'tab' | 'section',
+
+  name: string
+): SectionComponentField | TabComponentField => ({
+  type: directiveProp,
+  display_name: sentenceCase(name),
+  keys:
+    node.fields
+      ?.filter((field) =>
+        ifValue(
+          maybeDirective(field, 'storyblokField'),
+          (directive) =>
+            maybeDirectiveValue<StringValueNode>(directive, directiveProp)
+              ?.value === name
+        )
+      )
+      .map((field) => field.name.value) ?? [],
 })
 
 const toArrayComponentField = (

@@ -16,7 +16,7 @@ resource "storyblok_component" "a" {
       required     = false
       type         = "text"
     }
-    section = {
+    sectionSection = {
       position     = 2
       type         = "section"
       display_name = "Section"

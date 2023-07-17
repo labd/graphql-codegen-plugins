@@ -132,6 +132,12 @@ export type SectionComponentField = {
   keys: string[]
 }
 
+export type TabComponentField = {
+  type: 'tab'
+  display_name?: string
+  keys: string[]
+}
+
 export type CustomComponentField = ComponentFieldBase & {
   type: 'custom'
   field_type?: string

@@ -5,7 +5,7 @@ import {
   StringValueNode,
 } from 'graphql'
 import { Resource, TerraformGenerator } from 'terraform-generator'
-import { maybeDirective, maybeDirectiveValue } from './graphql'
+import { findStoryblokValue, hasDirective } from './graphql'
 import { toComponent } from './mapper'
 
 /**
@@ -28,11 +28,14 @@ export const createObjectTypeVisitor =
     }
   ) =>
   (node: ObjectTypeDefinitionNode) => {
-    const directive = maybeDirective(node, 'storyblok')
-    if (node.name.value.startsWith('Storyblok') || !directive) return null
+    if (
+      node.name.value.startsWith('Storyblok') ||
+      !hasDirective(node, 'storyblok')
+    )
+      return null
 
-    const componentGroupName = maybeDirectiveValue<StringValueNode>(
-      directive,
+    const componentGroupName = findStoryblokValue<StringValueNode>(
+      node,
       'componentGroup'
     )?.value
 

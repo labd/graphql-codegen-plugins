@@ -62,6 +62,13 @@ enum AssetFileTypes {
   texts
 }
 
+enum LinkFeatures {
+  assets
+  newTab
+  anchor
+  email
+}
+
 # Object directives
 directive @storyblok(
   componentGroup: String
@@ -88,6 +95,10 @@ directive @storyblokField(
   decimals: Int
   tab: String
   section: String
+  folder: String
+  linkFeatures: [LinkFeatures!]
+  "A list of story names. E.g. ['ContentPage', 'Article'] "
+  linkInternalTypes: [String!]
 ) on FIELD_DEFINITION
 
 type StoryblokAsset {

@@ -15,9 +15,9 @@ import {
 } from 'graphql'
 import { Resource, list, map } from 'terraform-generator'
 import {
+  findStoryblokFieldValue,
+  findStoryblokValue,
   hasDirective,
-  maybeDirective,
-  maybeDirectiveValue,
   switchArray,
   typeName,
 } from './graphql'
@@ -50,25 +50,19 @@ export const toComponent = (
 ): Component => ({
   name: snakeCase(node.name.value),
   space_id: spaceId,
-  is_root: false,
-  is_nestable: true,
-  ...ifValue(maybeDirective(node, 'storyblok'), (directive) => ({
-    is_nestable:
-      maybeDirectiveValue<EnumValueNode>(directive, 'type')?.value !==
-      'contentType',
-    is_root: ['contentType', 'universal'].includes(
-      maybeDirectiveValue<EnumValueNode>(directive, 'type')?.value ?? ''
-    ),
-    // Disabled until supported by the terraform provider:
-    //
-    icon: ifValue(
-      maybeDirectiveValue<EnumValueNode>(directive, 'icon')?.value,
-      toIconValue
-    ),
-    preview: maybeDirectiveValue<StringValueNode>(directive, 'preview')?.value,
-    color: maybeDirectiveValue<StringValueNode>(directive, 'color')?.value,
-    image: maybeDirectiveValue<StringValueNode>(directive, 'image')?.value,
-  })),
+  is_root: ['contentType', 'universal'].includes(
+    findStoryblokValue<EnumValueNode>(node, 'type')?.value ?? ''
+  ),
+  is_nestable:
+    findStoryblokValue<EnumValueNode>(node, 'type')?.value !== 'contentType' ??
+    true,
+  icon: ifValue(
+    findStoryblokValue<EnumValueNode>(node, 'icon')?.value,
+    toIconValue
+  ),
+  preview: findStoryblokValue<StringValueNode>(node, 'preview')?.value,
+  color: findStoryblokValue<StringValueNode>(node, 'color')?.value,
+  image: findStoryblokValue<StringValueNode>(node, 'image')?.value,
   component_group_uuid: componentGroup?.attr('uuid'),
   schema: map(toSchema(node, schema)),
 })
@@ -88,20 +82,18 @@ export const toSchema = (
         field.name.value,
         map({
           position,
-          ...ifValue(maybeDirective(field, 'storyblokField'), (directive) => ({
-            translatable: maybeDirectiveValue<BooleanValueNode>(
-              directive,
-              'translatable'
-            )?.value,
-            default_value: maybeDirectiveValue<StringValueNode>(
-              directive,
-              'default'
-            )?.value,
-            no_translate: maybeDirectiveValue<StringValueNode>(
-              directive,
-              'excludeFromExport'
-            )?.value,
-          })),
+          translatable: findStoryblokFieldValue<BooleanValueNode>(
+            field,
+            'translatable'
+          )?.value,
+          default_value: findStoryblokFieldValue<StringValueNode>(
+            field,
+            'default'
+          )?.value,
+          no_translate: findStoryblokFieldValue<StringValueNode>(
+            field,
+            'excludeFromExport'
+          )?.value,
           display_name: sentenceCase(field.name.value),
           required: field.type.kind === 'NonNullType',
           description: field.description?.value,
@@ -137,12 +129,9 @@ const getUniqueDirectiveProps = (
   directiveProp: 'tab' | 'section'
 ) =>
   node.fields
-    ?.map((field) =>
-      ifValue(
-        maybeDirective(field, 'storyblokField'),
-        (directive) =>
-          maybeDirectiveValue<StringValueNode>(directive, directiveProp)?.value
-      )
+    ?.map(
+      (field) =>
+        findStoryblokFieldValue<StringValueNode>(field, directiveProp)?.value
     )
     .filter(uniqueBy((x) => x))
     .filter(isValue)
@@ -150,48 +139,78 @@ const getUniqueDirectiveProps = (
 const toFieldGroupComponentField = (
   node: ObjectTypeDefinitionNode,
   directiveProp: 'tab' | 'section',
-
   name: string
 ): SectionComponentField | TabComponentField => ({
   type: directiveProp,
   display_name: sentenceCase(name),
   keys:
     node.fields
-      ?.filter((field) =>
-        ifValue(
-          maybeDirective(field, 'storyblokField'),
-          (directive) =>
-            maybeDirectiveValue<StringValueNode>(directive, directiveProp)
-              ?.value === name
-        )
+      ?.filter(
+        (field) =>
+          findStoryblokFieldValue<StringValueNode>(field, directiveProp)
+            ?.value === name
       )
       .map((field) => field.name.value) ?? [],
 })
 
 const toArrayComponentField = (
-  prop: FieldDefinitionNode,
+  field: FieldDefinitionNode,
   type: TypeNode,
   schema: GraphQLSchema
 ): OptionsComponentField | MultiassetComponentField | BloksComponentField => {
   const node = schema.getType(typeName(type))
 
+  if (node?.name === 'StoryblokAsset') {
+    return {
+      type: 'multiasset',
+      filetypes:
+        findStoryblokFieldValue<ConstListValueNode>(field, 'filetypes')
+          ?.values.map((v) =>
+            v.kind === 'EnumValue' ? (v.value as 'images') : undefined
+          )
+          .filter(isValue) ?? [],
+    }
+  }
+
   if (isObjectType(node) || isUnionType(node)) {
+    const types = isUnionType(node)
+      ? node.astNode?.types
+          ?.map((t) => schema.getType(t.name.value))
+          .filter(isObjectType)
+          .map((t) => t.astNode!)
+      : [node.astNode!]
+
+    // all types must have a @storyblok(type: contentType) directive
+    const isContentReference = types?.every((node) =>
+      ['contentType', 'universal'].includes(
+        findStoryblokValue<EnumValueNode>(node, 'type')?.value ?? ''
+      )
+    )
+
+    if (isContentReference) {
+      return {
+        type: 'options',
+        source: 'internal_stories',
+        component_whitelist: types?.map((t) => snakeCase(t.name.value)),
+        restrict_components: true,
+        use_uuid: true,
+        folder_slug: findStoryblokFieldValue<StringValueNode>(field, 'folder')
+          ?.value,
+      }
+    }
+
     return {
       type: 'bloks',
-      component_whitelist: isUnionType(node)
-        ? node.astNode?.types?.map((type) => snakeCase(typeName(type)))
-        : [snakeCase(node.name)],
+      component_whitelist: types?.map((t) => snakeCase(t.name.value)),
       restrict_components: true,
-      ...ifValue(maybeDirective(prop, 'storyblokField'), (d) => ({
-        minimum: ifValue(
-          maybeDirectiveValue<IntValueNode>(d, 'minimum')?.value,
-          Number
-        ),
-        maximum: ifValue(
-          maybeDirectiveValue<IntValueNode>(d, 'maximum')?.value,
-          Number
-        ),
-      })),
+      minimum: ifValue(
+        findStoryblokFieldValue<IntValueNode>(field, 'minimum')?.value,
+        Number
+      ),
+      maximum: ifValue(
+        findStoryblokFieldValue<IntValueNode>(field, 'maximum')?.value,
+        Number
+      ),
     }
   }
 
@@ -199,7 +218,7 @@ const toArrayComponentField = (
     return {
       type: 'options',
       options: list(
-        node.astNode.values!.map((value) =>
+        ...node.astNode.values!.map((value) =>
           map({
             name: value.name.value,
             value: value.name.value,
@@ -209,25 +228,11 @@ const toArrayComponentField = (
     }
   }
 
-  if (node?.name === 'StoryblokAsset') {
-    return {
-      type: 'multiasset',
-      ...ifValue(maybeDirective(prop, 'storyblokField'), (d) => ({
-        filetypes:
-          maybeDirectiveValue<ConstListValueNode>(d, 'filetypes')
-            ?.values.map((v) =>
-              v.kind === 'StringValue' ? (v.value as 'images') : undefined
-            )
-            .filter(isValue) ?? [],
-      })),
-    }
-  }
-
   throw new Error(`Unsupported array type ${typeName(type)}`)
 }
 
 const toComponentField = (
-  prop: FieldDefinitionNode,
+  field: FieldDefinitionNode,
   type: TypeNode,
   schema: GraphQLSchema
 ):
@@ -250,7 +255,7 @@ const toComponentField = (
       return {
         type: 'option',
         options: list(
-          node.astNode.values!.map((value) =>
+          ...node.astNode.values!.map((value) =>
             map({
               name: value.name.value,
               value: value.name.value,
@@ -264,40 +269,81 @@ const toComponentField = (
       case 'StoryblokAsset': {
         return {
           type: 'asset',
-          ...ifValue(maybeDirective(prop, 'storyblokField'), (d) => ({
-            filetypes:
-              maybeDirectiveValue<ConstListValueNode>(d, 'filetypes')
-                ?.values.map((v) =>
-                  v.kind === 'StringValue' ? (v.value as 'images') : undefined
-                )
-                .filter(isValue) ?? [],
-          })),
+          filetypes:
+            findStoryblokFieldValue<ConstListValueNode>(field, 'filetypes')
+              ?.values.map((v) =>
+                v.kind === 'EnumValue' ? (v.value as 'images') : undefined
+              )
+              .filter(isValue) ?? [],
         }
       }
       case 'StoryblokLink': {
+        const folder = findStoryblokFieldValue<StringValueNode>(
+          field,
+          'folder'
+        )?.value
+
+        const linkFeatures = findStoryblokFieldValue<ConstListValueNode>(
+          field,
+          'linkFeatures'
+        )
+          ?.values.map((v) => (v.kind === 'EnumValue' ? v.value : undefined))
+          .filter(isValue)
+
+        const components = findStoryblokFieldValue<ConstListValueNode>(
+          field,
+          'linkInternalTypes'
+        )
+          ?.values.map((v) =>
+            v.kind === 'StringValue' ? snakeCase(v.value) : undefined
+          )
+          .filter(isValue)
+
         return {
           type: 'multilink',
-
-          ...ifValue(maybeDirective(prop, 'storyblokField'), (d) => ({
-            filetypes:
-              maybeDirectiveValue<ConstListValueNode>(d, 'filetypes')
-                ?.values.map((v) =>
-                  v.kind === 'StringValue' ? (v.value as 'images') : undefined
-                )
-                .filter(isValue) ?? [],
-          })),
+          link_scope: folder,
+          force_link_scope: Boolean(folder) || undefined,
+          restrict_content_types: Boolean(components?.length) || undefined,
+          component_whitelist: components,
+          // allow_custom_attributes: false,
+          asset_link_type: linkFeatures?.includes('assets') || undefined,
+          allow_target_blank: linkFeatures?.includes('newTab') || undefined,
+          email_link_type: linkFeatures?.includes('email') || undefined,
+          show_anchor: linkFeatures?.includes('anchor') || undefined,
         }
       }
     }
 
-    if (isObjectType(node) || isUnionType(node)) {
+    if (isObjectType(node) || (isUnionType(node) && node.astNode)) {
+      const types = isUnionType(node)
+        ? node.astNode?.types
+            ?.map((t) => schema.getType(t.name.value))
+            .filter(isObjectType)
+            .map((t) => t.astNode!)
+        : [node.astNode!]
+
+      // all types must have a @storyblok(type: contentType) directive
+      const isContentReference = types?.every(
+        (node) =>
+          findStoryblokValue<EnumValueNode>(node, 'type')?.value ===
+          'contentType'
+      )
+
+      if (isContentReference) {
+        return {
+          type: 'option',
+          source: 'internal_stories',
+          component_whitelist: types?.map((t) => snakeCase(t.name.value)),
+          restrict_components: true,
+          use_uuid: true,
+        }
+      }
+
       return {
         type: 'bloks',
-        component_whitelist: isUnionType(node)
-          ? node.astNode?.types?.map((type) => snakeCase(typeName(type)))
-          : [snakeCase(node.name)],
+        component_whitelist: types?.map((t) => snakeCase(t.name.value)),
         restrict_components: true,
-        minimum: prop.type.kind === 'NonNullType' ? 1 : 0,
+        minimum: field.type.kind === 'NonNullType' ? 1 : 0,
         maximum: 1,
       }
     }
@@ -305,16 +351,8 @@ const toComponentField = (
 
   switch (typeName(type)) {
     case 'String': {
-      const directive = maybeDirective(prop, 'storyblokField')
-
-      if (!directive) {
-        return {
-          type: 'text',
-        }
-      }
-
-      const stringType = maybeDirectiveValue<StringValueNode>(
-        directive,
+      const stringType = findStoryblokFieldValue<StringValueNode>(
+        field,
         'format'
       )?.value
 
@@ -322,9 +360,9 @@ const toComponentField = (
         case 'richtext': {
           return {
             type: 'markdown',
-            rtl: maybeDirectiveValue<BooleanValueNode>(directive, 'rtl')?.value,
+            rtl: findStoryblokFieldValue<BooleanValueNode>(field, 'rtl')?.value,
             max_length: ifValue(
-              maybeDirectiveValue<IntValueNode>(directive, 'max')?.value,
+              findStoryblokFieldValue<IntValueNode>(field, 'max')?.value,
               Number
             ),
             rich_markdown: true,
@@ -333,9 +371,9 @@ const toComponentField = (
         case 'markdown': {
           return {
             type: 'markdown',
-            rtl: maybeDirectiveValue<BooleanValueNode>(directive, 'rtl')?.value,
+            rtl: findStoryblokFieldValue<BooleanValueNode>(field, 'rtl')?.value,
             max_length: ifValue(
-              maybeDirectiveValue<IntValueNode>(directive, 'max')?.value,
+              findStoryblokFieldValue<IntValueNode>(field, 'max')?.value,
               Number
             ),
           }
@@ -343,9 +381,9 @@ const toComponentField = (
         case 'textarea': {
           return {
             type: 'textarea',
-            rtl: maybeDirectiveValue<BooleanValueNode>(directive, 'rtl')?.value,
+            rtl: findStoryblokFieldValue<BooleanValueNode>(field, 'rtl')?.value,
             max_length: ifValue(
-              maybeDirectiveValue<IntValueNode>(directive, 'max')?.value,
+              findStoryblokFieldValue<IntValueNode>(field, 'max')?.value,
               Number
             ),
           }
@@ -353,12 +391,12 @@ const toComponentField = (
         default: {
           return {
             type: 'text',
-            rtl: maybeDirectiveValue<BooleanValueNode>(directive, 'rtl')?.value,
+            rtl: findStoryblokFieldValue<BooleanValueNode>(field, 'rtl')?.value,
             max_length: ifValue(
-              maybeDirectiveValue<IntValueNode>(directive, 'max')?.value,
+              findStoryblokFieldValue<IntValueNode>(field, 'max')?.value,
               Number
             ),
-            regex: maybeDirectiveValue<IntValueNode>(directive, 'regex')?.value,
+            regex: findStoryblokFieldValue<IntValueNode>(field, 'regex')?.value,
           }
         }
       }
@@ -372,24 +410,22 @@ const toComponentField = (
     case 'Float':
       return {
         type: 'number',
-        ...ifValue(maybeDirective(prop, 'storyblokField'), (d) => ({
-          decimals_value: ifValue(
-            maybeDirectiveValue<StringValueNode>(d, 'decimals')?.value,
-            Number
-          ),
-          steps_value: ifValue(
-            maybeDirectiveValue<StringValueNode>(d, 'steps')?.value,
-            Number
-          ),
-          min_value: ifValue(
-            maybeDirectiveValue<IntValueNode>(d, 'min')?.value,
-            Number
-          ),
-          max_value: ifValue(
-            maybeDirectiveValue<IntValueNode>(d, 'max')?.value,
-            Number
-          ),
-        })),
+        decimals_value: ifValue(
+          findStoryblokFieldValue<StringValueNode>(field, 'decimals')?.value,
+          Number
+        ),
+        steps_value: ifValue(
+          findStoryblokFieldValue<StringValueNode>(field, 'steps')?.value,
+          Number
+        ),
+        min_value: ifValue(
+          findStoryblokFieldValue<IntValueNode>(field, 'min')?.value,
+          Number
+        ),
+        max_value: ifValue(
+          findStoryblokFieldValue<IntValueNode>(field, 'max')?.value,
+          Number
+        ),
       }
     case 'Date': {
       return {

@@ -67,3 +67,37 @@ type Article @storyblok {
   content: String @storyblokField(format: markdown, translatable: true)
 }
 ```
+
+## Advanced examples
+
+### Tabs and Sections
+
+Fields can be grouped into tabs and/or sections with corresponding storyblokField arguments.
+
+```graphql
+type A @storyblok {
+  a: String @storyblokField(tab: "my-tab")
+  b: String @storyblokField(tab: "my-tab")
+  c: String @storyblokField(section: "my-section")
+}
+```
+
+### Story Option Type
+
+A story option type renders a dropdown list with available stories.
+
+To create an option field with a story reference, create a field that references to `contentType` or `universal`.
+
+```graphql
+type A @storyblok {
+  story: Story @storyblokField(folder: "{0}/some-folder")
+}
+
+type Story @storyblok(type: contentType) {
+  name: String @storyblokField
+}
+```
+
+Similarly, you'll get an options field if you provide an array.
+Furthermore, the reference may also be a union type.
+But if so, all types of the union type must either be a `contentType` or a `universal` type.

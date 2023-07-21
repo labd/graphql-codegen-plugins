@@ -1,0 +1,17 @@
+type Story @storyblok(type: contentType) {
+  simpleLink: StoryblokLink @storyblokField
+  fullFeatureLink: StoryblokLink!
+    @storyblokField(
+      folder: "test"
+      linkFeatures: [newTab, email, anchor, assets]
+      linkInternalTypes: ["StoryA", "StoryB"]
+    )
+}
+
+type StoryA @storyblok(type: contentType) {
+  name: String @storyblokField
+}
+
+type StoryB @storyblok(type: contentType) {
+  name: String @storyblokField
+}

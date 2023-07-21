@@ -1,37 +1,33 @@
 import {
   DefinitionNode,
-  DirectiveNode,
   FieldDefinitionNode,
   NamedTypeNode,
   ObjectTypeDefinitionNode,
-  ObjectValueNode,
   TypeDefinitionNode,
   TypeNode,
   ValueNode,
 } from 'graphql'
 
+export const findStoryblokFieldValue = <T extends ValueNode>(
+  symbol: FieldDefinitionNode,
+  argument: string
+) =>
+  symbol.directives
+    ?.find((t) => t.name.value === 'storyblokField')
+    ?.arguments?.find((t) => t.name.value === argument)?.value as T | undefined
+
+export const findStoryblokValue = <T extends ValueNode>(
+  symbol: TypeDefinitionNode,
+  argument: string
+) =>
+  symbol.directives
+    ?.find((t) => t.name.value === 'storyblok')
+    ?.arguments?.find((t) => t.name.value === argument)?.value as T | undefined
+
 export const hasDirective = (
   symbol: FieldDefinitionNode | TypeDefinitionNode,
   name: string
 ) => symbol.directives?.some((t) => t.name.value === name)
-
-export const maybeDirective = (
-  symbol: FieldDefinitionNode | TypeDefinitionNode,
-  name: string
-) => symbol.directives?.find((t) => t.name.value === name)
-
-export const maybeDirectiveValue = <T extends ValueNode>(
-  directive: DirectiveNode,
-  argument: string
-) =>
-  directive?.arguments?.find((t) => t.name.value === argument)?.value as
-    | T
-    | undefined
-
-export const maybeFieldValue = <T extends ValueNode>(
-  node: ObjectValueNode,
-  field: string
-) => node.fields.find((f) => f.name.value === field)?.value as T | undefined
 
 export const isObjectTypeDefinitionNode = (
   definitionNode: DefinitionNode

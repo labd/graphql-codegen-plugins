@@ -6,6 +6,7 @@ export type Component = {
   is_root?: boolean
   is_nestable?: boolean
   image?: string
+  preview?: string
   component_group_uuid?: Attribute
   schema: Map //  Record<string, ComponentField>
   color?: string
@@ -94,6 +95,15 @@ export type OptionsComponentField = ComponentFieldBase & {
   external_datasource?: string
   /** only if source is 'internal' */
   datasource_slug?: string
+  /** only if source is 'internal_stories'
+   * @default true */
+  use_uuid?: boolean
+  /** only if source is 'internal_stories' */
+  restrict_components?: boolean
+  /** only if source is 'internal_stories' */
+  component_whitelist?: string[]
+  /** only if source is 'internal_stories' */
+  folder_slug?: string
 }
 
 export type OptionComponentField = ComponentFieldBase & {
@@ -108,6 +118,12 @@ export type OptionComponentField = ComponentFieldBase & {
   /** only if source is 'internal_stories'
    * @default true */
   use_uuid?: boolean
+  /** only if source is 'internal_stories' */
+  restrict_components?: boolean
+  /** only if source is 'internal_stories' */
+  component_whitelist?: string[]
+  /** only if source is 'internal_stories' */
+  folder_slug?: string
 }
 
 export type AssetComponentField = ComponentFieldBase & {
@@ -124,6 +140,13 @@ export type MultilinkComponentField = ComponentFieldBase & {
   type: 'multilink'
   restrict_content_types?: boolean
   component_whitelist?: string[]
+  link_scope?: string
+  force_link_scope?: boolean
+  allow_custom_attributes?: boolean
+  asset_link_type?: boolean
+  allow_target_blank?: boolean
+  email_link_type?: boolean
+  show_anchor?: boolean
 }
 
 export type SectionComponentField = {

@@ -95,16 +95,15 @@ resource "storyblok_component" "base" {
       display_name = "Image"
       required     = true
       type         = "asset"
+      filetypes = [
+        "images"
+      ]
     }
     assets = {
       position     = 14
       display_name = "Assets"
       required     = false
-      type         = "bloks"
-      component_whitelist = [
-        "storyblok_asset"
-      ]
-      restrict_components = true
+      type         = "multiasset"
     }
     option = {
       position     = 15
@@ -112,16 +111,14 @@ resource "storyblok_component" "base" {
       required     = false
       type         = "option"
       options = [
-        [
-          {
-            name  = "a"
-            value = "a"
-          },
-          {
-            name  = "b"
-            value = "b"
-          }
-        ]
+        {
+          name  = "a"
+          value = "a"
+        },
+        {
+          name  = "b"
+          value = "b"
+        }
       ]
     }
     options = {
@@ -130,16 +127,14 @@ resource "storyblok_component" "base" {
       required     = false
       type         = "options"
       options = [
-        [
-          {
-            name  = "a"
-            value = "a"
-          },
-          {
-            name  = "b"
-            value = "b"
-          }
-        ]
+        {
+          name  = "a"
+          value = "a"
+        },
+        {
+          name  = "b"
+          value = "b"
+        }
       ]
     }
     blok = {

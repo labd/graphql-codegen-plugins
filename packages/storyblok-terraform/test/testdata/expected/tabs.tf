@@ -16,8 +16,22 @@ resource "storyblok_component" "a" {
       required     = false
       type         = "text"
     }
-    tabA = {
+    tabBSectionProp = {
       position     = 2
+      display_name = "Tab b section prop"
+      required     = false
+      type         = "text"
+    }
+    sectionS = {
+      position     = 3
+      type         = "section"
+      display_name = "S"
+      keys = [
+        "tabBSectionProp"
+      ]
+    }
+    tabA = {
+      position     = 4
       type         = "tab"
       display_name = "A"
       keys = [
@@ -25,11 +39,13 @@ resource "storyblok_component" "a" {
       ]
     }
     tabB = {
-      position     = 3
+      position     = 5
       type         = "tab"
       display_name = "B"
       keys = [
-        "tabBProp"
+        "tabBProp",
+        "tabBSectionProp",
+        "sectionS"
       ]
     }
   }

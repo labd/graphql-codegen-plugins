@@ -10,11 +10,10 @@ resource "storyblok_component" "story" {
       required     = true
       type         = "option"
       source       = "internal_stories"
-      component_whitelist = [
+      filter_content_type = [
         "story_a"
       ]
-      restrict_components = true
-      use_uuid            = true
+      use_uuid = true
     }
     stories = {
       position     = 1
@@ -22,11 +21,10 @@ resource "storyblok_component" "story" {
       required     = false
       type         = "options"
       source       = "internal_stories"
-      component_whitelist = [
+      filter_content_type = [
         "story_a"
       ]
-      restrict_components = true
-      use_uuid            = true
+      use_uuid = true
     }
     union = {
       position     = 2
@@ -34,12 +32,11 @@ resource "storyblok_component" "story" {
       required     = false
       type         = "option"
       source       = "internal_stories"
-      component_whitelist = [
+      filter_content_type = [
         "story_a",
         "story_b"
       ]
-      restrict_components = true
-      use_uuid            = true
+      use_uuid = true
     }
     unions = {
       position     = 3
@@ -47,12 +44,11 @@ resource "storyblok_component" "story" {
       required     = false
       type         = "options"
       source       = "internal_stories"
-      component_whitelist = [
+      filter_content_type = [
         "story_a",
         "story_b"
       ]
-      restrict_components = true
-      use_uuid            = true
+      use_uuid = true
     }
   }
 }

@@ -99,9 +99,7 @@ export type OptionsComponentField = ComponentFieldBase & {
    * @default true */
   use_uuid?: boolean
   /** only if source is 'internal_stories' */
-  restrict_components?: boolean
-  /** only if source is 'internal_stories' */
-  component_whitelist?: string[]
+  filter_content_type?: string[]
   /** only if source is 'internal_stories' */
   folder_slug?: string
 }
@@ -119,9 +117,7 @@ export type OptionComponentField = ComponentFieldBase & {
    * @default true */
   use_uuid?: boolean
   /** only if source is 'internal_stories' */
-  restrict_components?: boolean
-  /** only if source is 'internal_stories' */
-  component_whitelist?: string[]
+  filter_content_type?: string[]
   /** only if source is 'internal_stories' */
   folder_slug?: string
 }

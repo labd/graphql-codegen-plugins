@@ -1,4 +1,5 @@
 type A @storyblok {
   tabAProp: String @storyblokField(tab: "a")
   tabBProp: String @storyblokField(tab: "b")
+  tabBSectionProp: String @storyblokField(tab: "b", section: "s")
 }

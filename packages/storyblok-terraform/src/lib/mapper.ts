@@ -104,22 +104,22 @@ export const toSchema = (
         }),
       ]) ?? []),
     // Sections
-    ...(getUniqueDirectiveProps(node, 'section')?.map((tabName, position) => [
-      camelCase(`section ${tabName}`),
+    ...(getUniqueDirectiveProps(node, 'section')?.map((name, position) => [
+      camelCase(`section ${name}`),
       map({
         position: position + (node.fields?.length ?? 0),
-        ...toFieldGroupComponentField(node, 'section', tabName),
+        ...toFieldGroupComponentField(node, 'section', name),
       }),
     ]) ?? []),
     // Tabs
-    ...(getUniqueDirectiveProps(node, 'tab')?.map((tabName, position) => [
-      camelCase(`tab ${tabName}`),
+    ...(getUniqueDirectiveProps(node, 'tab')?.map((name, position) => [
+      camelCase(`tab ${name}`),
       map({
         position:
           position +
           (getUniqueDirectiveProps(node, 'section')?.length ?? 0) +
           (node.fields?.length ?? 0),
-        ...toFieldGroupComponentField(node, 'tab', tabName),
+        ...toFieldGroupComponentField(node, 'tab', name),
       }),
     ]) ?? []),
   ])
@@ -143,14 +143,36 @@ const toFieldGroupComponentField = (
 ): SectionComponentField | TabComponentField => ({
   type: directiveProp,
   display_name: sentenceCase(name),
-  keys:
-    node.fields
+  keys: [
+    // get all tab or section field names
+    ...(node.fields
       ?.filter(
         (field) =>
           findStoryblokFieldValue<StringValueNode>(field, directiveProp)
             ?.value === name
       )
-      .map((field) => field.name.value) ?? [],
+      .map((field) => field.name.value) ?? []),
+    // special case for sections in tabs: add section field names for this tab
+    ...(directiveProp === 'tab'
+      ? [
+          ...(
+            node.fields?.filter(
+              (field) =>
+                findStoryblokFieldValue<StringValueNode>(field, 'tab')
+                  ?.value === name &&
+                findStoryblokFieldValue<StringValueNode>(field, 'section')
+            ) ?? []
+          )
+            .map(
+              (field) =>
+                findStoryblokFieldValue<StringValueNode>(field, 'section')
+                  ?.value
+            )
+            .map((name) => camelCase(`section ${name}`))
+            .filter(uniqueBy((x) => x)),
+        ]
+      : []),
+  ],
 })
 
 const toArrayComponentField = (
@@ -191,8 +213,7 @@ const toArrayComponentField = (
       return {
         type: 'options',
         source: 'internal_stories',
-        component_whitelist: types?.map((t) => snakeCase(t.name.value)),
-        restrict_components: true,
+        filter_content_type: types?.map((t) => snakeCase(t.name.value)),
         use_uuid: true,
         folder_slug: findStoryblokFieldValue<StringValueNode>(field, 'folder')
           ?.value,
@@ -333,8 +354,9 @@ const toComponentField = (
         return {
           type: 'option',
           source: 'internal_stories',
-          component_whitelist: types?.map((t) => snakeCase(t.name.value)),
-          restrict_components: true,
+          filter_content_type: types?.map((t) => snakeCase(t.name.value)),
+          folder_slug: findStoryblokFieldValue<StringValueNode>(field, 'folder')
+            ?.value,
           use_uuid: true,
         }
       }

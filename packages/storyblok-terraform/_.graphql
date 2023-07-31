@@ -1,0 +1,4 @@
+# This file is needed for graphql intellisense
+type Query {
+  _: Int
+}

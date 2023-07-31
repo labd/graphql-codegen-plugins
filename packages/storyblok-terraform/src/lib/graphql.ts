@@ -1,6 +1,8 @@
+import { pascalCase } from 'change-case'
 import {
   DefinitionNode,
   FieldDefinitionNode,
+  Kind,
   NamedTypeNode,
   ObjectTypeDefinitionNode,
   TypeDefinitionNode,
@@ -29,11 +31,6 @@ export const hasDirective = (
   name: string
 ) => symbol.directives?.some((t) => t.name.value === name)
 
-export const isObjectTypeDefinitionNode = (
-  definitionNode: DefinitionNode
-): definitionNode is ObjectTypeDefinitionNode =>
-  definitionNode.kind === 'ObjectTypeDefinition'
-
 export const typeName = (type: TypeNode): string => namedType(type).name.value
 
 export const namedType = (type: TypeNode): NamedTypeNode => {
@@ -61,3 +58,15 @@ export const switchArray = <T>(
     : type.kind === 'NonNullType' && type.type.kind === 'ListType'
     ? ifArray(type.type.type)
     : other(type)
+
+export const isObjectTypeDefinitionNode = (
+  node: DefinitionNode
+): node is ObjectTypeDefinitionNode => node.kind === Kind.OBJECT_TYPE_DEFINITION
+
+export const storyblokComponentExists = (
+  componentName: string,
+  definitions: TypeDefinitionNode[]
+) =>
+  definitions.some(
+    (definition) => definition.name.value === pascalCase(componentName)
+  )

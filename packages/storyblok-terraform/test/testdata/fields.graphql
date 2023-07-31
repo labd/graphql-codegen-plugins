@@ -1,5 +1,5 @@
 type Base @storyblok {
-  text: String! @storyblokField(max: 4)
+  text: String! @storyblokField(max: 4, displayName: "The Text")
   textarea: String! @storyblokField(format: textarea)
   markdown: String! @storyblokField(format: markdown)
   richtext: String! @storyblokField(format: richtext)
@@ -18,9 +18,9 @@ type Base @storyblok {
   image: StoryblokAsset! @storyblokField(filetypes: [images])
   assets: [StoryblokAsset!] @storyblokField
   option: Option @storyblokField
-  options: [Option!] @storyblokField
+  options: [Option!] @storyblokField(min: 1, max: 2)
   blok: A @storyblokField
-  bloks: [B] @storyblokField
+  bloks: [B] @storyblokField(min: 2, max: 4)
   unionBlok: Union @storyblokField
   unionBloks: [Union!] @storyblokField
   ignored: String

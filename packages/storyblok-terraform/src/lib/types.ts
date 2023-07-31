@@ -7,6 +7,7 @@ export type Component = {
   is_nestable?: boolean
   image?: string
   preview?: string
+  preview_tmpl?: string
   component_group_uuid?: Attribute
   schema: Map //  Record<string, ComponentField>
   color?: string
@@ -102,6 +103,8 @@ export type OptionsComponentField = ComponentFieldBase & {
   filter_content_type?: string[]
   /** only if source is 'internal_stories' */
   folder_slug?: string
+  minimum?: number
+  maximum?: number
 }
 
 export type OptionComponentField = ComponentFieldBase & {

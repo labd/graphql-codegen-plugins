@@ -71,18 +71,24 @@ enum LinkFeatures {
 
 # Object directives
 directive @storyblok(
+  "Use the name of the component group. E.g. 'Page Blocks'."
   componentGroup: String
+  "Whether the component will be a content type or a nestable blok. Defaults to 'nestable'."
   type: BlockType
+  "A url to an example image."
   image: String
+  "Either a field name or a preview template. E.g. 'title' or '{{title}} - {{description}}'. For more info see https://www.storyblok.com/docs/schema-configuration#preview-template"
   preview: String
+  "The icon used for the component in the sidebar. E.g. 'block_text_r'. For more info see https://www.storyblok.com/docs/schema-configuration#icon"
   icon: BlockIcon
+  "A css color used as background for the block icon. E.g. '#000000' or 'red'"
   color: String
 ) on OBJECT
 
 # Field directives
 directive @storyblokField(
   translatable: Boolean
-  previewField: Boolean
+  displayName: String
   default: String
   min: Int
   max: Int

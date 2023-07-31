@@ -10,7 +10,7 @@ type ContentType @storyblok(type: contentType) {
   name: String @storyblokField
 }
 
-type Nestable @storyblok(type: nested) {
+type Nestable @storyblok(type: nestable) {
   name: String @storyblokField
 }
 
@@ -24,7 +24,7 @@ type Group
     image: "https://www.example.com/image.jpg"
     icon: block_email
     color: "#ff0000"
-    preview: "{{ name }}"
+    preview: "name"
   ) {
   name: String @storyblokField
 }

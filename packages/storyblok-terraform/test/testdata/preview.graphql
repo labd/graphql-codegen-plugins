@@ -1,0 +1,8 @@
+type A @storyblok(preview: "name") {
+  name: String @storyblokField
+}
+
+type B @storyblok(preview: "{{name}} - {{description}}") {
+  name: String @storyblokField
+  description: String @storyblokField
+}

@@ -6,7 +6,7 @@ resource "storyblok_component" "base" {
   schema = {
     text = {
       position     = 0
-      display_name = "Text"
+      display_name = "The Text"
       required     = true
       type         = "text"
       max_length   = 4
@@ -136,6 +136,8 @@ resource "storyblok_component" "base" {
           value = "b"
         }
       ]
+      minimum = 1
+      maximum = 2
     }
     blok = {
       position     = 17
@@ -158,6 +160,8 @@ resource "storyblok_component" "base" {
         "b"
       ]
       restrict_components = true
+      minimum             = 2
+      maximum             = 4
     }
     unionBlok = {
       position     = 19

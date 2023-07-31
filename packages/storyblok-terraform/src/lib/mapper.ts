@@ -60,12 +60,22 @@ export const toComponent = (
     findStoryblokValue<EnumValueNode>(node, 'icon')?.value,
     toIconValue
   ),
-  preview: findStoryblokValue<StringValueNode>(node, 'preview')?.value,
   color: findStoryblokValue<StringValueNode>(node, 'color')?.value,
   image: findStoryblokValue<StringValueNode>(node, 'image')?.value,
   component_group_uuid: componentGroup?.attr('uuid'),
   schema: map(toSchema(node, schema)),
+  ...previewField(node),
 })
+
+const previewField = (node: ObjectTypeDefinitionNode) => {
+  const value = findStoryblokValue<StringValueNode>(node, 'preview')?.value
+
+  return !value
+    ? {}
+    : node.fields?.some((f) => f.name.value === value)
+    ? { preview_field: snakeCase(value) }
+    : { preview_tmpl: value }
+}
 
 const toIconValue = (value: string) =>
   value === 'block_at' ? 'block-@' : value.replace(/_/g, '-')
@@ -94,7 +104,9 @@ export const toSchema = (
             field,
             'excludeFromExport'
           )?.value,
-          display_name: sentenceCase(field.name.value),
+          display_name:
+            findStoryblokFieldValue<StringValueNode>(field, 'displayName')
+              ?.value ?? sentenceCase(field.name.value),
           required: field.type.kind === 'NonNullType',
           description: field.description?.value,
           ...switchArray<ComponentField>(field.type, {
@@ -225,11 +237,11 @@ const toArrayComponentField = (
       component_whitelist: types?.map((t) => snakeCase(t.name.value)),
       restrict_components: true,
       minimum: ifValue(
-        findStoryblokFieldValue<IntValueNode>(field, 'minimum')?.value,
+        findStoryblokFieldValue<IntValueNode>(field, 'min')?.value,
         Number
       ),
       maximum: ifValue(
-        findStoryblokFieldValue<IntValueNode>(field, 'maximum')?.value,
+        findStoryblokFieldValue<IntValueNode>(field, 'max')?.value,
         Number
       ),
     }
@@ -245,6 +257,14 @@ const toArrayComponentField = (
             value: value.name.value,
           })
         )
+      ),
+      minimum: ifValue(
+        findStoryblokFieldValue<IntValueNode>(field, 'min')?.value,
+        Number
+      ),
+      maximum: ifValue(
+        findStoryblokFieldValue<IntValueNode>(field, 'max')?.value,
+        Number
       ),
     }
   }

@@ -18,17 +18,21 @@ resource "storyblok_component" "base" {
       type         = "textarea"
     }
     markdown = {
-      position     = 2
-      display_name = "Markdown"
-      required     = true
-      type         = "markdown"
-    }
-    richtext = {
-      position      = 3
-      display_name  = "Richtext"
+      position      = 2
+      display_name  = "Markdown"
       required      = true
       type          = "markdown"
       rich_markdown = true
+    }
+    richtext = {
+      position     = 3
+      display_name = "Richtext"
+      required     = true
+      type         = "richtext"
+      component_whitelist = [
+        "a",
+        "b"
+      ]
     }
     optionalRegexText = {
       position     = 4

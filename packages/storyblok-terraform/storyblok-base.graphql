@@ -69,6 +69,67 @@ enum LinkFeatures {
   email
 }
 
+enum TextToolbarItem {
+  "Richtext only"
+  anchor
+  "Richtext only"
+  blok
+  bold
+  code
+  "Richtext only"
+  color
+  "Richtext only"
+  copy
+  "Richtext only"
+  cut
+  "Richtext only"
+  emoji
+  h1
+  h2
+  h3
+  h4
+  h5
+  h6
+  "Richtext only"
+  highlight
+  "Markdown only"
+  help
+  hrule
+  image
+  inlinecode
+  italic
+  link
+  list
+  olist
+  paragraph
+  "Richtext only"
+  paste_action
+  "Richtext only"
+  paste
+  quote
+  "Richtext only"
+  redo
+  "Richtext only"
+  strike
+  "Richtext only"
+  subscript
+  "Richtext only"
+  superscript
+  "Markdown only"
+  toggle_richtext
+  "Richtext only"
+  underline
+  "Richtext only"
+  undo
+}
+
+enum StoryblokLinkType {
+  external
+  asset
+  internal
+  email
+}
+
 # Object directives
 directive @storyblok(
   "Use the name of the component group. E.g. 'Page Blocks'."
@@ -98,13 +159,15 @@ directive @storyblokField(
   custom: String
   excludeFromExport: Boolean
   steps: Int
+  toolbarItems: [TextToolbarItem!]
   decimals: Int
   tab: String
   section: String
   folder: String
+  "For StoryblokLinks. `linkFeatures: [newTab]` can also be used for `format: richtext`"
   linkFeatures: [LinkFeatures!]
-  "A list of story names. E.g. ['ContentPage', 'Article'] "
-  linkInternalTypes: [String!]
+  "A list of story names. E.g. ['ContentPage', 'Article']"
+  blokTypes: [String!]
 ) on FIELD_DEFINITION
 
 type StoryblokAsset {
@@ -113,13 +176,6 @@ type StoryblokAsset {
   name: String
   isExternalUrl: Boolean
   title: String
-}
-
-enum StoryblokLinkType {
-  external
-  asset
-  internal
-  email
 }
 
 type StoryblokLink {

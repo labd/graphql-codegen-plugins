@@ -12,7 +12,7 @@
     ".": "./dist/index.js",
     "./resolvers": "./dist/resolvers.js"
   },
-  "version": "0.4.2",
+  "version": "0.5.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "typesVersions": {

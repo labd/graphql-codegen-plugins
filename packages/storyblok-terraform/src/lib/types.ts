@@ -20,6 +20,7 @@ export type ComponentField =
   | TextComponentField
   | TextareaComponentField
   | MarkdownComponentField
+  | RichtextComponentField
   | NumberComponentField
   | DatetimeComponentField
   | BooleanComponentField
@@ -66,6 +67,18 @@ export type MarkdownComponentField = ComponentFieldBase & {
   max_length?: number
   rtl?: boolean
   rich_markdown?: boolean
+  toolbar?: string[]
+  customize_toolbar?: boolean
+}
+
+export type RichtextComponentField = ComponentFieldBase & {
+  type: 'richtext'
+  max_length?: number
+  rtl?: boolean
+  toolbar?: string[]
+  customize_toolbar?: boolean
+  allow_target_blank?: boolean
+  component_whitelist?: string[]
 }
 
 export type NumberComponentField = ComponentFieldBase & {

@@ -2,7 +2,7 @@ type Base @storyblok {
   text: String! @storyblokField(max: 4, displayName: "The Text")
   textarea: String! @storyblokField(format: textarea)
   markdown: String! @storyblokField(format: markdown)
-  richtext: String! @storyblokField(format: richtext)
+  richtext: String! @storyblokField(format: richtext, blokTypes: ["A", "B"])
 
   optionalRegexText: String @storyblokField(regex: "/[\\w\\-]+")
   integer: Int! @storyblokField(min: 2, max: 10)

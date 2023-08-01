@@ -1,4 +1,4 @@
-import { camelCase, sentenceCase, snakeCase } from 'change-case'
+import { camelCase, paramCase, sentenceCase, snakeCase } from 'change-case'
 import {
   BooleanValueNode,
   ConstListValueNode,
@@ -35,6 +35,7 @@ import {
   NumberComponentField,
   OptionComponentField,
   OptionsComponentField,
+  RichtextComponentField,
   SectionComponentField,
   TabComponentField,
   TextComponentField,
@@ -281,6 +282,7 @@ const toComponentField = (
   | TextComponentField
   | TextareaComponentField
   | MarkdownComponentField
+  | RichtextComponentField
   | NumberComponentField
   | DatetimeComponentField
   | BooleanComponentField
@@ -333,7 +335,7 @@ const toComponentField = (
 
         const components = findStoryblokFieldValue<ConstListValueNode>(
           field,
-          'linkInternalTypes'
+          'blokTypes'
         )
           ?.values.map((v) =>
             v.kind === 'StringValue' ? snakeCase(v.value) : undefined
@@ -400,6 +402,56 @@ const toComponentField = (
 
       switch (stringType) {
         case 'richtext': {
+          const components = findStoryblokFieldValue<ConstListValueNode>(
+            field,
+            'blokTypes'
+          )
+            ?.values.map((v) =>
+              v.kind === 'StringValue' ? snakeCase(v.value) : undefined
+            )
+            .filter(isValue)
+            .filter(uniqueBy((x) => x))
+
+          const toolbar = findStoryblokFieldValue<ConstListValueNode>(
+            field,
+            'toolbar'
+          )
+            ?.values.map((v) =>
+              v.kind === 'EnumValue' ? paramCase(v.value) : undefined
+            )
+            .concat(components?.length ? ['blok'] : undefined)
+            .filter(isValue)
+            .filter(uniqueBy((x) => x))
+
+          return {
+            type: 'richtext',
+            rtl: findStoryblokFieldValue<BooleanValueNode>(field, 'rtl')?.value,
+            max_length: ifValue(
+              findStoryblokFieldValue<IntValueNode>(field, 'max')?.value,
+              Number
+            ),
+            customize_toolbar: Boolean(toolbar) || undefined,
+            toolbar,
+            allow_target_blank:
+              findStoryblokFieldValue<ConstListValueNode>(
+                field,
+                'linkFeatures'
+              )?.values.some(
+                (v) => v.kind === 'EnumValue' && v.value === 'newTab'
+              ) || undefined,
+            component_whitelist: components,
+          }
+        }
+        case 'markdown': {
+          const toolbar = findStoryblokFieldValue<ConstListValueNode>(
+            field,
+            'toolbar'
+          )
+            ?.values.map((v) =>
+              v.kind === 'EnumValue' ? paramCase(v.value) : undefined
+            )
+            .filter(isValue)
+
           return {
             type: 'markdown',
             rtl: findStoryblokFieldValue<BooleanValueNode>(field, 'rtl')?.value,
@@ -408,16 +460,8 @@ const toComponentField = (
               Number
             ),
             rich_markdown: true,
-          }
-        }
-        case 'markdown': {
-          return {
-            type: 'markdown',
-            rtl: findStoryblokFieldValue<BooleanValueNode>(field, 'rtl')?.value,
-            max_length: ifValue(
-              findStoryblokFieldValue<IntValueNode>(field, 'max')?.value,
-              Number
-            ),
+            customize_toolbar: Boolean(toolbar) || undefined,
+            toolbar,
           }
         }
         case 'textarea': {

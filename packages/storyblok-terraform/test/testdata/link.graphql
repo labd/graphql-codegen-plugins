@@ -4,7 +4,7 @@ type Story @storyblok(type: contentType) {
     @storyblokField(
       folder: "test"
       linkFeatures: [newTab, email, anchor, assets]
-      linkInternalTypes: ["StoryA", "StoryB"]
+      blokTypes: ["StoryA", "StoryB"]
     )
 }
 

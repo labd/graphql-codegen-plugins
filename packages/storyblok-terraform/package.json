@@ -9,10 +9,10 @@
     "storyblok-base.graphql"
   ],
   "exports": {
-    ".": "./dist/index.mjs",
-    "./resolvers": "./dist/resolvers.mjs"
+    ".": "./dist/index.js",
+    "./resolvers": "./dist/resolvers.js"
   },
-  "version": "0.4.0",
+  "version": "0.4.1",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "typesVersions": {

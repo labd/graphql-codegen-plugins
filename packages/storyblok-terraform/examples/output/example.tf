@@ -32,12 +32,16 @@ resource "storyblok_component" "banner_block" {
   space_id    = 123
   is_root     = false
   is_nestable = true
+  icon        = "block-image"
   schema = {
     image = {
       position     = 0
       display_name = "Image"
       required     = true
       type         = "asset"
+      filetypes = [
+        "image"
+      ]
     }
     link = {
       position     = 1
@@ -77,34 +81,38 @@ resource "storyblok_component" "page" {
   is_root     = true
   is_nestable = false
   schema = {
-    seoDescription = {
+    blocks = {
       position     = 0
+      display_name = "Blocks"
+      required     = false
+      type         = "bloks"
+      component_whitelist = [
+        "markdown_block",
+        "banner_block"
+      ]
+      restrict_components = true
+    }
+    seoDescription = {
+      position     = 1
       translatable = true
       display_name = "Seo description"
       required     = false
       type         = "text"
     }
     seoTitle = {
-      position     = 1
+      position     = 2
       translatable = true
       display_name = "Seo title"
       required     = false
       type         = "text"
     }
-    slug = {
-      position     = 2
-      translatable = true
-      display_name = "Slug"
-      required     = false
-      type         = "text"
-    }
-    pageMeta = {
+    sectionSeo = {
+      position     = 3
       type         = "section"
-      display_name = "Page meta"
+      display_name = "SEO"
       keys = [
-        "seoTitle",
         "seoDescription",
-        "slug"
+        "seoTitle"
       ]
     }
   }

@@ -1,5 +1,5 @@
 # For root content types, add the `@storyblok(type: contentType)` directive
-type Page implements PageMeta @storyblok(type: contentType) {
+type Page @storyblok(type: contentType) {
   # Add a `@storyblokField` directive to add extra configuration for a field such as translations
   seoTitle: String @storyblokField(translatable: true, section: "SEO")
   seoDescription: String @storyblokField(translatable: true, section: "SEO")
@@ -17,7 +17,7 @@ type MarkdownBlock @storyblok {
 type BannerBlock @storyblok(icon: block_image) {
   title: String @storyblokField(translatable: true)
   link: StoryblokLink @storyblokField
-  image: StoryblokAsset! @storyblokField(filetypes: [image])
+  image: StoryblokAsset! @storyblokField(filetypes: [images])
 }
 
 type ProductListBlock @storyblok {

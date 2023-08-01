@@ -101,3 +101,60 @@ type Story @storyblok(type: contentType) {
 Similarly, you'll get an options field if you provide an array.
 Furthermore, the reference may also be a union type.
 But if so, all types of the union type must either be a `contentType` or a `universal` type.
+
+# Your resolvers file
+
+This repository also contains a set of resolvers that can be used to do a couple of things:
+
+- resolve internal and external links
+- resolve an `id` field (based on the `_uid` field)
+- resolve single blok fields
+- resolve rich text as a serialized JSON string
+- resolve union types
+- resolve stories for single and multiple option fields
+
+## Usage
+
+```ts
+import { logger } from '@commerce-backend/observability'
+import { mergeResolvers } from '@graphql-tools/merge'
+import {
+  storyblokResolvers,
+  updateContext,
+} from 'storyblok-graphql-codegen-terraform/resolvers'
+import StoryblokClient from 'storyblok-js-client'
+import { typeDefs } from './typedefs.js'
+
+const client = new StoryblokClient({
+  accessToken: process.env.STORYBLOK_ACCESS_TOKEN,
+})
+
+export const customResolvers = {
+  Query: {
+    contentPage: (_parent, args, context, _info) =>
+      client
+        .get(`cdn/stories/pages/${args.path}`, {
+          resolve_links: 'url', // this is required for the link resolver to work
+          resolve_relations: ['content_page.usps'], // TODO: make this dynamic
+        })
+        // Use the update context so the resolvers can resolve links and story options
+        .then(updateContext(context))
+        .then((response) => ({
+          ...response.data?.story.content,
+          pageId: response.data?.story.id,
+        })),
+  },
+}
+
+const resolvers = mergeResolvers([
+  // include all storyblok resolvers
+  storyblokResolvers(typeDefs, {
+    // optionally modify the relative story paths for the link resolver
+    slugResolver: (fullPath) => fullPath.split('/pages/')?.[1] ?? fullPath,
+  }),
+  // add your own resolvers
+  customResolvers,
+])
+
+export default resolvers
+```

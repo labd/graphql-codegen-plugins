@@ -253,7 +253,7 @@ const toArrayComponentField = (
       options: list(
         ...node.astNode.values!.map((value) =>
           map({
-            name: value.description ?? sentenceCase(value.name.value),
+            name: value.description?.value ?? sentenceCase(value.name.value),
             value: value.name.value,
           })
         )
@@ -298,7 +298,7 @@ const toComponentField = (
         options: list(
           ...node.astNode.values!.map((value) =>
             map({
-              name: value.description ?? sentenceCase(value.name.value),
+              name: value.description?.value ?? sentenceCase(value.name.value),
               value: value.name.value,
             })
           )

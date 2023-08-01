@@ -81,52 +81,52 @@ type Link = {
 
 const linkResolver =
   (prop: string, slugResolver: (input: string) => string) =>
-  (parent: any, context?: { links?: Link[] }) =>
-    ifValue(
-      parent[prop] as ApiLink,
-      (link): StoryblokLink =>
-        link.linktype === 'story'
-          ? {
-              type: 'internal',
-              hash: link.anchor,
-              newTab: link.target === '_blank', // internal links are not newTab by default
-              ...(ifValue(
-                context?.links?.find((l) => l.uuid === link.id)?.full_slug,
-                (fullSlug) => ({
-                  url:
-                    slugResolver(fullSlug) +
-                    (link.anchor ? `#${link.anchor}` : ''),
-                  pathname: slugResolver(fullSlug),
-                })
-              ) ?? {
-                url: link.cached_url
-                  ? new URL(link.cached_url).pathname +
-                    (link.anchor ? `#${link.anchor}` : '')
-                  : '',
-                pathname: link.cached_url
-                  ? new URL(link.cached_url).pathname
-                  : '',
-              }),
-            }
-          : link.linktype === 'email'
-          ? {
-              type: 'email',
-              newTab: true,
-              url: `mailto:${link.url}`,
-              pathname: `mailto:${link.url}`,
-            }
-          : link.linktype === 'asset'
-          ? {
-              type: 'asset',
-              newTab: true,
-              url: link.url,
-              pathname: link.url,
-            }
-          : {
-              type: 'external',
-              url: link.url,
-              pathname: new URL(link.url).pathname,
-              hash: new URL(link.url).hash.substring(1), // remove the first '#'
-              newTab: link.target !== '_self', // external links are newTab by default
-            }
+  (parent: any, _args?: any, context?: { links?: Link[] }) =>
+    ifValue(parent[prop] as ApiLink, (link): StoryblokLink | undefined =>
+      link.linktype === 'story'
+        ? {
+            type: 'internal',
+            hash: link.anchor,
+            newTab: link.target === '_blank', // internal links are not newTab by default
+            ...(ifValue(
+              context?.links?.find((l) => l.uuid === link.id)?.full_slug,
+              (fullSlug) => ({
+                url:
+                  slugResolver(fullSlug) +
+                  (link.anchor ? `#${link.anchor}` : ''),
+                pathname: slugResolver(fullSlug),
+              })
+            ) ?? {
+              url: link.cached_url?.startsWith('http')
+                ? new URL(link.cached_url).pathname +
+                  (link.anchor ? `#${link.anchor}` : '')
+                : '',
+              pathname: link.cached_url?.startsWith('http')
+                ? new URL(link.cached_url).pathname
+                : '',
+            }),
+          }
+        : link.linktype === 'email'
+        ? {
+            type: 'email',
+            newTab: true,
+            url: `mailto:${link.url}`,
+            pathname: `mailto:${link.url}`,
+          }
+        : link.linktype === 'asset'
+        ? {
+            type: 'asset',
+            newTab: true,
+            url: link.url,
+            pathname: link.url,
+          }
+        : link.url?.startsWith('http')
+        ? {
+            type: 'external',
+            url: link.url,
+            pathname: new URL(link.url).pathname,
+            hash: new URL(link.url).hash.substring(1), // remove the first '#'
+            newTab: link.target !== '_self', // external links are newTab by default
+          }
+        : undefined
     )

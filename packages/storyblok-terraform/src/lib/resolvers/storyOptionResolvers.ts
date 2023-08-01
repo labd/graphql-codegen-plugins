@@ -67,11 +67,19 @@ type Rel = {
 }
 
 const storyOptionResolver =
-  (prop: string) => (parent: any, context?: { rels?: Rel[] }) =>
-    context?.rels?.find((r) => r.uuid === parent[prop])
+  (prop: string) => (parent: any, _args?: any, context?: { rels?: Rel[] }) =>
+    parent[prop].content ??
+    context?.rels
+      ?.filter((r) => r.uuid === parent[prop])
+      .map((r) => ({ ...r.content, id: r.content._uid }))[0]
 
 const storyOptionsResolver =
-  (prop: string) => (parent: any, context?: { rels?: Rel[] }) =>
-    parent[prop].map((uuid: string) =>
-      context?.rels?.find((r) => r.uuid === uuid)
-    )
+  (prop: string) => (parent: any, _args?: any, context?: { rels?: Rel[] }) =>
+    parent[prop]?.[0].content
+      ? parent[prop].map((f: { content: object }) => f.content)
+      : parent[prop].map(
+          (uuid: string) =>
+            context?.rels
+              ?.filter((r) => r.uuid === uuid)
+              .map((r) => ({ ...r.content, id: r.content._uid }))[0]
+        )

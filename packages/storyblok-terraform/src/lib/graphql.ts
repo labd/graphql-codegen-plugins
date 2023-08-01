@@ -82,6 +82,7 @@ export const findDefinition = (
 
 export const isNestable = (node: ObjectTypeDefinitionNode) =>
   // Either 'nestable' or 'universal' (or undefined, since that is treated as 'nestable')
+  hasDirective(node, 'storyblok') &&
   findStoryblokValue<EnumValueNode>(node, 'type')?.value !== 'contentType'
 
 export const isRoot = (node: ObjectTypeDefinitionNode) =>

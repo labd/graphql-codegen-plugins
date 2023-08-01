@@ -111,14 +111,21 @@ type StoryblokAsset {
   alt: String
   filename: String!
   name: String
-  isExternalUrl: Boolean!
+  isExternalUrl: Boolean
   title: String
 }
 
+enum StoryblokLinkType {
+  external
+  asset
+  internal
+  email
+}
+
 type StoryblokLink {
-  cached_url: String
-  linktype: String
-  fieldtype: String
-  id: String
-  url: String
+  type: StoryblokLinkType!
+  url: String!
+  hash: String
+  pathname: String
+  newTab: Boolean
 }

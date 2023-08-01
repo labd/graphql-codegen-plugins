@@ -8,7 +8,11 @@
     "dist",
     "storyblok-base.graphql"
   ],
-  "version": "0.2.0",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./resolvers": "./dist/resolvers.mjs"
+  },
+  "version": "0.3.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "packageManager": "pnpm@8.5.1",
@@ -40,10 +44,12 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^4",
+    "@graphql-tools/merge": "9",
     "@labdigital/eslint-config-node": "^0.0.5",
     "@size-limit/preset-small-lib": "^8.2.4",
     "@types/node": "^20.2.5",
     "eslint": "^8.41.0",
+    "graphql-tag": "2",
     "graphql": "^16.6.0",
     "husky": "^8.0.3",
     "prettier": "^2.8.8",
@@ -56,10 +62,13 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^5.0.0",
     "change-case": "^4.1.2",
-    "graphql": "^16.6.0",
-    "graphql-tag": "^2.12.6",
     "terraform-generator": "^5.3.1",
     "vite": "^4.3.9"
+  },
+  "peerDependencies": {
+    "graphql-tag": "2",
+    "graphql": "16",
+    "@graphql-tools/merge": "9"
   },
   "pnpm": {
     "overrides": {

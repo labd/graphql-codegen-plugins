@@ -154,7 +154,7 @@ const toFieldGroupComponentField = (
   name: string
 ): SectionComponentField | TabComponentField => ({
   type: directiveProp,
-  display_name: sentenceCase(name),
+  display_name: name,
   keys: [
     // get all tab or section field names
     ...(node.fields
@@ -253,7 +253,7 @@ const toArrayComponentField = (
       options: list(
         ...node.astNode.values!.map((value) =>
           map({
-            name: value.name.value,
+            name: value.description ?? sentenceCase(value.name.value),
             value: value.name.value,
           })
         )
@@ -298,7 +298,7 @@ const toComponentField = (
         options: list(
           ...node.astNode.values!.map((value) =>
             map({
-              name: value.name.value,
+              name: value.description ?? sentenceCase(value.name.value),
               value: value.name.value,
             })
           )

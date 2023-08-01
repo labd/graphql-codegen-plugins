@@ -112,11 +112,11 @@ resource "storyblok_component" "base" {
       type         = "option"
       options = [
         {
-          name  = "a"
+          name  = "A"
           value = "a"
         },
         {
-          name  = "b"
+          name  = "B"
           value = "b"
         }
       ]
@@ -128,11 +128,11 @@ resource "storyblok_component" "base" {
       type         = "options"
       options = [
         {
-          name  = "a"
+          name  = "A"
           value = "a"
         },
         {
-          name  = "b"
+          name  = "B"
           value = "b"
         }
       ]

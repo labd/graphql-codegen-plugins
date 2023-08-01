@@ -10,12 +10,6 @@ dependencies:
   change-case:
     specifier: ^4.1.2
     version: 4.1.2
-  graphql:
-    specifier: 16.6.0
-    version: 16.6.0
-  graphql-tag:
-    specifier: ^2.12.6
-    version: 2.12.6(graphql@16.6.0)
   terraform-generator:
     specifier: ^5.3.1
     version: 5.3.1
@@ -27,6 +21,9 @@ devDependencies:
   '@graphql-codegen/cli':
     specifier: ^4
     version: 4.0.0(@babel/core@7.22.1)(@types/node@20.2.5)(graphql@16.6.0)
+  '@graphql-tools/merge':
+    specifier: '9'
+    version: 9.0.0(graphql@16.6.0)
   '@labdigital/eslint-config-node':
     specifier: ^0.0.5
     version: 0.0.5(eslint@8.41.0)(typescript@5.0.4)
@@ -39,6 +36,12 @@ devDependencies:
   eslint:
     specifier: ^8.41.0
     version: 8.41.0
+  graphql:
+    specifier: 16.6.0
+    version: 16.6.0
+  graphql-tag:
+    specifier: '2'
+    version: 2.12.6(graphql@16.6.0)
   husky:
     specifier: ^8.0.3
     version: 8.0.3
@@ -2691,7 +2694,7 @@ packages:
     dependencies:
       graphql: 16.6.0
       tslib: 2.5.2
-    dev: false
+    dev: true
 
   /graphql-ws@5.13.1(graphql@16.6.0):
     resolution: {integrity: sha512-eiX7ES/ZQr0q7hSM5UBOEIFfaAUmAY9/CSDyAnsETuybByU7l/v46drRg9DQoTvVABEHp3QnrvwgTRMhqy7zxQ==}

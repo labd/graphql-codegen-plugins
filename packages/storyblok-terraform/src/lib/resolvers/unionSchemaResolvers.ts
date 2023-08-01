@@ -7,7 +7,7 @@ import {
   UnionTypeDefinitionNode,
   isTypeDefinitionNode,
 } from 'graphql'
-import { storyblokComponentExists, typeName } from './graphql'
+import { storyblokComponentExists, typeName } from '../graphql'
 
 type Meta = {
   component: string
@@ -29,7 +29,7 @@ export const unionArrayFieldResolvers = (definitions: TypeDefinitionNode[]) => {
   const unionNames = getUnions(definitions).map((u) => u.name.value)
   return Object.fromEntries(
     definitions
-      .filter(isObjectWithUnionProperties(unionNames))
+      .filter(isObjectWithUnionFields(unionNames))
       .map((objectDef) => [
         objectDef.name.value,
         Object.fromEntries(
@@ -57,7 +57,7 @@ export const unionResolvers = (definitions: readonly DefinitionNode[]) =>
     ])
   )
 
-const unionArraySchemaResolver = // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const unionArraySchemaResolver =
   (arrayProp: string, definitions: TypeDefinitionNode[]) => (entry: any) => {
     if (!(arrayProp in entry)) {
       return []
@@ -91,7 +91,7 @@ const getUnions = (definitions: readonly DefinitionNode[]) =>
     (d): d is UnionTypeDefinitionNode => d.kind === Kind.UNION_TYPE_DEFINITION
   )
 
-const isObjectWithUnionProperties =
+const isObjectWithUnionFields =
   (unionNames: string[]) =>
   (d: TypeDefinitionNode): d is ObjectTypeDefinitionNode =>
     (d.kind === Kind.OBJECT_TYPE_DEFINITION &&

@@ -56,4 +56,4 @@ const isSingleBlokField =
     !isArray(field.type) &&
     ifValue(findDefinition(definitions, field.type), isNestable)
 
-const singleBlokResolver = (prop: string) => (parent: any) => parent[prop][0]
+const singleBlokResolver = (prop: string) => (parent: any) => parent[prop]?.[0]

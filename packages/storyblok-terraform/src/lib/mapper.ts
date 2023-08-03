@@ -63,6 +63,7 @@ export const toComponent = (
   ),
   color: findStoryblokValue<StringValueNode>(node, 'color')?.value,
   image: findStoryblokValue<StringValueNode>(node, 'image')?.value,
+  display_name: findStoryblokValue<StringValueNode>(node, 'displayName')?.value,
   component_group_uuid: componentGroup?.attr('uuid'),
   schema: map(toSchema(node, schema)),
   ...previewField(node),

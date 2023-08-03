@@ -144,6 +144,7 @@ directive @storyblok(
   icon: BlockIcon
   "A css color used as background for the block icon. E.g. '#000000' or 'red'"
   color: String
+  displayName: String
 ) on OBJECT
 
 # Field directives

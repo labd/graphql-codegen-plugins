@@ -440,6 +440,7 @@ const toComponentField = (
               )?.values.some(
                 (v) => v.kind === 'EnumValue' && v.value === 'newTab'
               ) || undefined,
+            restrict_components: Boolean(components) || undefined,
             component_whitelist: components,
           }
         }

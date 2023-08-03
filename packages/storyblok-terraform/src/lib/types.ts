@@ -78,6 +78,7 @@ export type RichtextComponentField = ComponentFieldBase & {
   toolbar?: string[]
   customize_toolbar?: boolean
   allow_target_blank?: boolean
+  restrict_components?: boolean
   component_whitelist?: string[]
 }
 

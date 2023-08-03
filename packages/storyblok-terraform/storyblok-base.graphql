@@ -159,7 +159,7 @@ directive @storyblokField(
   custom: String
   excludeFromExport: Boolean
   steps: Int
-  toolbarItems: [TextToolbarItem!]
+  toolbar: [TextToolbarItem!]
   decimals: Int
   tab: String
   section: String

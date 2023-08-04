@@ -356,6 +356,12 @@ const toComponentField = (
           show_anchor: linkFeatures?.includes('anchor') || undefined,
         }
       }
+      case 'StoryblokSeo': {
+        return {
+          type: 'custom',
+          field_type: 'seo-metatags',
+        }
+      }
     }
 
     if (isObjectType(node) || (isUnionType(node) && node.astNode)) {

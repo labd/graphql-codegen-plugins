@@ -25,10 +25,11 @@ resource "storyblok_component" "base" {
       rich_markdown = true
     }
     richtext = {
-      position     = 3
-      display_name = "Richtext"
-      required     = true
-      type         = "richtext"
+      position            = 3
+      display_name        = "Richtext"
+      required            = true
+      type                = "richtext"
+      restrict_components = true
       component_whitelist = [
         "a",
         "b"

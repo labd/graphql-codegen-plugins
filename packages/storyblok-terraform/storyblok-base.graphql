@@ -186,3 +186,16 @@ type StoryblokLink {
   pathname: String
   newTab: Boolean
 }
+
+type StoryblokSeo {
+  title: String
+  description: String
+
+  ogTitle: String
+  ogDescription: String
+  ogImage: String
+
+  twitterTitle: String
+  twitterDescription: String
+  twitterImage: String
+}

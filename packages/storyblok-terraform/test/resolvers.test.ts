@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { isObjectTypeDefinitionNode } from '../src/lib/graphql'
 import { idResolvers } from '../src/lib/resolvers/idResolvers'
 import { linkResolvers } from '../src/lib/resolvers/linkResolvers'
+import { seoResolvers } from '../src/lib/resolvers/seoResolver'
 import { storyOptionFieldResolvers } from '../src/lib/resolvers/storyOptionResolvers'
 import { storyblokResolvers } from '../src/resolvers'
 
@@ -134,6 +135,42 @@ describe('idResolvers', () => {
   it('resolves the id', () => {
     const result = resolvers.Article.id({ _uid: '1' })
     expect(result).toBe('1')
+  })
+})
+
+describe('seoResolvers', () => {
+  const typeDefs = gql`
+    type Article @storyblok {
+      seo: StoryblokSeo @storyblokField
+    }
+  `
+  const resolvers = seoResolvers(
+    typeDefs.definitions.filter(isObjectTypeDefinitionNode)
+  )
+
+  it('resolves the seo field', () => {
+    const result = resolvers.Article.seo({
+      seo: {
+        _uid: '1',
+        title: 'test',
+        description: 'test',
+        og_title: 'test',
+        og_description: 'test',
+        og_image: 'test',
+        twitter_title: 'test',
+        twitter_description: 'test',
+        twitter_image: 'test',
+      },
+    })
+
+    expect(result).toHaveProperty('title')
+    expect(result).toHaveProperty('description')
+    expect(result).toHaveProperty('ogTitle')
+    expect(result).toHaveProperty('ogDescription')
+    expect(result).toHaveProperty('ogImage')
+    expect(result).toHaveProperty('twitterTitle')
+    expect(result).toHaveProperty('twitterDescription')
+    expect(result).toHaveProperty('twitterImage')
   })
 })
 

@@ -182,4 +182,5 @@ export type CustomComponentField = ComponentFieldBase & {
   external_datasource?: string
   /** only if source is 'internal' */
   datasource_slug?: string
+  options?: List // Option[]
 }

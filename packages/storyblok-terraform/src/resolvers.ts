@@ -4,6 +4,7 @@ import { isObjectTypeDefinitionNode } from './lib/graphql'
 import { idResolvers } from './lib/resolvers/idResolvers'
 import { linkResolvers } from './lib/resolvers/linkResolvers'
 import { richtextResolvers } from './lib/resolvers/richtextResolvers'
+import { seoResolvers } from './lib/resolvers/seoResolver'
 import { singleBlokFieldResolvers } from './lib/resolvers/singleBlokResolvers'
 import { storyOptionFieldResolvers } from './lib/resolvers/storyOptionResolvers'
 import {
@@ -32,6 +33,7 @@ export const storyblokResolvers = (
     unionResolvers(documentNode.definitions),
     richtextResolvers(definitions),
     linkResolvers(definitions, slugResolver),
+    seoResolvers(definitions),
   ])
 }
 

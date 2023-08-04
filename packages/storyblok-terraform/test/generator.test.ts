@@ -14,6 +14,7 @@ it.each([
   'story-option',
   'link',
   'preview',
+  'seo',
 ])('has a correct Terraform file for %s', (graphqlFile) => {
   const schema = buildSchema(
     storyblokBase + readFileSync(`./testdata/${graphqlFile}.graphql`)

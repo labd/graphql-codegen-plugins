@@ -1,3 +1,4 @@
+import { pascalCase } from 'change-case'
 import { ObjectTypeDefinitionNode } from 'graphql'
 import { hasDirective } from '../graphql'
 
@@ -32,6 +33,8 @@ export const idResolvers = (definitions: ObjectTypeDefinitionNode[]) =>
       .map((node) => [
         node.name.value,
         {
+          __typename: (parent: any) =>
+            pascalCase(parent.component ?? parent[0].component),
           id: (parent: any) => parent._uid ?? parent[0]?._uid,
         },
       ])

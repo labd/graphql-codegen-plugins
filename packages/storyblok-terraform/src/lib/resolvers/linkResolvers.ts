@@ -83,7 +83,7 @@ const linkResolver =
   (prop: string, slugResolver: (input: string) => string) =>
   (parent: any, _args?: any, context?: { links?: Link[] }) =>
     ifValue(parent[prop] as ApiLink, (link): StoryblokLink | undefined =>
-      link.linktype === 'story'
+      link.linktype === 'story' && link.id
         ? {
             type: 'internal',
             hash: link.anchor,
@@ -100,10 +100,10 @@ const linkResolver =
               url: link.cached_url?.startsWith('http')
                 ? new URL(link.cached_url).pathname +
                   (link.anchor ? `#${link.anchor}` : '')
-                : '',
+                : link.cached_url ?? '',
               pathname: link.cached_url?.startsWith('http')
                 ? new URL(link.cached_url).pathname
-                : '',
+                : link.cached_url ?? '',
             }),
           }
         : link.linktype === 'email'
@@ -113,7 +113,7 @@ const linkResolver =
             url: `mailto:${link.url}`,
             pathname: `mailto:${link.url}`,
           }
-        : link.linktype === 'asset'
+        : link.linktype === 'asset' && link.id
         ? {
             type: 'asset',
             newTab: true,

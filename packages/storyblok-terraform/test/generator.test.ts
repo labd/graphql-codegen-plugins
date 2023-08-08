@@ -1,21 +1,21 @@
 import { execSync } from 'child_process'
+import { readdirSync } from 'fs'
 import { buildSchema } from 'graphql'
+import path from 'path'
 import { expect, it } from 'vitest'
 import { plugin } from '../src/index'
 import { readFileSync, writeFileSync } from './file'
 
 const storyblokBase = readFileSync('../storyblok-base.graphql')
+const testNames = readdirSync(path.join(__dirname, './testdata'), {
+  withFileTypes: true,
+})
+  .filter((f) => f.isFile())
+  .map(({ name }) => path.parse(name).name)
 
-it.each([
-  'component',
-  'section',
-  'fields',
-  'tabs',
-  'story-option',
-  'link',
-  'preview',
-  'seo',
-])('has a correct Terraform file for %s', (graphqlFile) => {
+console.log(testNames)
+
+it.each(testNames)('has a correct Terraform file for %s', (graphqlFile) => {
   const schema = buildSchema(
     storyblokBase + readFileSync(`./testdata/${graphqlFile}.graphql`)
   )

@@ -271,6 +271,22 @@ const toArrayComponentField = (
     }
   }
 
+  if (typeName(type) === 'String') {
+    const datasource = findStoryblokFieldValue<StringValueNode>(
+      field,
+      'datasource'
+    )?.value
+
+    if (datasource) {
+      return {
+        type: 'options',
+        datasource_slug: datasource,
+        source: 'internal',
+        use_uuid: true,
+      }
+    }
+  }
+
   throw new Error(`Unsupported array type ${typeName(type)}`)
 }
 
@@ -402,6 +418,20 @@ const toComponentField = (
 
   switch (typeName(type)) {
     case 'String': {
+      const datasource = findStoryblokFieldValue<StringValueNode>(
+        field,
+        'datasource'
+      )?.value
+
+      if (datasource) {
+        return {
+          type: 'option',
+          datasource_slug: datasource,
+          source: 'internal',
+          use_uuid: true,
+        }
+      }
+
       const stringType = findStoryblokFieldValue<StringValueNode>(
         field,
         'format'

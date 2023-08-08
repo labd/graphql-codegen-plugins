@@ -1,0 +1,4 @@
+type Story @storyblok(type: contentType) {
+  datasource: String! @storyblokField(datasource: "test")
+  datasources: [String!] @storyblokField(datasource: "test")
+}

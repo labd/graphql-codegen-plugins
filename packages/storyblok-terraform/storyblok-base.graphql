@@ -151,24 +151,39 @@ directive @storyblok(
 directive @storyblokField(
   translatable: Boolean
   displayName: String
-  default: String
-  min: Int
-  max: Int
-  format: StoryblokTextFormat
-  regex: String
-  filetypes: [AssetFileTypes!]
-  custom: String
   excludeFromExport: Boolean
+  default: String
+
+  "The display name for the field tab."
+  tab: String
+  "The display name for the field section (i.e. group)."
+  section: String
+
+  "Used for number fields and blok lists."
+  min: Int
+  "Used for number fields and blok lists."
+  max: Int
+  "Used to enhance string fields. E.g. 'textarea', 'markdown', or 'richtext'."
+  format: StoryblokTextFormat
+  "For string fields."
+  regex: String
+  "For StoryblokAsset fields, including lists of StoryblokAssets."
+  filetypes: [AssetFileTypes!]
+  "The plugin name of the field."
+  custom: String
+  "For number inputs"
   steps: Int
   toolbar: [TextToolbarItem!]
+  "For number inputs"
   decimals: Int
-  tab: String
-  section: String
+  "A folder template string used for the a blok filter. E.g. '{0}/pages'."
   folder: String
-  "For StoryblokLinks. `linkFeatures: [newTab]` can also be used for `format: richtext`"
+  "For StoryblokLinks. 'linkFeatures: [newTab]' can also be used for 'format: richtext'"
   linkFeatures: [LinkFeatures!]
   "A list of story names. E.g. ['ContentPage', 'Article']"
   blokTypes: [String!]
+  "The slug of the datasource"
+  datasource: String
 ) on FIELD_DEFINITION
 
 type StoryblokAsset {

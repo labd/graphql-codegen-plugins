@@ -80,7 +80,7 @@ type Link = {
 }
 
 const linkResolver =
-  (prop: string, slugResolver: (input: string) => string) =>
+  (prop: string, slugResolver: (input: string, context?: object) => string) =>
   (parent: any, _args?: any, context?: { links?: Link[] }) =>
     ifValue(parent[prop] as ApiLink, (link): StoryblokLink | undefined =>
       link.linktype === 'story' && link.id
@@ -92,9 +92,9 @@ const linkResolver =
               context?.links?.find((l) => l.uuid === link.id)?.full_slug,
               (fullSlug) => ({
                 url:
-                  slugResolver(fullSlug) +
+                  slugResolver(fullSlug, context) +
                   (link.anchor ? `#${link.anchor}` : ''),
-                pathname: slugResolver(fullSlug),
+                pathname: slugResolver(fullSlug, context),
               })
             ) ?? {
               url: link.cached_url?.startsWith('http')

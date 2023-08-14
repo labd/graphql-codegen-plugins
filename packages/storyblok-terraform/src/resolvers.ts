@@ -13,7 +13,7 @@ import {
 } from './lib/resolvers/unionSchemaResolvers'
 
 type Options = {
-  slugResolver?: (fullSlug: string) => string
+  slugResolver?: (fullSlug: string, context?: object) => string
 }
 
 export const storyblokResolvers = (

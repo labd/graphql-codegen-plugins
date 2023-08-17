@@ -120,13 +120,11 @@ const linkResolver =
             url: link.url,
             pathname: link.url,
           }
-        : link.url?.startsWith('http')
-        ? {
+        : {
             type: 'external',
             url: link.url,
-            pathname: new URL(link.url).pathname,
-            hash: new URL(link.url).hash.substring(1), // remove the first '#'
+            pathname: new URL(link.url, 'http://dummy.com').pathname, // fallback url to avoid errors
+            hash: new URL(link.url, 'http://dummy.com').hash.substring(1), // remove the first '#'
             newTab: link.target !== '_self', // external links are newTab by default
           }
-        : undefined
     )

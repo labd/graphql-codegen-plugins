@@ -33,7 +33,10 @@ export const assetResolvers = (definitions: ObjectTypeDefinitionNode[]) =>
         Object.fromEntries(
           node.fields
             ?.filter(isAssetField)
-            ?.map((field) => [field.name.value, assetResolver]) ?? []
+            ?.map((field) => [
+              field.name.value,
+              assetResolver(field.name.value),
+            ]) ?? []
         ),
       ])
   )
@@ -44,4 +47,5 @@ const hasAssetFields = (node: ObjectTypeDefinitionNode) =>
 const isAssetField = (field: FieldDefinitionNode) =>
   typeName(field.type) === 'StoryblokAsset'
 
-const assetResolver = (parent: any) => (parent.filename ? parent : undefined)
+const assetResolver = (prop: string) => (parent: any) =>
+  parent[prop]?.filename ? parent[prop] : undefined

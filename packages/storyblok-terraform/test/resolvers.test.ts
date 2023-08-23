@@ -234,11 +234,11 @@ describe('assetResolvers', () => {
     typeDefs.definitions.filter(isObjectTypeDefinitionNode)
   )
   it('returns undefined if no filename', () => {
-    const result = resolvers.Article.image({ filename: null })
+    const result = resolvers.Article.image({ image: { filename: null } })
     expect(result).toBe(undefined)
   })
   it('returns the asset if a filename', () => {
-    const result = resolvers.Article.image({ filename: 'test.jpg' })
+    const result = resolvers.Article.image({ image: { filename: 'test.jpg' } })
     expect(result).toEqual({ filename: 'test.jpg' })
   })
 })

@@ -1,6 +1,7 @@
 import { mergeResolvers } from '@graphql-tools/merge'
 import { DocumentNode } from 'graphql'
 import { isObjectTypeDefinitionNode } from './lib/graphql'
+import { assetResolvers } from './lib/resolvers/assetResolvers'
 import { idResolvers } from './lib/resolvers/idResolvers'
 import { linkResolvers } from './lib/resolvers/linkResolvers'
 import { richtextResolvers } from './lib/resolvers/richtextResolvers'
@@ -34,6 +35,7 @@ export const storyblokResolvers = (
     richtextResolvers(definitions),
     linkResolvers(definitions, slugResolver),
     seoResolvers(definitions),
+    assetResolvers(definitions),
   ])
 }
 

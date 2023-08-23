@@ -1,6 +1,5 @@
 import { FieldDefinitionNode, ObjectTypeDefinitionNode } from 'graphql'
 import { typeName } from '../graphql'
-import { ifValue } from '../value'
 
 /**
  * Returns resolves for resolving StoryblokAsset fields.
@@ -34,21 +33,10 @@ export const assetResolvers = (definitions: ObjectTypeDefinitionNode[]) =>
         Object.fromEntries(
           node.fields
             ?.filter(isAssetField)
-            ?.map((field) => [
-              field.name.value,
-              assetResolver(field.name.value),
-            ]) ?? []
+            ?.map((field) => [field.name.value, assetResolver]) ?? []
         ),
       ])
   )
-
-type ApiAsset = {
-  alt?: String
-  filename: String
-  name?: String
-  isExternalUrl?: Boolean
-  title?: String
-}
 
 const hasAssetFields = (node: ObjectTypeDefinitionNode) =>
   node.fields?.some(isAssetField)
@@ -56,15 +44,4 @@ const hasAssetFields = (node: ObjectTypeDefinitionNode) =>
 const isAssetField = (field: FieldDefinitionNode) =>
   typeName(field.type) === 'StoryblokAsset'
 
-type StoryblokAsset = {
-  alt?: String
-  filename: String
-  name?: String
-  isExternalUrl?: Boolean
-  title?: String
-}
-
-const assetResolver = (prop: string) => (parent: any) =>
-  ifValue(parent[prop] as ApiAsset, (asset): StoryblokAsset | undefined =>
-    asset.filename ? asset : undefined
-  )
+const assetResolver = (parent: any) => (parent.filename ? parent : undefined)

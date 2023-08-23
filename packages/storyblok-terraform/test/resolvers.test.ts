@@ -1,6 +1,7 @@
 import { gql } from 'graphql-tag'
 import { describe, expect, it } from 'vitest'
 import { isObjectTypeDefinitionNode } from '../src/lib/graphql'
+import { assetResolvers } from '../src/lib/resolvers/assetResolvers'
 import { idResolvers } from '../src/lib/resolvers/idResolvers'
 import { linkResolvers } from '../src/lib/resolvers/linkResolvers'
 import { seoResolvers } from '../src/lib/resolvers/seoResolver'
@@ -115,12 +116,12 @@ it('combines resolvers', () => {
   expect(result.Article.id).toBeDefined()
   expect(result.Article.url).toBeDefined()
   expect(result.Article.richtext).toBeDefined()
+  expect(result.Article.asset).toBeDefined()
 
   // we expect no resolvers for these fields
   expect(result.Article.noSpecialResolver).not.toBeDefined()
   expect(result.Article.ignored).not.toBeDefined()
   expect(result.Article.ignoredType).not.toBeDefined()
-  expect(result.Article.asset).not.toBeDefined()
 })
 
 describe('idResolvers', () => {
@@ -220,5 +221,24 @@ describe('storyOptionResolvers', () => {
     expect(resultAuthor.id).toBe('2')
     expect(resultCoAuthor[0].name).toBe('test1')
     expect(resultCoAuthor[0].id).toBe('2')
+  })
+})
+
+describe('assetResolvers', () => {
+  const typeDefs = gql`
+    type Article @storyblok {
+      image: StoryblokAsset @storyblokField
+    }
+  `
+  const resolvers = assetResolvers(
+    typeDefs.definitions.filter(isObjectTypeDefinitionNode)
+  )
+  it('returns undefined if no filename', () => {
+    const result = resolvers.Article.image({ filename: null })
+    expect(result).toBe(undefined)
+  })
+  it('returns the asset if a filename', () => {
+    const result = resolvers.Article.image({ filename: 'test.jpg' })
+    expect(result).toEqual({ filename: 'test.jpg' })
   })
 })

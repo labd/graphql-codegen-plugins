@@ -19,7 +19,14 @@ import { typeName } from '../graphql'
  * // result looks something like this:
  * const resolvers = {
  *   Article: {
- *     image: (parent) => parent.filename ? parent : undefined
+ *     image: (parent) => {
+ *       if(parent.image.filename) {
+ *         return {
+ *           ...parent.image,
+ *           isExternalUrl: parent.image.is_external_url
+ *         }
+ *       }
+ *     }
  *   },
  * }
  * ```
@@ -47,5 +54,10 @@ const hasAssetFields = (node: ObjectTypeDefinitionNode) =>
 const isAssetField = (field: FieldDefinitionNode) =>
   typeName(field.type) === 'StoryblokAsset'
 
-const assetResolver = (prop: string) => (parent: any) =>
-  parent[prop]?.filename ? parent[prop] : undefined
+const assetResolver = (prop: string) => (parent: any) => {
+  if (parent[prop]?.filename)
+    return {
+      ...parent[prop],
+      isExternalUrl: parent[prop].is_external_url,
+    }
+}

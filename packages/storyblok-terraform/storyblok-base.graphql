@@ -1,5 +1,6 @@
 scalar Date
 scalar DateTime
+scalar CtTypeId
 
 enum BlockType {
   nestable
@@ -130,6 +131,11 @@ enum StoryblokLinkType {
   email
 }
 
+enum CtType {
+  product
+  category
+}
+
 # Object directives
 directive @storyblok(
   "Use the name of the component group. E.g. 'Page Blocks'."
@@ -169,8 +175,6 @@ directive @storyblokField(
   regex: String
   "For StoryblokAsset fields, including lists of StoryblokAssets."
   filetypes: [AssetFileTypes!]
-  "The plugin name of the field."
-  custom: String
   "For number inputs"
   steps: Int
   toolbar: [TextToolbarItem!]
@@ -184,6 +188,7 @@ directive @storyblokField(
   blokTypes: [String!]
   "The slug of the datasource"
   datasource: String
+  ctType: CtType
 ) on FIELD_DEFINITION
 
 type StoryblokAsset {

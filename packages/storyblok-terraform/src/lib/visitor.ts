@@ -6,7 +6,7 @@ import {
 } from 'graphql'
 import { Resource, TerraformGenerator } from 'terraform-generator'
 import { findStoryblokValue, hasDirective } from './graphql'
-import { toComponent } from './mapper'
+import { CtConfig, toComponent } from './mapper'
 
 /**
  * This visitor checks the GraphQL object type and *updates* the terraform generator to include:
@@ -21,10 +21,12 @@ export const createObjectTypeVisitor =
       tfg,
       spaceId,
       componentGroups,
+      ctConfig,
     }: {
       tfg: TerraformGenerator
       spaceId: number
       componentGroups: Resource[]
+      ctConfig?: CtConfig
     }
   ) =>
   (node: ObjectTypeDefinitionNode) => {
@@ -61,7 +63,7 @@ export const createObjectTypeVisitor =
     tfg.resource(
       'storyblok_component',
       snakeCase(node.name.value),
-      toComponent(node, spaceId, componentGroup, schema)
+      toComponent(node, spaceId, componentGroup, schema, ctConfig)
     )
 
     return null

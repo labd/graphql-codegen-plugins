@@ -1,0 +1,9 @@
+type A @storyblok {
+  categoryId: CtTypeId @storyblokField(ctType: category)
+  categoryIds: [CtTypeId!] @storyblokField(ctType: category)
+
+  productId: CtTypeId @storyblokField(ctType: product)
+  productIds: [CtTypeId!] @storyblokField(ctType: product, max: 3)
+
+  categoryOrProductId: CtTypeId @storyblokField
+}

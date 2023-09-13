@@ -30,6 +30,10 @@ it.each(testNames)('has a correct Terraform file for %s', (graphqlFile) => {
 
   const terraformResult = plugin(schema, [], {
     space_id: 123,
+    ct_client_id: 'var.ct_client_id',
+    ct_client_secret: 'var.ct_client_secret',
+    ct_endpoint: 'var.ct_endpoint',
+    ct_locale: 'nl-NL',
   })
     .toString()
     .trim()

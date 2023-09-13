@@ -2,6 +2,7 @@ import { gql } from 'graphql-tag'
 import { describe, expect, it } from 'vitest'
 import { isObjectTypeDefinitionNode } from '../src/lib/graphql'
 import { assetResolvers } from '../src/lib/resolvers/assetResolvers'
+import { ctTypeIdResolvers } from '../src/lib/resolvers/ctTypeIdResolvers'
 import { idResolvers } from '../src/lib/resolvers/idResolvers'
 import { linkResolvers } from '../src/lib/resolvers/linkResolvers'
 import { seoResolvers } from '../src/lib/resolvers/seoResolver'
@@ -240,5 +241,31 @@ describe('assetResolvers', () => {
   it('returns the asset if a filename', () => {
     const result = resolvers.Article.image({ image: { filename: 'test.jpg' } })
     expect(result).toEqual({ filename: 'test.jpg' })
+  })
+})
+
+describe('ctTypeIdResolvers', () => {
+  const typeDefs = gql`
+    type Article @storyblok {
+      categoryId: CtTypeId @storyblokField(ctType: category)
+      productIds: [CtTypeId!] @storyblokField(ctType: product)
+    }
+  `
+  const resolvers = ctTypeIdResolvers(
+    typeDefs.definitions.filter(isObjectTypeDefinitionNode)
+  )
+
+  it('resolves a single Commercetools id', () => {
+    const result = resolvers.Article.categoryId({
+      categoryId: { items: [{ id: '1' }] },
+    })
+    expect(result).toBe('1')
+  })
+
+  it('resolves a Commercetools id list', () => {
+    const result = resolvers.Article.productIds({
+      productIds: { items: [{ id: '1' }, { id: '2' }] },
+    })
+    expect(result).toEqual(['1', '2'])
   })
 })

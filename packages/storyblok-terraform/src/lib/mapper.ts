@@ -13,7 +13,7 @@ import {
   isObjectType,
   isUnionType,
 } from 'graphql'
-import { Resource, list, map } from 'terraform-generator'
+import { Resource, arg, list, map } from 'terraform-generator'
 import {
   findStoryblokFieldValue,
   findStoryblokValue,
@@ -43,11 +43,19 @@ import {
 } from './types'
 import { ifValue, isValue, uniqueBy } from './value'
 
+export type CtConfig = {
+  endpoint: string
+  clientId: string
+  clientSecret: string
+  locale: string
+}
+
 export const toComponent = (
   node: ObjectTypeDefinitionNode,
   spaceId: number,
   componentGroup: Resource | undefined,
-  schema: GraphQLSchema
+  schema: GraphQLSchema,
+  ctConfig?: CtConfig
 ): Component => ({
   name: snakeCase(node.name.value),
   space_id: spaceId,
@@ -65,7 +73,7 @@ export const toComponent = (
   image: findStoryblokValue<StringValueNode>(node, 'image')?.value,
   display_name: findStoryblokValue<StringValueNode>(node, 'displayName')?.value,
   component_group_uuid: componentGroup?.attr('uuid'),
-  schema: map(toSchema(node, schema)),
+  schema: map(toSchema(node, schema, ctConfig)),
   ...previewField(node),
 })
 
@@ -84,7 +92,8 @@ const toIconValue = (value: string) =>
 
 export const toSchema = (
   node: ObjectTypeDefinitionNode,
-  schema: GraphQLSchema
+  schema: GraphQLSchema,
+  ctConfig?: CtConfig
 ) =>
   Object.fromEntries([
     // Normal fields
@@ -112,8 +121,9 @@ export const toSchema = (
           required: field.type.kind === 'NonNullType',
           description: field.description?.value,
           ...switchArray<ComponentField>(field.type, {
-            ifArray: (subType) => toArrayComponentField(field, subType, schema),
-            other: (type) => toComponentField(field, type, schema),
+            ifArray: (subType) =>
+              toArrayComponentField(field, subType, schema, ctConfig),
+            other: (type) => toComponentField(field, type, schema, ctConfig),
           }),
         }),
       ]) ?? []),
@@ -192,8 +202,13 @@ const toFieldGroupComponentField = (
 const toArrayComponentField = (
   field: FieldDefinitionNode,
   type: TypeNode,
-  schema: GraphQLSchema
-): OptionsComponentField | MultiassetComponentField | BloksComponentField => {
+  schema: GraphQLSchema,
+  ctConfig?: CtConfig
+):
+  | OptionsComponentField
+  | MultiassetComponentField
+  | BloksComponentField
+  | CustomComponentField => {
   const node = schema.getType(typeName(type))
 
   if (node?.name === 'StoryblokAsset') {
@@ -271,18 +286,61 @@ const toArrayComponentField = (
     }
   }
 
-  if (typeName(type) === 'String') {
-    const datasource = findStoryblokFieldValue<StringValueNode>(
-      field,
-      'datasource'
-    )?.value
+  switch (typeName(type)) {
+    case 'String': {
+      const datasource = findStoryblokFieldValue<StringValueNode>(
+        field,
+        'datasource'
+      )?.value
 
-    if (datasource) {
+      if (!datasource) {
+        throw new Error(`Datasource is required for type ${typeName(type)}`)
+      }
+
       return {
         type: 'options',
         datasource_slug: datasource,
         source: 'internal',
         use_uuid: true,
+      }
+    }
+    case 'CtTypeId': {
+      if (!ctConfig) {
+        throw new Error(
+          `Commercetools config is required for type ${typeName(type)}`
+        )
+      }
+
+      const max = findStoryblokFieldValue<IntValueNode>(
+        field,
+        'max'
+      )?.value.toString()
+
+      const ctType = findStoryblokFieldValue<EnumValueNode>(
+        field,
+        'ctType'
+      )?.value
+
+      return {
+        type: 'custom',
+        field_type: 'sb-commercetools',
+        options: list(
+          [
+            ...ctConnectionOptions(ctConfig),
+            max
+              ? map({
+                  name: 'limit',
+                  value: max,
+                })
+              : undefined,
+            ctType
+              ? map({
+                  name: 'selectOnly',
+                  value: ctType,
+                })
+              : undefined,
+          ].filter(isValue)
+        ),
       }
     }
   }
@@ -293,7 +351,8 @@ const toArrayComponentField = (
 const toComponentField = (
   field: FieldDefinitionNode,
   type: TypeNode,
-  schema: GraphQLSchema
+  schema: GraphQLSchema,
+  ctConfig?: CtConfig
 ):
   | BloksComponentField
   | TextComponentField
@@ -562,7 +621,64 @@ const toComponentField = (
         type: 'datetime',
       }
     }
+    case 'CtTypeId': {
+      if (!ctConfig) {
+        throw new Error(
+          `Commercetools config is required for type ${typeName(type)}`
+        )
+      }
+
+      const ctType = findStoryblokFieldValue<EnumValueNode>(
+        field,
+        'ctType'
+      )?.value
+
+      return {
+        type: 'custom',
+        field_type: 'sb-commercetools',
+        options: list(
+          [
+            ...ctConnectionOptions(ctConfig),
+            map({
+              name: 'limit',
+              value: '1',
+            }),
+            ctType
+              ? map({
+                  name: 'selectOnly',
+                  value: findStoryblokFieldValue<EnumValueNode>(field, 'ctType')
+                    ?.value,
+                })
+              : undefined,
+          ].filter(isValue)
+        ),
+      }
+    }
   }
 
   throw new Error(`Unsupported type ${typeName(type)}`)
 }
+
+const ctConnectionOptions = (ctConfig: CtConfig) => [
+  map({
+    name: 'endpoint',
+    value: maybeArg(ctConfig.endpoint),
+  }),
+  map({
+    name: 'clientId',
+    value: maybeArg(ctConfig.clientId),
+  }),
+  map({
+    name: 'clientSecret',
+    value: maybeArg(ctConfig.clientSecret),
+  }),
+  map({
+    name: 'locale',
+    value: maybeArg(ctConfig.locale),
+  }),
+]
+
+export const maybeArg = (value: string, ...prefixes: string[]) =>
+  ['var.', 'local.', ...prefixes].some((prefix) => value.startsWith(prefix))
+    ? arg(value)
+    : value

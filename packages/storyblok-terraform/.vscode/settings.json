@@ -8,5 +8,5 @@
   "eslint.packageManager": "pnpm",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "cSpell.words": ["storyblok", "codegen", "typedefs"]
+  "cSpell.words": ["codegen", "Commercetools", "storyblok", "typedefs"]
 }

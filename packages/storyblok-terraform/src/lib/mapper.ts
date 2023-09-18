@@ -38,6 +38,7 @@ import {
   RichtextComponentField,
   SectionComponentField,
   TabComponentField,
+  TableComponentField,
   TextComponentField,
   TextareaComponentField,
 } from './types'
@@ -325,7 +326,7 @@ const toArrayComponentField = (
         type: 'custom',
         field_type: 'sb-commercetools',
         options: list(
-          [
+          ...[
             ...ctConnectionOptions(ctConfig),
             max
               ? map({
@@ -354,19 +355,20 @@ const toComponentField = (
   schema: GraphQLSchema,
   ctConfig?: CtConfig
 ):
-  | BloksComponentField
-  | TextComponentField
-  | TextareaComponentField
-  | MarkdownComponentField
-  | RichtextComponentField
-  | NumberComponentField
-  | DatetimeComponentField
-  | BooleanComponentField
-  | OptionComponentField
   | AssetComponentField
+  | BloksComponentField
+  | BooleanComponentField
+  | CustomComponentField
+  | DatetimeComponentField
+  | MarkdownComponentField
   | MultilinkComponentField
+  | NumberComponentField
+  | OptionComponentField
+  | RichtextComponentField
   | SectionComponentField
-  | CustomComponentField => {
+  | TableComponentField
+  | TextareaComponentField
+  | TextComponentField => {
   const node = schema.getType(typeName(type))
 
   if (node) {
@@ -435,6 +437,11 @@ const toComponentField = (
         return {
           type: 'custom',
           field_type: 'seo-metatags',
+        }
+      }
+      case 'StoryblokTable': {
+        return {
+          type: 'table',
         }
       }
     }
@@ -637,7 +644,7 @@ const toComponentField = (
         type: 'custom',
         field_type: 'sb-commercetools',
         options: list(
-          [
+          ...[
             ...ctConnectionOptions(ctConfig),
             map({
               name: 'limit',

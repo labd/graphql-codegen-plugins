@@ -7,6 +7,7 @@ import { idResolvers } from '../src/lib/resolvers/idResolvers'
 import { linkResolvers } from '../src/lib/resolvers/linkResolvers'
 import { seoResolvers } from '../src/lib/resolvers/seoResolver'
 import { storyOptionFieldResolvers } from '../src/lib/resolvers/storyOptionResolvers'
+import { tableResolvers } from '../src/lib/resolvers/tableResolvers'
 import { storyblokResolvers } from '../src/resolvers'
 
 describe('linkResolvers', () => {
@@ -267,5 +268,47 @@ describe('ctTypeIdResolvers', () => {
       productIds: { items: [{ id: '1' }, { id: '2' }] },
     })
     expect(result).toEqual(['1', '2'])
+  })
+})
+
+describe('tableResolvers', () => {
+  const typeDefs = gql`
+    type Article @storyblok {
+      table: StoryblokTable @storyblokField
+    }
+  `
+
+  const resolvers = tableResolvers(
+    typeDefs.definitions.filter(isObjectTypeDefinitionNode)
+  )
+
+  it('resolves a single Commercetools id', () => {
+    const result = resolvers.Article.table({
+      table: {
+        tbody: [
+          {
+            _uid: '1',
+            body: [
+              {
+                _uid: '1',
+                value: 'Value 1,1',
+                component: '_table_col',
+              },
+            ],
+            component: '_table_row',
+          },
+        ],
+        thead: [
+          {
+            _uid: '1',
+            value: 'Heading 1',
+            component: '_table_head',
+          },
+        ],
+        fieldtype: 'table',
+      },
+    })
+    expect(result.thead).toEqual(['Heading 1'])
+    expect(result.tbody).toEqual([['Value 1,1']])
   })
 })

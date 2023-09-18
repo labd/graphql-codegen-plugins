@@ -219,3 +219,8 @@ type StoryblokSeo {
   twitterDescription: String
   twitterImage: String
 }
+
+type StoryblokTable {
+  thead: [String!]
+  tbody: [[String!]!]
+}

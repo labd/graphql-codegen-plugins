@@ -11,32 +11,30 @@ resource "storyblok_component" "a" {
       type         = "custom"
       field_type   = "sb-commercetools"
       options = [
-        [
-          {
-            name  = "endpoint"
-            value = var.ct_endpoint
-          },
-          {
-            name  = "clientId"
-            value = var.ct_client_id
-          },
-          {
-            name  = "clientSecret"
-            value = var.ct_client_secret
-          },
-          {
-            name  = "locale"
-            value = "nl-NL"
-          },
-          {
-            name  = "limit"
-            value = "1"
-          },
-          {
-            name  = "selectOnly"
-            value = "category"
-          }
-        ]
+        {
+          name  = "endpoint"
+          value = var.ct_endpoint
+        },
+        {
+          name  = "clientId"
+          value = var.ct_client_id
+        },
+        {
+          name  = "clientSecret"
+          value = var.ct_client_secret
+        },
+        {
+          name  = "locale"
+          value = "nl-NL"
+        },
+        {
+          name  = "limit"
+          value = "1"
+        },
+        {
+          name  = "selectOnly"
+          value = "category"
+        }
       ]
     }
     categoryIds = {
@@ -46,28 +44,26 @@ resource "storyblok_component" "a" {
       type         = "custom"
       field_type   = "sb-commercetools"
       options = [
-        [
-          {
-            name  = "endpoint"
-            value = var.ct_endpoint
-          },
-          {
-            name  = "clientId"
-            value = var.ct_client_id
-          },
-          {
-            name  = "clientSecret"
-            value = var.ct_client_secret
-          },
-          {
-            name  = "locale"
-            value = "nl-NL"
-          },
-          {
-            name  = "selectOnly"
-            value = "category"
-          }
-        ]
+        {
+          name  = "endpoint"
+          value = var.ct_endpoint
+        },
+        {
+          name  = "clientId"
+          value = var.ct_client_id
+        },
+        {
+          name  = "clientSecret"
+          value = var.ct_client_secret
+        },
+        {
+          name  = "locale"
+          value = "nl-NL"
+        },
+        {
+          name  = "selectOnly"
+          value = "category"
+        }
       ]
     }
     productId = {
@@ -77,32 +73,30 @@ resource "storyblok_component" "a" {
       type         = "custom"
       field_type   = "sb-commercetools"
       options = [
-        [
-          {
-            name  = "endpoint"
-            value = var.ct_endpoint
-          },
-          {
-            name  = "clientId"
-            value = var.ct_client_id
-          },
-          {
-            name  = "clientSecret"
-            value = var.ct_client_secret
-          },
-          {
-            name  = "locale"
-            value = "nl-NL"
-          },
-          {
-            name  = "limit"
-            value = "1"
-          },
-          {
-            name  = "selectOnly"
-            value = "product"
-          }
-        ]
+        {
+          name  = "endpoint"
+          value = var.ct_endpoint
+        },
+        {
+          name  = "clientId"
+          value = var.ct_client_id
+        },
+        {
+          name  = "clientSecret"
+          value = var.ct_client_secret
+        },
+        {
+          name  = "locale"
+          value = "nl-NL"
+        },
+        {
+          name  = "limit"
+          value = "1"
+        },
+        {
+          name  = "selectOnly"
+          value = "product"
+        }
       ]
     }
     productIds = {
@@ -112,32 +106,30 @@ resource "storyblok_component" "a" {
       type         = "custom"
       field_type   = "sb-commercetools"
       options = [
-        [
-          {
-            name  = "endpoint"
-            value = var.ct_endpoint
-          },
-          {
-            name  = "clientId"
-            value = var.ct_client_id
-          },
-          {
-            name  = "clientSecret"
-            value = var.ct_client_secret
-          },
-          {
-            name  = "locale"
-            value = "nl-NL"
-          },
-          {
-            name  = "limit"
-            value = "3"
-          },
-          {
-            name  = "selectOnly"
-            value = "product"
-          }
-        ]
+        {
+          name  = "endpoint"
+          value = var.ct_endpoint
+        },
+        {
+          name  = "clientId"
+          value = var.ct_client_id
+        },
+        {
+          name  = "clientSecret"
+          value = var.ct_client_secret
+        },
+        {
+          name  = "locale"
+          value = "nl-NL"
+        },
+        {
+          name  = "limit"
+          value = "3"
+        },
+        {
+          name  = "selectOnly"
+          value = "product"
+        }
       ]
     }
     categoryOrProductId = {
@@ -147,28 +139,26 @@ resource "storyblok_component" "a" {
       type         = "custom"
       field_type   = "sb-commercetools"
       options = [
-        [
-          {
-            name  = "endpoint"
-            value = var.ct_endpoint
-          },
-          {
-            name  = "clientId"
-            value = var.ct_client_id
-          },
-          {
-            name  = "clientSecret"
-            value = var.ct_client_secret
-          },
-          {
-            name  = "locale"
-            value = "nl-NL"
-          },
-          {
-            name  = "limit"
-            value = "1"
-          }
-        ]
+        {
+          name  = "endpoint"
+          value = var.ct_endpoint
+        },
+        {
+          name  = "clientId"
+          value = var.ct_client_id
+        },
+        {
+          name  = "clientSecret"
+          value = var.ct_client_secret
+        },
+        {
+          name  = "locale"
+          value = "nl-NL"
+        },
+        {
+          name  = "limit"
+          value = "1"
+        }
       ]
     }
   }

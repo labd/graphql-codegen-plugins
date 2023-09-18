@@ -9,6 +9,7 @@ import { richtextResolvers } from './lib/resolvers/richtextResolvers'
 import { seoResolvers } from './lib/resolvers/seoResolver'
 import { singleBlokFieldResolvers } from './lib/resolvers/singleBlokResolvers'
 import { storyOptionFieldResolvers } from './lib/resolvers/storyOptionResolvers'
+import { tableResolvers } from './lib/resolvers/tableResolvers'
 import {
   unionArrayFieldResolvers,
   unionResolvers,
@@ -38,6 +39,7 @@ export const storyblokResolvers = (
     assetResolvers(definitions),
     seoResolvers(definitions),
     ctTypeIdResolvers(definitions),
+    tableResolvers(definitions),
   ])
 }
 

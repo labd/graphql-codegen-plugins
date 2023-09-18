@@ -31,6 +31,7 @@ export type ComponentField =
   | MultilinkComponentField
   | SectionComponentField
   | CustomComponentField
+  | TableComponentField
 
 export type ComponentFieldBase = {
   // pos: number
@@ -183,4 +184,8 @@ export type CustomComponentField = ComponentFieldBase & {
   /** only if source is 'internal' */
   datasource_slug?: string
   options?: List // Option[]
+}
+
+export type TableComponentField = ComponentFieldBase & {
+  type: 'table'
 }

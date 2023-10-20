@@ -13,8 +13,6 @@ const testNames = readdirSync(path.join(__dirname, './testdata'), {
   .filter((f) => f.isFile())
   .map(({ name }) => path.parse(name).name)
 
-console.log(testNames)
-
 it.each(testNames)('has a correct Terraform file for %s', (graphqlFile) => {
   const schema = buildSchema(
     storyblokBase + readFileSync(`./testdata/${graphqlFile}.graphql`)
@@ -33,6 +31,7 @@ it.each(testNames)('has a correct Terraform file for %s', (graphqlFile) => {
     ct_client_id: 'var.ct_client_id',
     ct_client_secret: 'var.ct_client_secret',
     ct_endpoint: 'var.ct_endpoint',
+    ct_project_key: 'var.ct_project_key',
     ct_locale: 'nl-NL',
   })
     .toString()

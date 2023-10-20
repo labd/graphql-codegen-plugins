@@ -2,6 +2,7 @@ import { gql } from 'graphql-tag'
 import { describe, expect, it } from 'vitest'
 import { isObjectTypeDefinitionNode } from '../src/lib/graphql'
 import { assetResolvers } from '../src/lib/resolvers/assetResolvers'
+import { ctCategoryIdResolvers } from '../src/lib/resolvers/ctCategoryIdResolvers'
 import { ctTypeIdResolvers } from '../src/lib/resolvers/ctTypeIdResolvers'
 import { idResolvers } from '../src/lib/resolvers/idResolvers'
 import { linkResolvers } from '../src/lib/resolvers/linkResolvers'
@@ -268,6 +269,24 @@ describe('ctTypeIdResolvers', () => {
       productIds: { items: [{ id: '1' }, { id: '2' }] },
     })
     expect(result).toEqual(['1', '2'])
+  })
+})
+
+describe('ctCategoryIdResolvers', () => {
+  const typeDefs = gql`
+    type Article @storyblok {
+      categoryId: String @storyblokField(ctType: category)
+    }
+  `
+  const resolvers = ctCategoryIdResolvers(
+    typeDefs.definitions.filter(isObjectTypeDefinitionNode)
+  )
+
+  it('resolves a single Commercetools id', () => {
+    const result = resolvers.Article.categoryId({
+      categoryId: { id: '1' },
+    })
+    expect(result).toBe('1')
   })
 })
 

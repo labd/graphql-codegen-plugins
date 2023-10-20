@@ -33,11 +33,13 @@ export const plugin: PluginFunction<PluginConfig> = (
           config.ct_endpoint &&
           config.ct_client_id &&
           config.ct_client_secret &&
+          config.ct_project_key &&
           config.ct_locale
             ? {
                 endpoint: config.ct_endpoint,
                 clientId: config.ct_client_id,
                 clientSecret: config.ct_client_secret,
+                projectKey: config.ct_project_key,
                 locale: config.ct_locale,
               }
             : undefined,

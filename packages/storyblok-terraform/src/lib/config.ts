@@ -6,5 +6,6 @@ export type PluginConfig = {
   ct_endpoint?: string
   ct_client_id?: string
   ct_client_secret?: string
+  ct_project_key?: string
   ct_locale?: string
 }

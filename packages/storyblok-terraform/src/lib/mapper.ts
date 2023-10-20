@@ -45,6 +45,7 @@ import {
 import { ifValue, isValue, uniqueBy } from './value'
 
 export type CtConfig = {
+  projectKey: string
   endpoint: string
   clientId: string
   clientSecret: string
@@ -497,6 +498,23 @@ const toComponentField = (
           use_uuid: true,
         }
       }
+      const ctType = findStoryblokFieldValue<EnumValueNode>(
+        field,
+        'ctType'
+      )?.value
+
+      if (ctType === 'category') {
+        if (!ctConfig) {
+          throw new Error(
+            `Commercetools config is required for ${field.name.value}`
+          )
+        }
+        return {
+          type: 'custom',
+          field_type: 'ct-category',
+          options: list(...[...ctCategoryOptions(ctConfig)].filter(isValue)),
+        }
+      }
 
       const stringType = findStoryblokFieldValue<StringValueNode>(
         field,
@@ -682,6 +700,21 @@ const ctConnectionOptions = (ctConfig: CtConfig) => [
   map({
     name: 'locale',
     value: maybeArg(ctConfig.locale),
+  }),
+]
+
+const ctCategoryOptions = (ctConfig: CtConfig) => [
+  map({
+    name: 'projectKey',
+    value: maybeArg(ctConfig.projectKey),
+  }),
+  map({
+    name: 'clientId',
+    value: maybeArg(ctConfig.clientId),
+  }),
+  map({
+    name: 'clientSecret',
+    value: maybeArg(ctConfig.clientSecret),
   }),
 ]
 

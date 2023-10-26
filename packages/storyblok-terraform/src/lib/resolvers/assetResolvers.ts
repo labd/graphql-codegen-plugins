@@ -1,5 +1,5 @@
 import { FieldDefinitionNode, ObjectTypeDefinitionNode } from 'graphql'
-import { typeName } from '../graphql'
+import { isArray, typeName } from '../graphql'
 
 /**
  * Returns resolves for resolving StoryblokAsset fields.
@@ -42,7 +42,9 @@ export const assetResolvers = (definitions: ObjectTypeDefinitionNode[]) =>
             ?.filter(isAssetField)
             ?.map((field) => [
               field.name.value,
-              assetResolver(field.name.value),
+              isArray(field.type)
+                ? assetsResolver(field.name.value)
+                : assetResolver(field.name.value),
             ]) ?? []
         ),
       ])
@@ -60,4 +62,11 @@ const assetResolver = (prop: string) => (parent: any) => {
       ...parent[prop],
       isExternalUrl: parent[prop].is_external_url,
     }
+}
+const assetsResolver = (prop: string) => (parent: any) => {
+  if (parent[prop]?.[0].filename)
+    return parent[prop].map((item: any) => ({
+      ...item,
+      isExternalUrl: item.is_external_url,
+    }))
 }

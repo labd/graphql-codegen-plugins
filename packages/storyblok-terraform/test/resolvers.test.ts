@@ -231,6 +231,7 @@ describe('assetResolvers', () => {
   const typeDefs = gql`
     type Article @storyblok {
       image: StoryblokAsset @storyblokField
+      images: [StoryblokAsset] @storyblokField
     }
   `
   const resolvers = assetResolvers(
@@ -243,6 +244,12 @@ describe('assetResolvers', () => {
   it('returns the asset if a filename', () => {
     const result = resolvers.Article.image({ image: { filename: 'test.jpg' } })
     expect(result).toEqual({ filename: 'test.jpg' })
+  })
+  it('returns the asset list if there is a filename', () => {
+    const result = resolvers.Article.images({
+      images: [{ filename: 'test.jpg' }],
+    })
+    expect(result).toEqual([{ filename: 'test.jpg' }])
   })
 })
 

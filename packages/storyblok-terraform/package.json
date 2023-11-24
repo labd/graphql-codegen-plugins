@@ -36,9 +36,11 @@
     "start": "tsup --watch",
     "build": "tsup",
     "test": "vitest",
+    "test:ci": "vitest run --coverage",
     "postbuild": "cp package.json dist",
     "lint": "eslint src/**/*.ts test/**/*.ts",
-    "example": "pnpm build && graphql-codegen --config examples/codegen.yml"
+    "example": "pnpm build && graphql-codegen --config examples/codegen.yml",
+    "publish:ci": "pnpm build && pnpm changeset publish"
   },
   "prettier": {
     "semi": false,
@@ -50,14 +52,15 @@
     }
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.2",
     "@graphql-codegen/cli": "^4",
     "@graphql-tools/merge": "9",
     "@labdigital/eslint-config-node": "^0.0.5",
     "@size-limit/preset-small-lib": "^8.2.4",
     "@types/node": "^20.2.5",
     "eslint": "^8.41.0",
-    "graphql-tag": "2",
     "graphql": "^16.6.0",
+    "graphql-tag": "2",
     "husky": "^8.0.3",
     "prettier": "^2.8.8",
     "size-limit": "^8.2.4",
@@ -73,9 +76,9 @@
     "vite": "^4.3.9"
   },
   "peerDependencies": {
-    "graphql-tag": "2",
+    "@graphql-tools/merge": "9",
     "graphql": "16",
-    "@graphql-tools/merge": "9"
+    "graphql-tag": "2"
   },
   "pnpm": {
     "overrides": {

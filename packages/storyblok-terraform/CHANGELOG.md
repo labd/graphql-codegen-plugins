@@ -1,5 +1,11 @@
 # @labdigital/storyblok-graphql-codegen-terraform
 
+## 0.11.0
+
+### Minor Changes
+
+- 1a8aed4: Move package to other NPM scope to fix publishing rights
+
 ## 0.10.3
 
 ### Patch Changes

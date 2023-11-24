@@ -101,7 +101,7 @@ export type BooleanComponentField = ComponentFieldBase & {
   type: 'boolean'
 }
 
-type Option = { name: string; value: string }
+// type Option = { name: string; value: string }
 export type OptionsComponentField = ComponentFieldBase & {
   type: 'options'
   source?: 'internal_stories' | 'internal' | 'external'

@@ -1,5 +1,11 @@
 # storyblok-graphql-codegen-terraform
 
+## 0.10.3
+
+### Patch Changes
+
+- 875f5bd: Fix release process
+
 ## 0.10.2
 
 ### Patch Changes

@@ -1,5 +1,5 @@
 {
-  "name": "storyblok-graphql-codegen-terraform",
+  "name": "@labdigital/storyblok-graphql-codegen-terraform",
   "author": "Lab Digital",
   "private": false,
   "license": "MIT",

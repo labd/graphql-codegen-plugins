@@ -1,4 +1,4 @@
-# storyblok-graphql-codegen-terraform
+# @labdigital/storyblok-graphql-codegen-terraform
 
 ## 0.10.3
 

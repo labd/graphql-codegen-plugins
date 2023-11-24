@@ -64,7 +64,7 @@ const assetResolver = (prop: string) => (parent: any) => {
     }
 }
 const assetsResolver = (prop: string) => (parent: any) => {
-  if (parent[prop]?.[0].filename)
+  if (parent[prop]?.length > 0 && parent[prop][0].filename)
     return parent[prop].map((item: any) => ({
       ...item,
       isExternalUrl: item.is_external_url,

@@ -53,6 +53,5 @@ const isRichtextField = (field: FieldDefinitionNode) =>
   typeName(field.type) === 'String' &&
   findStoryblokFieldValue<EnumValueNode>(field, 'format')?.value === 'richtext'
 
-const richtextResolver = (prop: string) => (parent: any) =>
-  // Storyblok even returns a simple json blob even if the user has not entered any content.
-  parent[prop]?.content?.[0].content ? JSON.stringify(parent[prop]) : undefined
+export const richtextResolver = (prop: string) => (parent: any) =>
+  JSON.stringify(parent[prop])

@@ -1,5 +1,11 @@
 # @labdigital/storyblok-graphql-codegen-terraform
 
+## 0.11.1
+
+### Patch Changes
+
+- 07e3144: Fix handling empty RichText blocks
+
 ## 0.11.0
 
 ### Minor Changes

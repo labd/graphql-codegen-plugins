@@ -1,0 +1,19 @@
+{
+  "name": "graphql-codegen-plugins",
+  "version": "0.0.1",
+  "description": "Monorepository for codegen",
+  "main": "index.js",
+  "scripts": {
+    "test": "turbo run test",
+    "dev": "turbo run dev --parallel --no-cache",
+    "build": "turbo run build"
+  },
+  "devDependencies": {
+    "@changesets/cli": "2.25.0",
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@6.32.6",
+  "author": "Lab Digital",
+  "private": true,
+  "license": "MIT"
+}

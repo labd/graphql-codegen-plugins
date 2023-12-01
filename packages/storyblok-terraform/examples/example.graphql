@@ -1,0 +1,33 @@
+# For root content types, add the `@storyblok(type: contentType)` directive
+type Page @storyblok(type: contentType) {
+  # Add a `@storyblokField` directive to add extra configuration for a field such as translations
+  seoTitle: String @storyblokField(translatable: true, section: "SEO")
+  seoDescription: String @storyblokField(translatable: true, section: "SEO")
+
+  blocks: [Block] @storyblokField
+}
+
+union Block = MarkdownBlock | BannerBlock
+
+# By default a type is a nested Storyblok component
+type MarkdownBlock @storyblok {
+  content: String @storyblokField(format: markdown, translatable: true)
+}
+
+type BannerBlock @storyblok(icon: block_image) {
+  title: String @storyblokField(translatable: true)
+  link: StoryblokLink @storyblokField
+  image: StoryblokAsset! @storyblokField(filetypes: [images])
+}
+
+type ProductListBlock @storyblok {
+  title: String @storyblokField(translatable: true)
+}
+
+type Article @storyblok {
+  # This field will be ignored
+  systemField: String
+  date: Date @storyblokField
+  author: String @storyblokField
+  content: String @storyblokField(format: markdown, translatable: true)
+}

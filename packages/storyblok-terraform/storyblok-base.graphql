@@ -1,0 +1,226 @@
+scalar Date
+scalar DateTime
+scalar CtTypeId
+
+enum BlockType {
+  nestable
+  contentType
+  universal
+}
+
+enum BlockIcon {
+  block_at
+  block_1_2block
+  block_add
+  block_arrow_pointer
+  block_block
+  block_buildin
+  block_center_m
+  block_comment
+  block_doc
+  block_dollar_sign
+  block_email
+  block_image
+  block_keyboard
+  block_locked
+  block_map_pin
+  block_mobile
+  block_monitor
+  block_paycard
+  block_resize_fc
+  block_cart
+  block_share
+  block_shield_2
+  block_shield
+  block_sticker
+  block_suitcase
+  block_table_2
+  block_table
+  block_tag
+  block_text_c
+  block_text_img_c
+  block_text_img_l
+  block_text_img_r_l
+  block_text_img_r
+  block_text_img_t_l
+  block_text_img_t_r
+  block_text_l
+  block_text_r
+  block_unlocked
+  block_wallet
+}
+
+enum StoryblokTextFormat {
+  markdown
+  textarea
+  text
+  richtext
+}
+enum AssetFileTypes {
+  images
+  videos
+  audios
+  texts
+}
+
+enum LinkFeatures {
+  assets
+  newTab
+  anchor
+  email
+}
+
+enum TextToolbarItem {
+  "Richtext only"
+  anchor
+  "Richtext only"
+  blok
+  bold
+  code
+  "Richtext only"
+  color
+  "Richtext only"
+  copy
+  "Richtext only"
+  cut
+  "Richtext only"
+  emoji
+  h1
+  h2
+  h3
+  h4
+  h5
+  h6
+  "Richtext only"
+  highlight
+  "Markdown only"
+  help
+  hrule
+  image
+  inlinecode
+  italic
+  link
+  list
+  olist
+  paragraph
+  "Richtext only"
+  paste_action
+  "Richtext only"
+  paste
+  quote
+  "Richtext only"
+  redo
+  "Richtext only"
+  strike
+  "Richtext only"
+  subscript
+  "Richtext only"
+  superscript
+  "Markdown only"
+  toggle_richtext
+  "Richtext only"
+  underline
+  "Richtext only"
+  undo
+}
+
+enum StoryblokLinkType {
+  external
+  asset
+  internal
+  email
+}
+
+enum CtType {
+  product
+  category
+}
+
+# Object directives
+directive @storyblok(
+  "Use the name of the component group. E.g. 'Page Blocks'."
+  componentGroup: String
+  "Whether the component will be a content type or a nestable blok. Defaults to 'nestable'."
+  type: BlockType
+  "A url to an example image."
+  image: String
+  "Either a field name or a preview template. E.g. 'title' or '{{title}} - {{description}}'. For more info see https://www.storyblok.com/docs/schema-configuration#preview-template"
+  preview: String
+  "The icon used for the component in the sidebar. E.g. 'block_text_r'. For more info see https://www.storyblok.com/docs/schema-configuration#icon"
+  icon: BlockIcon
+  "A css color used as background for the block icon. E.g. '#000000' or 'red'"
+  color: String
+  displayName: String
+) on OBJECT
+
+# Field directives
+directive @storyblokField(
+  translatable: Boolean
+  displayName: String
+  excludeFromExport: Boolean
+  default: String
+
+  "The display name for the field tab."
+  tab: String
+  "The display name for the field section (i.e. group)."
+  section: String
+
+  "Used for number fields and blok lists."
+  min: Int
+  "Used for number fields and blok lists."
+  max: Int
+  "Used to enhance string fields. E.g. 'textarea', 'markdown', or 'richtext'."
+  format: StoryblokTextFormat
+  "For string fields."
+  regex: String
+  "For StoryblokAsset fields, including lists of StoryblokAssets."
+  filetypes: [AssetFileTypes!]
+  "For number inputs"
+  steps: Int
+  toolbar: [TextToolbarItem!]
+  "For number inputs"
+  decimals: Int
+  "A folder template string used for the a blok filter. E.g. '{0}/pages'."
+  folder: String
+  "For StoryblokLinks. 'linkFeatures: [newTab]' can also be used for 'format: richtext'"
+  linkFeatures: [LinkFeatures!]
+  "A list of story names. E.g. ['ContentPage', 'Article']"
+  blokTypes: [String!]
+  "The slug of the datasource"
+  datasource: String
+  ctType: CtType
+) on FIELD_DEFINITION
+
+type StoryblokAsset {
+  alt: String
+  filename: String!
+  name: String
+  isExternalUrl: Boolean
+  title: String
+}
+
+type StoryblokLink {
+  type: StoryblokLinkType!
+  url: String!
+  hash: String
+  pathname: String
+  newTab: Boolean
+}
+
+type StoryblokSeo {
+  title: String
+  description: String
+
+  ogTitle: String
+  ogDescription: String
+  ogImage: String
+
+  twitterTitle: String
+  twitterDescription: String
+  twitterImage: String
+}
+
+type StoryblokTable {
+  thead: [String!]
+  tbody: [[String!]!]
+}

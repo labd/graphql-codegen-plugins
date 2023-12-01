@@ -1,0 +1,13 @@
+overwrite: true
+schema:
+  - ./storyblok-base.graphql # node_modules/storyblok-graphql-codegen-terraform/storyblok-base.graphql
+  - ./examples/example.graphql
+hooks:
+  afterAllFileWrite:
+    - terraform fmt
+generates:
+  examples/output/example.tf:
+    plugins:
+      - ./dist/index.js # storyblok-graphql-codegen-terraform
+    config:
+      space_id: 123

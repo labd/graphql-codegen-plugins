@@ -1,0 +1,12 @@
+{
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
+  "eslint.validate": ["typescript", "javascript"],
+  "eslint.packageManager": "pnpm",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "cSpell.words": ["codegen", "Commercetools", "storyblok", "typedefs"]
+}

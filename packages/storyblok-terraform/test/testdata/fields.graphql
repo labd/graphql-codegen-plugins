@@ -1,0 +1,42 @@
+type Base @storyblok {
+  text: String! @storyblokField(max: 4, displayName: "The Text")
+  textarea: String! @storyblokField(format: textarea)
+  markdown: String! @storyblokField(format: markdown)
+  richtext: String! @storyblokField(format: richtext, blokTypes: ["A", "B"])
+
+  optionalRegexText: String @storyblokField(regex: "/[\\w\\-]+")
+  integer: Int! @storyblokField(min: 2, max: 10)
+  optionalInteger: Int @storyblokField
+  float: Float! @storyblokField(min: 0, max: 10)
+  optionalFloat: Float @storyblokField
+  boolean: Boolean! @storyblokField
+  optionalBoolean: Boolean @storyblokField
+
+  date: Date @storyblokField
+  dateTime: DateTime @storyblokField
+
+  image: StoryblokAsset! @storyblokField(filetypes: [images])
+  assets: [StoryblokAsset!] @storyblokField
+  option: Option @storyblokField
+  options: [Option!] @storyblokField(min: 1, max: 2)
+  blok: A @storyblokField
+  bloks: [B] @storyblokField(min: 2, max: 4)
+  unionBlok: Union @storyblokField
+  unionBloks: [Union!] @storyblokField
+  ignored: String
+}
+
+enum Option {
+  a
+  b
+}
+
+union Union = A | B
+
+type A @storyblok {
+  a: String! @storyblokField
+}
+
+type B @storyblok {
+  b: String! @storyblokField
+}

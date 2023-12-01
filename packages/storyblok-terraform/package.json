@@ -1,0 +1,91 @@
+{
+  "name": "@labdigital/storyblok-graphql-codegen-terraform",
+  "author": "Lab Digital",
+  "private": false,
+  "license": "MIT",
+  "module": "dist/index.mjs",
+  "files": [
+    "dist",
+    "storyblok-base.graphql"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./resolvers": "./dist/resolvers.js"
+  },
+  "version": "0.11.1",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "resolvers": [
+        "dist/resolvers.d.ts"
+      ]
+    }
+  },
+  "packageManager": "pnpm@8.5.1",
+  "keywords": [
+    "graphql",
+    "codegen",
+    "terraform",
+    "storyblok"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "start": "tsup --watch",
+    "build": "tsup",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage",
+    "postbuild": "cp package.json dist",
+    "lint": "eslint src/**/*.ts test/**/*.ts",
+    "example": "pnpm build && graphql-codegen --config examples/codegen.yml",
+    "publish:ci": "pnpm build && pnpm changeset publish"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "eslint"
+    }
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.2",
+    "@graphql-codegen/cli": "^4",
+    "@graphql-tools/merge": "9",
+    "@labdigital/eslint-config-node": "^0.0.5",
+    "@size-limit/preset-small-lib": "^8.2.4",
+    "@types/node": "^20.2.5",
+    "eslint": "^8.41.0",
+    "graphql": "^16.6.0",
+    "graphql-tag": "2",
+    "husky": "^8.0.3",
+    "prettier": "^2.8.8",
+    "size-limit": "^8.2.4",
+    "tslib": "^2.5.2",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4",
+    "vitest": "^0.31.3"
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "^5.0.0",
+    "change-case": "^4.1.2",
+    "terraform-generator": "^5.3.1",
+    "vite": "^4.3.9"
+  },
+  "peerDependencies": {
+    "@graphql-tools/merge": "9",
+    "graphql": "16",
+    "graphql-tag": "2"
+  },
+  "pnpm": {
+    "overrides": {
+      "graphql": "16.6.0"
+    }
+  },
+  "resolutions": {
+    "graphql": "16.6.0"
+  }
+}

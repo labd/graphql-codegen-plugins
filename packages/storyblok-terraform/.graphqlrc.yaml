@@ -1,0 +1,7 @@
+# This is used as a base for the Graphql LSP extension based on graphql-config
+
+schema:
+  - ./_.graphql
+  - ./storyblok-base.graphql
+documents:
+  - ./**.graphql

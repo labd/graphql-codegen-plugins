@@ -1,35 +1,22 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "tasks": {
-    "topo": {
-      "dependsOn": [
-        "^topo"
-      ]
-    },
-    "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        "README.md"
-      ]
-    },
-    "lint": {
-      "dependsOn": [
-        "topo"
-      ],
-      "outputs": [
-        "node_modules/.cache/.eslintcache"
-      ],
-      "outputLogs": "new-only"
-    },
-    "format": {
-      "dependsOn": [
-        "topo"
-      ],
-      "outputLogs": "new-only"
-    }
-  },
-  "ui": "stream"
+	"$schema": "https://turbo.build/schema.json",
+	"tasks": {
+		"topo": {
+			"dependsOn": ["^topo"]
+		},
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**", "README.md"]
+		},
+		"lint": {
+			"dependsOn": ["topo"],
+			"outputs": ["node_modules/.cache/.eslintcache"],
+			"outputLogs": "new-only"
+		},
+		"format": {
+			"dependsOn": ["topo"],
+			"outputLogs": "new-only"
+		}
+	},
+	"ui": "stream"
 }

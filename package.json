@@ -1,25 +1,26 @@
 {
-  "name": "graphql-codegen-plugins",
-  "version": "0.0.1",
-  "description": "Monorepository for codegen",
-  "author": "Lab Digital <opensource@labdigital.nl>",
-  "license": "MIT",
-  "main": "index.js",
-  "scripts": {
-    "build": "pnpm turbo build",
-    "format": "turbo run format",
-    "lint": "turbo run lint",
-    "publish:ci": "pnpm build && pnpm changeset publish",
-    "test": "vitest run",
-    "test:ci": "vitest run --coverage"
-  },
-  "devDependencies": {
-    "@changesets/cli": "2.25.0",
-    "turbo": "^2.2.3"
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "packageManager": "pnpm@9.2.0",
-  "private": true
+	"name": "graphql-codegen-plugins",
+	"version": "0.0.1",
+	"description": "Monorepository for codegen",
+	"author": "Lab Digital <opensource@labdigital.nl>",
+	"license": "MIT",
+	"main": "index.js",
+	"scripts": {
+		"build": "pnpm turbo build",
+		"format": "biome format --fix",
+		"check": "biome check",
+		"publish:ci": "pnpm build && pnpm changeset publish",
+		"test": "vitest run",
+		"test:ci": "vitest run --coverage"
+	},
+	"devDependencies": {
+		"@changesets/cli": "2.25.0",
+		"turbo": "^2.2.3"
+	},
+	"workspaces": ["packages/*"],
+	"packageManager": "pnpm@9.2.0",
+	"private": true,
+	"dependencies": {
+		"@biomejs/biome": "^1.9.4"
+	}
 }

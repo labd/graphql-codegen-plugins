@@ -8,6 +8,7 @@
 	"scripts": {
 		"build": "pnpm turbo build",
 		"format": "biome format --fix",
+		"changeset-version": "changeset version && pnpm format",
 		"check": "biome check",
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"test": "vitest run",

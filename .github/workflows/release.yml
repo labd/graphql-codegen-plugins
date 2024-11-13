@@ -5,8 +5,8 @@ env:
   CI: true
 
 jobs:
-  lint:
-    name: Lint codebase
+  validate:
+    name: Validate codebase
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -23,13 +23,13 @@ jobs:
         with:
           run_install: true
 
-      - name: Lint
-        run: pnpm lint
+      - name: Check
+        run: pnpm check
 
   build:
     name: Build, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    needs: lint
+    needs: validate
     strategy:
       matrix:
         node: ["18.x", "20.x", "22.x"]

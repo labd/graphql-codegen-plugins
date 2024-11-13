@@ -17,9 +17,7 @@
 		"@changesets/cli": "2.25.0",
 		"turbo": "^2.2.3"
 	},
-	"workspaces": [
-		"packages/*"
-	],
+	"workspaces": ["packages/*"],
 	"packageManager": "pnpm@9.2.0",
 	"private": true,
 	"dependencies": {

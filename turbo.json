@@ -1,16 +1,35 @@
 {
-  "$schema": "https://turborepo.org/schema.json",
-  "pipeline": {
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "topo": {
+      "dependsOn": [
+        "^topo"
+      ]
+    },
     "build": {
       "dependsOn": [
         "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        "README.md"
       ]
     },
-    "test:coverage": {},
-    "dev": {
-      "cache": false
+    "lint": {
+      "dependsOn": [
+        "topo"
+      ],
+      "outputs": [
+        "node_modules/.cache/.eslintcache"
+      ],
+      "outputLogs": "new-only"
     },
-    "lint": {},
-    "test:types": {}
-  }
+    "format": {
+      "dependsOn": [
+        "topo"
+      ],
+      "outputLogs": "new-only"
+    }
+  },
+  "ui": "stream"
 }

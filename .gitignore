@@ -1,5 +1,10 @@
-*.log
-.DS_Store
-node_modules
-dist
-coverage
+NOTES.md
+node_modules/*
+**/node_modules/*
+**/dist/*
+**/*.log
+coverage/*
+dist/*
+test-reports/*
+
+.turbo/

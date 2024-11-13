@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/graphql-codegen-typedefs",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "Generate a typedefs file with your GraphQL schema",
 	"module": "./dist/index.js",
 	"main": "./dist/index.cjs",
@@ -12,7 +12,9 @@
 			"require": "./dist/index.cjs"
 		}
 	},
-	"keywords": ["graphql"],
+	"keywords": [
+		"graphql"
+	],
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
 	"repository": {
@@ -28,7 +30,10 @@
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
-	"files": ["dist", "src"],
+	"files": [
+		"dist",
+		"src"
+	],
 	"dependencies": {
 		"@graphql-tools/utils": "10.5.5",
 		"graphql": "^16.9.0"

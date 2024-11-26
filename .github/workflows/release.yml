@@ -87,7 +87,6 @@ jobs:
           title: "Release new version"
           commit: "update version"
           publish: pnpm publish:ci
-          version: pnpm changeset version && pnpm format
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

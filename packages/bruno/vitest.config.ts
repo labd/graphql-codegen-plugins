@@ -14,7 +14,7 @@ export default defineConfig({
 			deps: {
 				fallbackCJS: true,
 			},
-		}
+		},
 	},
 	resolve: {
 		alias: {

@@ -1,0 +1,57 @@
+{
+	"name": "@labdigital/graphql-codegen-k6",
+	"version": "0.0.2",
+	"type": "module",
+	"description": "GraphQL Code Generator plugin for generating a ready-to-use k6 compatible SDK based on GraphQL operations",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/labd/graphql-codegen-plugins.git",
+		"directory": "packages/k6"
+	},
+	"license": "MIT",
+	"engines": {
+		"node": ">= 16.0.0"
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"exports": {
+		".": {
+			"require": {
+				"default": "./dist/index.cjs"
+			},
+			"import": {
+				"default": "./dist/index.js"
+			},
+			"default": {
+				"default": "./dist/index.js"
+			}
+		}
+	},
+	"scripts": {
+		"lint": "biome ci",
+		"build": "tsup",
+		"publish:ci": "pnpm build && pnpm changeset publish",
+		"test:ci": "vitest run"
+	},
+	"peerDependencies": {
+		"graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
+		"graphql-tag": "^2.0.0"
+	},
+	"dependencies": {
+		"@graphql-codegen/plugin-helpers": "^3.1.2",
+		"@graphql-codegen/visitor-plugin-common": "2.13.1",
+		"auto-bind": "~4.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@changesets/cli": "^2.27.10",
+		"tslib": "~2.6.3",
+		"tsup": "^8.3.5",
+		"typescript": "^5.7.2",
+		"vitest": "^2.1.5"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"packageManager": "pnpm@9.9.0"
+}

@@ -34,24 +34,21 @@
 		"test:ci": "vitest run"
 	},
 	"peerDependencies": {
-		"graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
+		"graphql": "^16.9.0",
 		"graphql-tag": "^2.0.0"
 	},
 	"dependencies": {
-		"@graphql-codegen/plugin-helpers": "^3.1.2",
+		"@graphql-codegen/plugin-helpers": "^5.0.4",
 		"@graphql-codegen/visitor-plugin-common": "2.13.1",
 		"auto-bind": "~4.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"@changesets/cli": "^2.27.10",
 		"tslib": "~2.6.3",
 		"tsup": "^8.3.5",
 		"typescript": "^5.7.2",
-		"vitest": "^2.1.5"
+		"vitest": "^2.1.6"
 	},
 	"publishConfig": {
 		"access": "public"
-	},
-	"packageManager": "pnpm@9.9.0"
+	}
 }

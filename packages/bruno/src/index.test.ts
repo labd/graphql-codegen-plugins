@@ -3,7 +3,7 @@ import { afterEach } from "node:test";
 import type { Types } from "@graphql-codegen/plugin-helpers";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadDocumentsSync, loadSchemaSync } from "@graphql-tools/load";
-import fs from "fs-extra";
+import * as fs from "fs-extra";
 import { describe, expect, it } from "vitest";
 import { type BrunoPluginConfig, plugin } from "./index";
 

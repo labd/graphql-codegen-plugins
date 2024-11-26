@@ -23,5 +23,10 @@ export default defineConfig({
 			// functions: 30,
 			// lines: 50,
 		},
+		server: {
+			deps: {
+				fallbackCJS: true,
+			},
+		},
 	},
 });

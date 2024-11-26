@@ -13,6 +13,7 @@
 		"changeset-version": "changeset version && pnpm format",
 		"check": "biome check",
 		"publish:ci": "pnpm build && pnpm changeset publish",
+		"publish:version": "pnpm changeset version && pnpm format",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage --passWithNoTests"
 	},

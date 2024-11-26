@@ -16,15 +16,8 @@
 	"module": "dist/index.js",
 	"exports": {
 		".": {
-			"require": {
-				"default": "./dist/index.cjs"
-			},
-			"import": {
-				"default": "./dist/index.js"
-			},
-			"default": {
-				"default": "./dist/index.js"
-			}
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		}
 	},
 	"scripts": {

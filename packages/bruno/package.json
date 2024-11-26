@@ -11,6 +11,12 @@
 		"url": "https://github.com/labd/graphql-codegen-plugins.git",
 		"directory": "packages/bruno"
 	},
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
 	"scripts": {
 		"build": "tsup",
 		"lint": "biome ci && tsc --noEmit",

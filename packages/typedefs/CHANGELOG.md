@@ -1,5 +1,11 @@
 # @labdigital/graphql-codegen-typedefs
 
+## 0.0.3
+
+### Patch Changes
+
+- 1affeb6: resolve release workflow issue
+
 ## 0.0.2
 
 ### Patch Changes

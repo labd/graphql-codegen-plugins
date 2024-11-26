@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/graphql-codegen-k6",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"type": "module",
 	"description": "GraphQL Code Generator plugin for generating a ready-to-use k6 compatible SDK based on GraphQL operations",
 	"repository": {

@@ -1,5 +1,11 @@
 # @labdigital/graphql-codegen-k6
 
+## 0.0.5
+
+### Patch Changes
+
+- e82a0d3: add export for commonjs
+
 ## 0.0.4
 
 ### Patch Changes

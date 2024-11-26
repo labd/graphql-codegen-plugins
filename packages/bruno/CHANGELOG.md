@@ -1,5 +1,11 @@
 # @labdigital/graphql-codegen-bruno
 
+## 1.1.3
+
+### Patch Changes
+
+- e82a0d3: add export for commonjs
+
 ## 1.1.2
 
 ### Patch Changes

@@ -2,13 +2,8 @@ import path from "node:path";
 import type { PluginFunction, Types } from "@graphql-codegen/plugin-helpers";
 import fs from "fs-extra";
 import type { GraphQLSchema } from "graphql";
-import { asBruno } from "./bruno";
+import { type BrunoPluginConfig, asBruno } from "./bruno";
 import { extractOperations } from "./operations";
-
-export interface BrunoPluginConfig {
-	defaults: Record<string, unknown>;
-	clean: boolean;
-}
 
 export const plugin: PluginFunction<BrunoPluginConfig> = async (
 	schema: GraphQLSchema,
@@ -31,7 +26,7 @@ export const plugin: PluginFunction<BrunoPluginConfig> = async (
 		const fileName = `${operation.name}.bru`;
 		const outputPath = path.join(outputDir, subpath, fileName);
 
-		const formattedContent = await asBruno(operation, config.defaults);
+		const formattedContent = await asBruno(operation, config);
 
 		fs.outputFileSync(outputPath, formattedContent);
 		result[operation.name] = {

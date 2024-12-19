@@ -1,5 +1,11 @@
 # @labdigital/graphql-codegen-bruno
 
+## 1.2.0
+
+### Minor Changes
+
+- f48334b: Add support for setting http headers
+
 ## 1.1.3
 
 ### Patch Changes

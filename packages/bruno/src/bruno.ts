@@ -27,7 +27,7 @@ export const asBruno = async (
 	file.addElement(
 		"headers",
 		Object.entries(config.headers ?? {}).map(
-			([key, value]) => `${key}: "${value}"`,
+			([key, value]) => `${key}: ${value}`,
 		),
 	);
 

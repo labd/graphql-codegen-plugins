@@ -19,7 +19,9 @@ export const plugin: PluginFunction<BrunoPluginConfig> = async (
 		fs.emptyDirSync(outputDir);
 	}
 
-	const operations = extractOperations(schema, documents);
+	const operations = extractOperations(schema, documents).sort((a, b) =>
+		a.name.localeCompare(b.name),
+	);
 	const result: Record<string, Record<string, string>> = {};
 	for (const operation of operations) {
 		const subpath = operation.kind === "query" ? "queries" : "mutations";

@@ -1,5 +1,11 @@
 # @labdigital/graphql-codegen-bruno
 
+## 1.2.2
+
+### Patch Changes
+
+- 1cf3275: Sort operations alphabetically to minimize diffs
+
 ## 1.2.1
 
 ### Patch Changes

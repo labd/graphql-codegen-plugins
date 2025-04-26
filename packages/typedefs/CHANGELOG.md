@@ -1,5 +1,15 @@
 # @labdigital/graphql-codegen-typedefs
 
+## 0.1.0
+
+### Minor Changes
+
+- 6547ee2: Switch to ESM only
+
+### Patch Changes
+
+- 17160cf: Update dependencies
+
 ## 0.0.3
 
 ### Patch Changes

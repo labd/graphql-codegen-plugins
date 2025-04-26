@@ -1,5 +1,15 @@
 # @labdigital/graphql-codegen-bruno
 
+## 1.3.0
+
+### Minor Changes
+
+- 6547ee2: Switch to ESM only
+
+### Patch Changes
+
+- 17160cf: Update dependencies
+
 ## 1.2.2
 
 ### Patch Changes

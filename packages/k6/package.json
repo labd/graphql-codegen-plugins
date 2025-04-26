@@ -12,12 +12,10 @@
 	"engines": {
 		"node": ">= 16.0.0"
 	},
-	"main": "dist/index.cjs",
 	"module": "dist/index.js",
 	"exports": {
 		".": {
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
+			"import": "./dist/index.js"
 		}
 	},
 	"scripts": {

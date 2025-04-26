@@ -1,6 +1,6 @@
+import nodeFs from "node:fs";
 import path from "node:path";
 import type { PluginFunction, Types } from "@graphql-codegen/plugin-helpers";
-import fs from "fs-extra";
 import type { GraphQLSchema } from "graphql";
 import { type BrunoPluginConfig, asBruno } from "./bruno";
 import { extractOperations } from "./operations";
@@ -16,7 +16,7 @@ export const plugin: PluginFunction<BrunoPluginConfig> = async (
 	}
 	const outputDir = path.dirname(info?.outputFile);
 	if (config.clean) {
-		fs.emptyDirSync(outputDir);
+		emptyDirSync(outputDir);
 	}
 
 	const operations = extractOperations(schema, documents).sort((a, b) =>
@@ -30,7 +30,7 @@ export const plugin: PluginFunction<BrunoPluginConfig> = async (
 
 		const formattedContent = await asBruno(operation, config);
 
-		fs.outputFileSync(outputPath, formattedContent);
+		outputFileSync(outputPath, formattedContent);
 		result[operation.name] = {
 			filename: fileName,
 			source: operation.location
@@ -40,3 +40,24 @@ export const plugin: PluginFunction<BrunoPluginConfig> = async (
 	}
 	return JSON.stringify(result, null, 2);
 };
+
+function emptyDirSync(dirPath: string): void {
+	if (!nodeFs.existsSync(dirPath)) {
+		nodeFs.mkdirSync(dirPath, { recursive: true });
+		return;
+	}
+
+	const files = nodeFs.readdirSync(dirPath);
+	for (const file of files) {
+		const filePath = path.join(dirPath, file);
+		nodeFs.rmSync(filePath, { recursive: true, force: true });
+	}
+}
+
+function outputFileSync(filePath: string, content: string): void {
+	const dirPath = path.dirname(filePath);
+	if (!nodeFs.existsSync(dirPath)) {
+		nodeFs.mkdirSync(dirPath, { recursive: true });
+	}
+	nodeFs.writeFileSync(filePath, content);
+}

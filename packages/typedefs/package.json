@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/graphql-codegen-typedefs",
-	"version": "0.0.3",
+	"version": "0.1.0",
 	"description": "Generate a typedefs file with your GraphQL schema",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",

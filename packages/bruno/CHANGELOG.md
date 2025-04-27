@@ -1,5 +1,11 @@
 # @labdigital/graphql-codegen-bruno
 
+## 1.3.1
+
+### Patch Changes
+
+- 1dbff4b: Fix ESM only packaging
+
 ## 1.3.0
 
 ### Minor Changes

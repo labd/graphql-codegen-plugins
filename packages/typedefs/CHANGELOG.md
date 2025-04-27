@@ -1,5 +1,11 @@
 # @labdigital/graphql-codegen-typedefs
 
+## 0.1.1
+
+### Patch Changes
+
+- 1dbff4b: Fix ESM only packaging
+
 ## 0.1.0
 
 ### Minor Changes

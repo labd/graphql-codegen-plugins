@@ -2,6 +2,7 @@
 	"name": "@labdigital/graphql-codegen-k6",
 	"version": "0.1.0",
 	"type": "module",
+	"types": "./dist/index.d.ts",
 	"description": "GraphQL Code Generator plugin for generating a ready-to-use k6 compatible SDK based on GraphQL operations",
 	"repository": {
 		"type": "git",
@@ -14,9 +15,7 @@
 	},
 	"module": "dist/index.js",
 	"exports": {
-		".": {
-			"import": "./dist/index.js"
-		}
+		".": "./dist/index.js"
 	},
 	"scripts": {
 		"lint": "biome ci",

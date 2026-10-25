@@ -32,7 +32,7 @@ jobs:
     needs: validate
     strategy:
       matrix:
-        node: ["22.x", "24.x"]
+        node: ["22.x", "24.x", "26.x"]
         os: [ubuntu-latest]
 
     steps:

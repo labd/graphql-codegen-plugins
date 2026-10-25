@@ -10,6 +10,9 @@
 	"keywords": ["graphql", "codegen"],
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
+	"engines": {
+		"node": ">=22"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/labd/graphql-codegen-plugins.git",
@@ -30,8 +33,8 @@
 	},
 	"devDependencies": {
 		"graphql": "^16.9.0",
-		"tsup": "^8.3.5",
+		"tsup": "^9.0.0",
 		"typescript": "^5.7.2",
-		"vitest": "3.1.2"
+		"vitest": "3.2.7"
 	}
 }

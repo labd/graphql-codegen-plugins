@@ -55,7 +55,9 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 ## Configuration
 
-This plugin has no configuration options.
+| Option | Type | Default | Description |
+| ------ | ---- | ------- | ----------- |
+| `extendSchema` | `boolean` | `true` | Print the schema definition as an extension, `extend schema { ... }`, instead of `schema { ... }`. |
 
 ## Example output
 
@@ -88,7 +90,7 @@ the plugin generates `src/generated/typedefs.ts`:
 import { gql } from "graphql-tag";
 
 export const typeDefs = gql`
-  extend 	schema {
+	extend schema {
 		query: Query
 		mutation: Mutation
 	}
@@ -118,9 +120,14 @@ export const typeDefs = gql`
 - The schema is printed with `printSchemaWithDirectives` from
   `@graphql-tools/utils`, so directives on the schema and its types are kept.
   Types are sorted alphabetically.
-- The output starts with the schema definition, printed as an extension:
-  `extend schema { ... }`. `makeExecutableSchema` from `@graphql-tools/schema`
-  accepts this as is.
+- The schema definition (the root operation types) is printed as an extension,
+  `extend schema { ... }`, which `graphql`'s `buildSchema` and
+  `makeExecutableSchema` from `@graphql-tools/schema` accept as is, and which
+  can be merged with other type definitions that define the schema. Set
+  `extendSchema: false` to print a plain `schema { ... }` definition instead.
+  Schema extensions cannot have a description, so the description of the
+  schema (if any) is only kept with `extendSchema: false`. A schema without
+  root types has no schema definition; nothing is extended then.
 - Backticks in the schema (for example in descriptions) are escaped.
 - The schema is written as a whole; there is no option to include or exclude
   types.

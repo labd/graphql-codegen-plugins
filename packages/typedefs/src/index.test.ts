@@ -41,8 +41,18 @@ describe("typedefs plugin", () => {
 
 	it("generates valid SDL that builds the same schema", () => {
 		const schema = buildSchema(schemaSDL);
-		const sdl = extractSDL(plugin(schema));
-		expect(printSchema(buildSchema(sdl))).toBe(printSchema(schema));
+		for (const extendSchema of [true, false]) {
+			const sdl = extractSDL(plugin(schema, [], { extendSchema }));
+			expect(printSchema(buildSchema(sdl))).toBe(printSchema(schema));
+		}
+	});
+
+	it("prints a plain schema definition when extendSchema is false", () => {
+		const sdl = extractSDL(
+			plugin(buildSchema(schemaSDL), [], { extendSchema: false }),
+		);
+		expect(sdl).toMatch(/^\tschema \{\n/);
+		expect(sdl).not.toContain("extend");
 	});
 
 	it("only extends the schema definition", () => {
@@ -73,5 +83,9 @@ describe("typedefs plugin", () => {
 			/^\textend schema @meta \{\n\t\tquery: Root\n\t\}/,
 		);
 		expect(buildSchema(extended).getQueryType()?.name).toBe("Root");
+
+		const plain = extractSDL(plugin(schema, [], { extendSchema: false }));
+		expect(plain).toMatch(/^\t"""The schema"""\n\tschema @meta \{/);
+		expect(buildSchema(plain).description).toBe("The schema");
 	});
 });

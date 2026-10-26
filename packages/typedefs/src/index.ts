@@ -7,6 +7,14 @@ import {
 	type SchemaExtensionNode,
 } from "graphql";
 
+export interface TypedefsPluginConfig {
+	/**
+	 * Print the schema definition (`schema { query: Query ... }`) as an
+	 * extension: `extend schema { ... }`. Defaults to `true`.
+	 */
+	extendSchema?: boolean;
+}
+
 const print = (schema: string): string => {
 	let escaped = schema.replace(/\\`/g, "\\\\`").replace(/`/g, "\\`");
 	const tabSize = 2;
@@ -51,14 +59,17 @@ const toSchemaExtension = (definition: DefinitionNode): DefinitionNode => {
 	return extension;
 };
 
-export const plugin = (schema: GraphQLSchema): string => {
-	// Same as `printSchemaWithDirectives` from @graphql-tools/utils, with the
-	// schema definition printed as an extension
+export const plugin = (
+	schema: GraphQLSchema,
+	_documents?: unknown,
+	config: TypedefsPluginConfig = {},
+): string => {
+	// Same as `printSchemaWithDirectives` from @graphql-tools/utils
 	const document = getDocumentNodeFromSchema(schema);
-	return print(
-		printAST({
-			...document,
-			definitions: document.definitions.map(toSchemaExtension),
-		}),
-	);
+	const definitions =
+		config.extendSchema === false
+			? document.definitions
+			: document.definitions.map(toSchemaExtension);
+
+	return print(printAST({ ...document, definitions }));
 };

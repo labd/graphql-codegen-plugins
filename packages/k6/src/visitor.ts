@@ -55,7 +55,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<
 	): string {
 		if (node.name == null) {
 			throw new Error(
-				`PlugJn '@labdigital/graphql-codegen-k6' cannot generate SDK for unnamed operation.\n\n${print(node)}`,
+				`Plugin '@labdigital/graphql-codegen-k6' cannot generate SDK for unnamed operation.\n\n${print(node)}`,
 			);
 		} else {
 			this._operationsToInclude.push({
@@ -69,6 +69,29 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<
 		}
 
 		return "";
+	}
+
+	/**
+	 * The `Requester` type refers to `DocumentNode` in every mode except
+	 * `string`, but the base visitor only imports it for the `documentNode*`
+	 * modes. Add the import for the other modes as well.
+	 */
+	public getImports(options: { excludeFragments?: boolean } = {}): string[] {
+		const imports = super.getImports(options);
+		if (this.config.documentMode === DocumentMode.string) {
+			return imports;
+		}
+		const documentNodeImport = this._generateImport(
+			this._parseImport(
+				this.config.documentNodeImport || "graphql#DocumentNode",
+			),
+			"DocumentNode",
+			true,
+		);
+		if (documentNodeImport && !imports.includes(documentNodeImport)) {
+			imports.push(documentNodeImport);
+		}
+		return imports;
 	}
 
 	private getDocumentNodeVariable(documentVariableName: string): string {

@@ -1,12 +1,13 @@
 {
-	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
-		"defaultBranch": "main"
+		"defaultBranch": "main",
+		"useIgnoreFile": true
 	},
 	"files": {
-		"ignore": ["**/dist/*"]
+		"includes": ["**", "!**/dist/**/*"]
 	},
 	"json": {
 		"parser": {
@@ -20,7 +21,7 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
+			"preset": "recommended",
 			"complexity": {
 				"noUselessTernary": "error",
 				"useDateNow": "error",
@@ -32,9 +33,14 @@
 				"noUnusedVariables": "off"
 			},
 			"suspicious": {
-				"noConsoleLog": "error",
 				"noEvolvingTypes": "error",
-				"useErrorMessage": "error"
+				"useErrorMessage": "error",
+				"noConsole": {
+					"level": "error",
+					"options": {
+						"allow": ["assert", "debug", "error", "info", "trace", "warn"]
+					}
+				}
 			},
 			"style": {
 				"noParameterAssign": "off",
@@ -48,9 +54,7 @@
 					}
 				},
 				"useTemplate": "off",
-				"useThrowOnlyError": "error"
-			},
-			"nursery": {
+				"useThrowOnlyError": "error",
 				"noNestedTernary": "warn"
 			}
 		}

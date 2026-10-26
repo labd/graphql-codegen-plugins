@@ -1,6 +1,6 @@
 type Query {
-  customer(info: CustomerInfo!): Customer
-  product(id: ID!): Product
+	customer(info: CustomerInfo!): Customer
+	product(id: ID!): Product
 }
 
 input CustomerInfo {
@@ -19,23 +19,22 @@ input Credentials {
 }
 
 type Customer {
-  id: ID!
-  firstName: String!
-  email: String!
-  addresses: [Address!]!
+	id: ID!
+	firstName: String!
+	email: String!
+	addresses: [Address!]!
 }
 
 type Product {
-  id: ID!
-  name: String!
-  price: Float!
+	id: ID!
+	name: String!
+	price: Float!
 }
 
 type Address {
-  id: ID!
-  email: String
-  firstName: String
-  lastName: String
-  city: String
+	id: ID!
+	email: String
+	firstName: String
+	lastName: String
+	city: String
 }
-

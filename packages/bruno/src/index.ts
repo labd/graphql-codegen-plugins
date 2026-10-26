@@ -2,7 +2,7 @@ import nodeFs from "node:fs";
 import path from "node:path";
 import type { PluginFunction, Types } from "@graphql-codegen/plugin-helpers";
 import type { GraphQLSchema } from "graphql";
-import { type BrunoPluginConfig, asBruno } from "./bruno";
+import { asBruno, type BrunoPluginConfig } from "./bruno";
 import { extractOperations } from "./operations";
 
 export const plugin: PluginFunction<BrunoPluginConfig> = async (

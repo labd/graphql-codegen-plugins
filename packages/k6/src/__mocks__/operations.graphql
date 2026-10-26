@@ -1,0 +1,34 @@
+query GetProduct($id: ID!, $locale: Locale) {
+	product(id: $id, locale: $locale) {
+		...ProductFields
+	}
+}
+
+query ListProducts($filter: ProductFilter) {
+	products(filter: $filter) {
+		...ProductFields
+	}
+}
+
+mutation AddToCart($productId: ID!, $quantity: Int!) {
+	addToCart(productId: $productId, quantity: $quantity) {
+		id
+		totalItems
+	}
+}
+
+subscription CartUpdated($cartId: ID!) {
+	cartUpdated(cartId: $cartId) {
+		id
+	}
+}
+
+fragment ProductFields on Product {
+	id
+	name
+	...ProductPrice
+}
+
+fragment ProductPrice on Product {
+	price
+}

@@ -1,4 +1,7 @@
 ## GraphQL Codegen Bruno Plugin
+
+[![npm](https://img.shields.io/npm/v/@labdigital/graphql-codegen-bruno)](https://www.npmjs.com/package/@labdigital/graphql-codegen-bruno)
+
 This plugin generates a directory with
 [Bruno](https://github.com/usebruno/bruno) files with all GraphQL queries in
 your codebase

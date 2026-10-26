@@ -1,4 +1,3 @@
-import prettier from "prettier";
 import type { FileContent } from "./operations";
 
 export interface BrunoPluginConfig {
@@ -7,14 +6,10 @@ export interface BrunoPluginConfig {
 	clean: boolean;
 }
 
-export const asBruno = async (
+export const asBruno = (
 	operation: FileContent,
 	config: BrunoPluginConfig,
-) => {
-	const formattedContent = await prettier.format(operation.content, {
-		parser: "graphql",
-	});
-
+): string => {
 	const vars = mergeDefaults(operation.vars, config.defaults);
 
 	const file = new FileCreator();
@@ -31,7 +26,7 @@ export const asBruno = async (
 		),
 	);
 
-	file.addElement("body:graphql", formattedContent.split("\n"));
+	file.addElement("body:graphql", operation.content.split("\n"));
 
 	file.addElement(
 		"body:graphql:vars",

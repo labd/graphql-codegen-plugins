@@ -28,7 +28,7 @@ export const plugin: PluginFunction<BrunoPluginConfig> = async (
 		const fileName = `${operation.name}.bru`;
 		const outputPath = path.join(outputDir, subpath, fileName);
 
-		const formattedContent = await asBruno(operation, config);
+		const formattedContent = asBruno(operation, config);
 
 		outputFileSync(outputPath, formattedContent);
 		result[operation.name] = {

@@ -16,11 +16,20 @@
 		"directory": "packages/bruno"
 	},
 	"exports": {
-		".": "./dist/index.js"
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
 	},
+	"sideEffects": false,
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"build": "tsdown",
 		"clean": "rm -rf dist",
+		"lint:package": "publint --strict",
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
@@ -36,6 +45,7 @@
 		"@vitest/coverage-v8": "5.0.3",
 		"graphql": "^17.0.2",
 		"prettier": "^3.9.10",
+		"publint": "^0.3.25",
 		"tsdown": "^0.23.1",
 		"typescript": "^7.0.2",
 		"vitest": "5.0.3"

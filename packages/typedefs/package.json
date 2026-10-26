@@ -5,8 +5,13 @@
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"exports": {
-		".": "./dist/index.js"
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
 	},
+	"sideEffects": false,
 	"keywords": [
 		"graphql",
 		"codegen"
@@ -27,6 +32,7 @@
 	},
 	"scripts": {
 		"build": "tsdown",
+		"lint:package": "publint --strict",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
 		"typecheck": "tsc --noEmit"
@@ -40,6 +46,7 @@
 	},
 	"devDependencies": {
 		"graphql": "^17.0.2",
+		"publint": "^0.3.25",
 		"tsdown": "^0.23.1",
 		"typescript": "^7.0.2",
 		"vitest": "5.0.3"

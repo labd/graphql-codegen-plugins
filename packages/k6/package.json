@@ -18,24 +18,26 @@
 		".": "./dist/index.js"
 	},
 	"scripts": {
-		"lint": "biome ci",
 		"build": "tsdown",
 		"publish:ci": "pnpm build && pnpm changeset publish",
-		"test:ci": "vitest run"
+		"test": "vitest run",
+		"test:ci": "vitest run",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@graphql-codegen/plugin-helpers": "^5.0.4",
-		"@graphql-codegen/visitor-plugin-common": "5.8.0",
+		"@graphql-codegen/plugin-helpers": "^7.4.2",
+		"@graphql-codegen/visitor-plugin-common": "7.2.10",
 		"auto-bind": "5.0.1"
 	},
 	"devDependencies": {
+		"graphql": "^17.0.2",
 		"tsdown": "^0.23.1",
 		"tslib": "2.8.1",
-		"typescript": "^5.7.2",
-		"vitest": "3.2.7"
+		"typescript": "^7.0.2",
+		"vitest": "5.0.3"
 	},
 	"peerDependencies": {
-		"graphql": "16.x",
+		"graphql": "^16.0.0 || ^17.0.0",
 		"graphql-tag": "^2.0.0"
 	},
 	"publishConfig": {

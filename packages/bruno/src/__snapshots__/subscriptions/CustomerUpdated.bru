@@ -1,0 +1,40 @@
+meta {
+  name: CustomerUpdated
+  type: graphql
+}
+
+post {
+  url: {{graphql-gateway}}/graphql
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  subscription CustomerUpdated($id: ID!) {
+    customerUpdated(id: $id) {
+      id
+      ... on Customer {
+        ...CustomerDetails
+      }
+    }
+  }
+  
+  fragment CustomerDetails on Customer {
+    firstName
+    email
+    addresses {
+      ...AddressDetails
+    }
+  }
+  
+  fragment AddressDetails on Address {
+    id
+    city
+  }
+}
+
+body:graphql:vars {
+  {
+    "id": "example-id"
+  }
+}

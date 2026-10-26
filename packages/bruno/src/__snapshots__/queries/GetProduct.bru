@@ -1,0 +1,30 @@
+meta {
+  name: GetProduct
+  type: graphql
+}
+
+post {
+  url: {{graphql-gateway}}/graphql
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  query GetProduct($id: ID!) {
+    product(id: $id) {
+      ...ProductFields
+    }
+  }
+  
+  fragment ProductFields on Product {
+    id
+    name
+    price
+  }
+}
+
+body:graphql:vars {
+  {
+    "id": "example-id"
+  }
+}

@@ -1,7 +1,7 @@
 import nodeFs from "node:fs";
 import path from "node:path";
 import type { PluginFunction, Types } from "@graphql-codegen/plugin-helpers";
-import type { GraphQLSchema } from "graphql";
+import type { GraphQLSchema, OperationTypeNode } from "graphql";
 import { asBruno, type BrunoPluginConfig } from "./bruno";
 import { extractOperations } from "./operations";
 
@@ -24,9 +24,12 @@ export const plugin: PluginFunction<BrunoPluginConfig> = async (
 	);
 	const result: Record<string, Record<string, string>> = {};
 	for (const operation of operations) {
-		const subpath = operation.kind === "query" ? "queries" : "mutations";
 		const fileName = `${operation.name}.bru`;
-		const outputPath = path.join(outputDir, subpath, fileName);
+		const outputPath = path.join(
+			outputDir,
+			OPERATION_FOLDERS[operation.kind],
+			fileName,
+		);
 
 		const formattedContent = asBruno(operation, config);
 
@@ -39,6 +42,13 @@ export const plugin: PluginFunction<BrunoPluginConfig> = async (
 		};
 	}
 	return JSON.stringify(result, null, 2);
+};
+
+/** The folder (in the output directory) per operation type. */
+const OPERATION_FOLDERS: Record<OperationTypeNode, string> = {
+	query: "queries",
+	mutation: "mutations",
+	subscription: "subscriptions",
 };
 
 function emptyDirSync(dirPath: string): void {

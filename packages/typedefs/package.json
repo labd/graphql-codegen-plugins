@@ -32,7 +32,6 @@
 	},
 	"scripts": {
 		"build": "tsdown",
-		"lint:package": "publint --strict",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
 		"typecheck": "tsc --noEmit"

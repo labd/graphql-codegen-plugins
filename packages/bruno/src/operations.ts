@@ -1,106 +1,100 @@
-import assert from "node:assert";
 import type { Types } from "@graphql-codegen/plugin-helpers";
 import {
 	type FragmentDefinitionNode,
 	type GraphQLSchema,
 	Kind,
 	type OperationDefinitionNode,
+	type OperationTypeNode,
 	print,
+	visit,
 } from "graphql";
 import { generateExampleVariables } from "./vars";
 
-export interface BruPluginConfig {
-	outputDir?: string;
-}
-
 export type FileContent = {
-	kind: string | undefined;
+	kind: OperationTypeNode;
 	name: string;
 	content: string;
 	vars: Record<string, unknown>;
 	location: string | undefined;
 };
 
+/**
+ * Returns the names of the fragments used by the given node, including the
+ * fragments used by those fragments, in order of first use. Every fragment is
+ * listed once.
+ */
+export const collectUsedFragments = (
+	node: OperationDefinitionNode | FragmentDefinitionNode,
+	fragments: ReadonlyMap<string, FragmentDefinitionNode>,
+): string[] => {
+	const used = new Set<string>();
+
+	const collect = (
+		current: OperationDefinitionNode | FragmentDefinitionNode,
+	) => {
+		visit(current, {
+			FragmentSpread(spread) {
+				const name = spread.name.value;
+				if (used.has(name)) {
+					return;
+				}
+				used.add(name);
+				const fragment = fragments.get(name);
+				if (fragment) {
+					collect(fragment);
+				}
+			},
+		});
+	};
+
+	collect(node);
+	return [...used];
+};
+
 export const extractOperations = (
 	schema: GraphQLSchema,
 	documents: Types.DocumentFile[],
 ): FileContent[] => {
-	const results: FileContent[] = [];
-
-	// Step 1: Collect all fragments
-	const allFragments = new Map<string, FragmentDefinitionNode>();
-
+	// Collect the fragments of all documents, so operations can use fragments
+	// defined in other documents.
+	const fragments = new Map<string, FragmentDefinitionNode>();
 	for (const doc of documents) {
-		if (doc.document) {
-			for (const definition of doc.document.definitions) {
-				if (definition.kind === Kind.FRAGMENT_DEFINITION) {
-					const fragmentName = definition.name.value;
-					// allFragments[fragmentName] = definition as FragmentDefinitionNode;
-					allFragments.set(fragmentName, definition as FragmentDefinitionNode);
-				}
+		for (const definition of doc.document?.definitions ?? []) {
+			if (definition.kind === Kind.FRAGMENT_DEFINITION) {
+				fragments.set(definition.name.value, definition);
 			}
 		}
 	}
 
-	// Step 2: Process operations and append only used fragments
+	const results: FileContent[] = [];
 	for (const doc of documents) {
-		if (doc.document) {
-			const operations = doc.document.definitions
-				.filter((def) => def.kind === Kind.OPERATION_DEFINITION)
-				.filter((operation) => operation.name?.value !== undefined) // Filter out unnamed operations
-				.map((operation): FileContent => {
-					assert(operation.name?.value);
+		for (const definition of doc.document?.definitions ?? []) {
+			// Unnamed operations are skipped
+			if (
+				definition.kind !== Kind.OPERATION_DEFINITION ||
+				!definition.name?.value
+			) {
+				continue;
+			}
 
-					const operationString = doc.rawSDL || "";
+			// The request contains the operation itself, followed by the
+			// fragments it (transitively) uses.
+			const content = [
+				definition,
+				...collectUsedFragments(definition, fragments)
+					.map((name) => fragments.get(name))
+					.filter((fragment) => fragment !== undefined),
+			]
+				.map((node) => print(node))
+				.join("\n\n");
 
-					// Collect the names of all fragments used in this operation
-					const usedFragments = new Set<string>();
-					const collectFragments = (
-						node: OperationDefinitionNode | FragmentDefinitionNode,
-					) => {
-						if (node.selectionSet) {
-							for (const selection of node.selectionSet.selections) {
-								if (selection.kind === Kind.FRAGMENT_SPREAD) {
-									usedFragments.add(selection.name.value);
-									// Recursively collect fragments within fragments
-									const fragment = allFragments.get(selection.name.value);
-									if (fragment) {
-										collectFragments(fragment);
-									}
-								} else if (selection.selectionSet) {
-									// @ts-expect-error
-									collectFragments(selection as OperationDefinitionNode);
-								}
-							}
-						}
-					};
-
-					collectFragments(operation);
-
-					// Append only the used fragments
-					let fileContent = operationString;
-
-					for (const fragmentName of usedFragments) {
-						const fragment = allFragments.get(fragmentName);
-						if (fragment) {
-							const fragmentString = print(fragment);
-							fileContent += `\n${fragmentString}`;
-						}
-					}
-
-					return {
-						name: operation.name?.value,
-						location: operation.loc?.source.name,
-						kind: operation.operation,
-						content: fileContent,
-						vars: generateExampleVariables(
-							schema,
-							operation as OperationDefinitionNode,
-						),
-					};
-				});
-
-			results.push(...operations);
+			results.push({
+				name: definition.name.value,
+				location: definition.loc?.source.name ?? doc.location,
+				kind: definition.operation,
+				content,
+				vars: generateExampleVariables(schema, definition),
+			});
 		}
 	}
 

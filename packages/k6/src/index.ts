@@ -48,6 +48,9 @@ export const plugin: PluginFunction<RawK6PluginConfig> = (
 	return {
 		prepend: visitor.getImports(),
 		content: [
+			...(visitor.typedDocumentStringClass
+				? [visitor.typedDocumentStringClass]
+				: []),
 			visitor.fragments,
 			...visitorResult.definitions.filter((t) => typeof t === "string"),
 			visitor.sdkContent,

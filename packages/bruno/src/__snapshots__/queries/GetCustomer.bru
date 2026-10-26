@@ -28,17 +28,6 @@ body:graphql {
     id
     city
   }
-  fragment CustomerDetails on Customer {
-    firstName
-    email
-    addresses {
-      ...AddressDetails
-    }
-  }
-  fragment AddressDetails on Address {
-    id
-    city
-  }
   
 }
 

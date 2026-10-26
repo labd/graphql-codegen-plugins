@@ -22,8 +22,14 @@ pnpm add -D @types/k6
 ```
 
 `graphql` and `graphql-tag` are peer dependencies. The plugin only generates
-the SDK methods; the operation types it refers to come from
-`@graphql-codegen/typescript-operations`.
+the operation documents and the SDK methods; the operation types it refers to
+come from `@graphql-codegen/typescript-operations`.
+
+Use `typescript-operations` (v6) on its own, **without** the `typescript`
+plugin in the same output: `typescript-operations` v6 generates the enum and
+input types the operations need itself, so adding `typescript` results in
+duplicate declarations of those types. This plugin does not generate any schema
+types.
 
 ## Usage
 
@@ -37,7 +43,8 @@ const config: CodegenConfig = {
 		"k6/sdk.ts": {
 			plugins: ["typescript-operations", "@labdigital/graphql-codegen-k6"],
 			config: {
-				// Embed the operations as DocumentNode objects (see "Notes")
+				// Embed the operations as DocumentNode objects (the default,
+				// "graphQLTag", uses gql from graphql-tag)
 				documentMode: "documentNode",
 				useTypeImports: true,
 			},
@@ -105,7 +112,7 @@ The options that affect the generated SDK:
 
 | Option | Type | Default | Description |
 | ------ | ---- | ------- | ----------- |
-| `documentMode` | `"graphQLTag" \| "documentNode" \| "documentNodeImportFragments" \| "external" \| "string"` | `"graphQLTag"` | How the operation documents are emitted. `graphQLTag` uses `gql` from `graphql-tag`, `documentNode` embeds them as plain `DocumentNode` objects, `external` imports them from `importDocumentNodeExternallyFrom`. See the notes below. |
+| `documentMode` | `"graphQLTag" \| "documentNode" \| "documentNodeImportFragments" \| "external" \| "string"` | `"graphQLTag"` | How the operation documents are emitted. `graphQLTag` uses `gql` from `graphql-tag`, `documentNode` embeds them as plain `DocumentNode` objects, `external` imports them from `importDocumentNodeExternallyFrom`, `string` emits them as `TypedDocumentString` (see [String documents](#string-documents)). |
 | `importDocumentNodeExternallyFrom` | `string` | `""` | Module to import the documents from when `documentMode` is `external`. The SDK then refers to them as `Operations.<name>Document`. |
 | `importOperationTypesFrom` | `string` | `""` | Namespace prefix for the operation result and variables types used in the SDK (for example `Types` results in `Types.GetProductQuery`). Used by presets such as `near-operation-file`. |
 | `gqlImport` | `string` | `"graphql-tag#gql"` | Module (and export) to import `gql` from, when `documentMode` is `graphQLTag`. |
@@ -130,6 +137,21 @@ The options that affect the generated SDK:
 When the plugin runs in the same output as `typescript-operations` (as in the
 example above), shared options such as `namingConvention` can be set once in
 the `config` of the output.
+
+### String documents
+
+With `documentMode: "string"` the operations are emitted as instances of a
+`TypedDocumentString` class (a `String` subclass, the same class as generated
+by `typed-document-node` and the client preset), which the plugin generates in
+the output file. The requester receives the document as a
+`TypedDocumentString`; it serializes to the query string, so you do not need
+`graphql` at runtime:
+
+```ts
+const sdk = getSdk<Params, unknown>((doc, variables, options) =>
+	http.post(endpoint, JSON.stringify({ query: doc, variables }), options),
+);
+```
 
 ## Example output
 
@@ -185,11 +207,6 @@ variables (such as `ListProducts`).
 - Every operation must be named; codegen fails on unnamed operations.
 - The SDK methods return the raw k6 `RefinedResponse`; the response body is
   not typed or parsed. Use `res.json()` to read the result.
-- Use `documentMode: "documentNode"` (as above). With the default
-  `graphQLTag` mode the generated `Requester` type refers to `DocumentNode`
-  without importing it, so the file does not type check. `documentMode:
-  "string"` is not supported: the generated code uses a `TypedDocumentString`
-  class that is not emitted.
-- Use `typescript-operations` without the `typescript` plugin in the same
-  output: `typescript-operations` v6 already generates the input and enum
-  types it needs, and combining both results in duplicate type declarations.
+- The generated `Requester` type refers to `DocumentNode` (or
+  `TypedDocumentString` with `documentMode: "string"`); the plugin imports it
+  from `documentNodeImport` (default `graphql`).

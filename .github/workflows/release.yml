@@ -1,5 +1,10 @@
 name: Release
-on: [push]
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 env:
   CI: true
@@ -13,46 +18,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: 22
+        uses: labd/gh-actions-typescript/pnpm-install@ada4548df9a365c62c8b396b583953c6d4bc113f # v1.1.0
 
-      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          run_install: true
-
-      - name: Check
+      - name: Check formatting, linting and typing
         run: pnpm check
 
   build:
-    name: Build, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Build, and test on Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
     needs: validate
     strategy:
       matrix:
         node: ["22.x", "24.x", "26.x"]
-        os: [ubuntu-latest]
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
-
-      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
-        name: Install pnpm
-        id: pnpm-install
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          run_install: true
+          persist-credentials: false
 
-      - name: Use Node ${{ matrix.node }}
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - name: Set up Node.js
+        uses: labd/gh-actions-typescript/pnpm-install@ada4548df9a365c62c8b396b583953c6d4bc113f # v1.1.0
         with:
           node-version: ${{ matrix.node }}
-          cache: "pnpm"
 
       - name: Build
         run: pnpm build
@@ -60,11 +53,10 @@ jobs:
       - name: Test
         run: pnpm test:ci
 
-
   release:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     environment: release
     permissions:
@@ -73,21 +65,15 @@ jobs:
       pull-requests: write # create/update the release PR
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          run_install: true
-
       # No dependency cache in the release job (cache poisoning)
-      - name: Install node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - name: Set up Node.js
+        uses: labd/gh-actions-typescript/pnpm-install@ada4548df9a365c62c8b396b583953c6d4bc113f # v1.1.0
         with:
-          node-version: 22
+          cache: "false"
 
       - name: Upgrade npm for trusted publishing
         run: npm i -g npm@^11.6.4
@@ -95,7 +81,6 @@ jobs:
       - name: Create and publish versions
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          # changesets/action v2 renamed every one of these inputs.
           pr-title: "Release new version"
           commit-message: "update version"
           publish-script: pnpm publish:ci

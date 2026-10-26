@@ -5,3 +5,5 @@
 ---
 
 Update dependencies to resolve security advisories: `@graphql-codegen/plugin-helpers` 7, `@graphql-codegen/visitor-plugin-common` 7 and `@graphql-tools/utils` 12. The `graphql` peer dependency now accepts both v16 and v17.
+
+The packages now only publish `dist`, declare `types` in their `exports` map and are marked side-effect free.

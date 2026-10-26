@@ -1,5 +1,11 @@
-import { printSchemaWithDirectives } from "@graphql-tools/utils";
-import type { GraphQLSchema } from "graphql";
+import { getDocumentNodeFromSchema } from "@graphql-tools/utils";
+import {
+	type DefinitionNode,
+	type GraphQLSchema,
+	Kind,
+	print as printAST,
+	type SchemaExtensionNode,
+} from "graphql";
 
 const print = (schema: string): string => {
 	let escaped = schema.replace(/\\`/g, "\\\\`").replace(/`/g, "\\`");
@@ -24,11 +30,35 @@ const print = (schema: string): string => {
 import { gql } from "graphql-tag";
 
 export const typeDefs = gql\`
-  extend ${escaped}
+${escaped}
 \`;
 `.trim();
 };
 
+/**
+ * Converts the schema definition to a schema extension. Extensions cannot
+ * have a description, so that is dropped.
+ */
+const toSchemaExtension = (definition: DefinitionNode): DefinitionNode => {
+	if (definition.kind !== Kind.SCHEMA_DEFINITION) {
+		return definition;
+	}
+	const extension: SchemaExtensionNode = {
+		kind: Kind.SCHEMA_EXTENSION,
+		directives: definition.directives,
+		operationTypes: definition.operationTypes,
+	};
+	return extension;
+};
+
 export const plugin = (schema: GraphQLSchema): string => {
-	return print(printSchemaWithDirectives(schema));
+	// Same as `printSchemaWithDirectives` from @graphql-tools/utils, with the
+	// schema definition printed as an extension
+	const document = getDocumentNodeFromSchema(schema);
+	return print(
+		printAST({
+			...document,
+			definitions: document.definitions.map(toSchemaExtension),
+		}),
+	);
 };

@@ -1,0 +1,33 @@
+type Query {
+	product(id: ID!, locale: Locale): Product
+	products(filter: ProductFilter): [Product!]!
+}
+
+type Mutation {
+	addToCart(productId: ID!, quantity: Int!): Cart!
+}
+
+type Subscription {
+	cartUpdated(cartId: ID!): Cart!
+}
+
+enum Locale {
+	NL
+	EN
+}
+
+input ProductFilter {
+	query: String
+	locale: Locale
+}
+
+type Product {
+	id: ID!
+	name: String!
+	price: Float!
+}
+
+type Cart {
+	id: ID!
+	totalItems: Int!
+}

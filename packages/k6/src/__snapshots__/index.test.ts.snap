@@ -1,0 +1,329 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`k6 plugin > documentMode documentNode (useTypeImports: false) > generates the sdk 1`] = `
+"import { type RefinedResponse, type ResponseType } from "k6/http";
+import { DocumentNode } from 'graphql';
+export const ProductPriceFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductPrice"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode;
+export const ProductFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductPrice"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductPrice"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode;
+export const GetProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProduct"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"locale"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Locale"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"locale"},"value":{"kind":"Variable","name":{"kind":"Name","value":"locale"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductFields"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductPrice"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductPrice"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode;
+export const ListProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListProducts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ProductFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductFields"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductPrice"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductPrice"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode;
+export const AddToCartDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddToCart"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"quantity"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addToCart"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"productId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productId"}}},{"kind":"Argument","name":{"kind":"Name","value":"quantity"},"value":{"kind":"Variable","name":{"kind":"Name","value":"quantity"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalItems"}}]}}]}}]} as unknown as DocumentNode;
+export const CartUpdatedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"CartUpdated"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cartId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cartUpdated"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cartId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cartId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode;
+
+    export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => RefinedResponse<ResponseType>
+
+    export function getSdk<C, E>(requester: Requester<C, E>) {
+      return {
+            GetProduct(variables: GetProductQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<GetProductQuery, GetProductQueryVariables>(GetProductDocument, variables, options);
+            },
+    ListProducts(variables?: ListProductsQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<ListProductsQuery, ListProductsQueryVariables>(ListProductsDocument, variables, options);
+            },
+    AddToCart(variables: AddToCartMutationVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<AddToCartMutation, AddToCartMutationVariables>(AddToCartDocument, variables, options);
+            },
+    CartUpdated(variables: CartUpdatedSubscriptionVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<CartUpdatedSubscription, CartUpdatedSubscriptionVariables>(CartUpdatedDocument, variables, options);
+            }
+      };
+    }
+    export type Sdk = ReturnType<typeof getSdk>;"
+`;
+
+exports[`k6 plugin > documentMode documentNodeImportFragments (useTypeImports: false) > generates the sdk 1`] = `
+"import { type RefinedResponse, type ResponseType } from "k6/http";
+import { DocumentNode } from 'graphql';
+export const ProductPriceFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductPrice"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode;
+export const ProductFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductPrice"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductPrice"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode;
+export const GetProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProduct"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"locale"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Locale"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"locale"},"value":{"kind":"Variable","name":{"kind":"Name","value":"locale"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductFields"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductPrice"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductPrice"}}]}}]} as unknown as DocumentNode;
+export const ListProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListProducts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ProductFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductFields"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductPrice"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductPrice"}}]}}]} as unknown as DocumentNode;
+export const AddToCartDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddToCart"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"quantity"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addToCart"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"productId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productId"}}},{"kind":"Argument","name":{"kind":"Name","value":"quantity"},"value":{"kind":"Variable","name":{"kind":"Name","value":"quantity"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalItems"}}]}}]}}]} as unknown as DocumentNode;
+export const CartUpdatedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"CartUpdated"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cartId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cartUpdated"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cartId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cartId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode;
+
+    export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => RefinedResponse<ResponseType>
+
+    export function getSdk<C, E>(requester: Requester<C, E>) {
+      return {
+            GetProduct(variables: GetProductQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<GetProductQuery, GetProductQueryVariables>(GetProductDocument, variables, options);
+            },
+    ListProducts(variables?: ListProductsQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<ListProductsQuery, ListProductsQueryVariables>(ListProductsDocument, variables, options);
+            },
+    AddToCart(variables: AddToCartMutationVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<AddToCartMutation, AddToCartMutationVariables>(AddToCartDocument, variables, options);
+            },
+    CartUpdated(variables: CartUpdatedSubscriptionVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<CartUpdatedSubscription, CartUpdatedSubscriptionVariables>(CartUpdatedDocument, variables, options);
+            }
+      };
+    }
+    export type Sdk = ReturnType<typeof getSdk>;"
+`;
+
+exports[`k6 plugin > documentMode external > generates the sdk 1`] = `
+"import { type RefinedResponse, type ResponseType } from "k6/http";
+import * as Operations from './operations';
+import { DocumentNode } from 'graphql';
+
+
+
+
+
+
+    export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => RefinedResponse<ResponseType>
+
+    export function getSdk<C, E>(requester: Requester<C, E>) {
+      return {
+            GetProduct(variables: GetProductQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<GetProductQuery, GetProductQueryVariables>(Operations.GetProductDocument, variables, options);
+            },
+    ListProducts(variables?: ListProductsQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<ListProductsQuery, ListProductsQueryVariables>(Operations.ListProductsDocument, variables, options);
+            },
+    AddToCart(variables: AddToCartMutationVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<AddToCartMutation, AddToCartMutationVariables>(Operations.AddToCartDocument, variables, options);
+            },
+    CartUpdated(variables: CartUpdatedSubscriptionVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<CartUpdatedSubscription, CartUpdatedSubscriptionVariables>(Operations.CartUpdatedDocument, variables, options);
+            }
+      };
+    }
+    export type Sdk = ReturnType<typeof getSdk>;"
+`;
+
+exports[`k6 plugin > documentMode graphQLTag (useTypeImports: false) > generates the sdk 1`] = `
+"import { type RefinedResponse, type ResponseType } from "k6/http";
+import gql from 'graphql-tag';
+import { DocumentNode } from 'graphql';
+export const ProductPriceFragmentDoc = gql\`
+    fragment ProductPrice on Product {
+  price
+}
+    \`;
+export const ProductFieldsFragmentDoc = gql\`
+    fragment ProductFields on Product {
+  id
+  name
+  ...ProductPrice
+}
+    \`;
+export const GetProductDocument = gql\`
+    query GetProduct($id: ID!, $locale: Locale) {
+  product(id: $id, locale: $locale) {
+    ...ProductFields
+  }
+}
+    \${ProductFieldsFragmentDoc}
+\${ProductPriceFragmentDoc}\`;
+export const ListProductsDocument = gql\`
+    query ListProducts($filter: ProductFilter) {
+  products(filter: $filter) {
+    ...ProductFields
+  }
+}
+    \${ProductFieldsFragmentDoc}
+\${ProductPriceFragmentDoc}\`;
+export const AddToCartDocument = gql\`
+    mutation AddToCart($productId: ID!, $quantity: Int!) {
+  addToCart(productId: $productId, quantity: $quantity) {
+    id
+    totalItems
+  }
+}
+    \`;
+export const CartUpdatedDocument = gql\`
+    subscription CartUpdated($cartId: ID!) {
+  cartUpdated(cartId: $cartId) {
+    id
+  }
+}
+    \`;
+
+    export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => RefinedResponse<ResponseType>
+
+    export function getSdk<C, E>(requester: Requester<C, E>) {
+      return {
+            GetProduct(variables: GetProductQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<GetProductQuery, GetProductQueryVariables>(GetProductDocument, variables, options);
+            },
+    ListProducts(variables?: ListProductsQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<ListProductsQuery, ListProductsQueryVariables>(ListProductsDocument, variables, options);
+            },
+    AddToCart(variables: AddToCartMutationVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<AddToCartMutation, AddToCartMutationVariables>(AddToCartDocument, variables, options);
+            },
+    CartUpdated(variables: CartUpdatedSubscriptionVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<CartUpdatedSubscription, CartUpdatedSubscriptionVariables>(CartUpdatedDocument, variables, options);
+            }
+      };
+    }
+    export type Sdk = ReturnType<typeof getSdk>;"
+`;
+
+exports[`k6 plugin > documentMode graphQLTag (useTypeImports: true) > generates the sdk 1`] = `
+"import { type RefinedResponse, type ResponseType } from "k6/http";
+import gql from 'graphql-tag';
+import type { DocumentNode } from 'graphql';
+export const ProductPriceFragmentDoc = gql\`
+    fragment ProductPrice on Product {
+  price
+}
+    \`;
+export const ProductFieldsFragmentDoc = gql\`
+    fragment ProductFields on Product {
+  id
+  name
+  ...ProductPrice
+}
+    \`;
+export const GetProductDocument = gql\`
+    query GetProduct($id: ID!, $locale: Locale) {
+  product(id: $id, locale: $locale) {
+    ...ProductFields
+  }
+}
+    \${ProductFieldsFragmentDoc}
+\${ProductPriceFragmentDoc}\`;
+export const ListProductsDocument = gql\`
+    query ListProducts($filter: ProductFilter) {
+  products(filter: $filter) {
+    ...ProductFields
+  }
+}
+    \${ProductFieldsFragmentDoc}
+\${ProductPriceFragmentDoc}\`;
+export const AddToCartDocument = gql\`
+    mutation AddToCart($productId: ID!, $quantity: Int!) {
+  addToCart(productId: $productId, quantity: $quantity) {
+    id
+    totalItems
+  }
+}
+    \`;
+export const CartUpdatedDocument = gql\`
+    subscription CartUpdated($cartId: ID!) {
+  cartUpdated(cartId: $cartId) {
+    id
+  }
+}
+    \`;
+
+    export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => RefinedResponse<ResponseType>
+
+    export function getSdk<C, E>(requester: Requester<C, E>) {
+      return {
+            GetProduct(variables: GetProductQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<GetProductQuery, GetProductQueryVariables>(GetProductDocument, variables, options);
+            },
+    ListProducts(variables?: ListProductsQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<ListProductsQuery, ListProductsQueryVariables>(ListProductsDocument, variables, options);
+            },
+    AddToCart(variables: AddToCartMutationVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<AddToCartMutation, AddToCartMutationVariables>(AddToCartDocument, variables, options);
+            },
+    CartUpdated(variables: CartUpdatedSubscriptionVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<CartUpdatedSubscription, CartUpdatedSubscriptionVariables>(CartUpdatedDocument, variables, options);
+            }
+      };
+    }
+    export type Sdk = ReturnType<typeof getSdk>;"
+`;
+
+exports[`k6 plugin > documentMode string > generates the sdk 1`] = `
+"import { type RefinedResponse, type ResponseType } from "k6/http";
+export class TypedDocumentString<TResult, TVariables> extends String {
+  __apiType?: (variables: TVariables) => TResult;
+  private value: string;
+  public __meta__?: Record<string, any> | undefined;
+
+  constructor(value: string, __meta__?: Record<string, any> | undefined) {
+    super(value);
+    this.value = value;
+    this.__meta__ = __meta__;
+  }
+
+  override toString(): string {
+    return this.value;
+  }
+}
+
+export const ProductPriceFragmentDoc = new TypedDocumentString(\`
+    fragment ProductPrice on Product {
+  price
+}
+    \`, {"fragmentName":"ProductPrice"});
+export const ProductFieldsFragmentDoc = new TypedDocumentString(\`
+    fragment ProductFields on Product {
+  id
+  name
+  ...ProductPrice
+}
+    fragment ProductPrice on Product {
+  price
+}\`, {"fragmentName":"ProductFields"});
+export const GetProductDocument = new TypedDocumentString(\`
+    query GetProduct($id: ID!, $locale: Locale) {
+  product(id: $id, locale: $locale) {
+    ...ProductFields
+  }
+}
+    fragment ProductFields on Product {
+  id
+  name
+  ...ProductPrice
+}
+fragment ProductPrice on Product {
+  price
+}\`) as unknown as TypedDocumentString<GetProductQuery, GetProductQueryVariables>;
+export const ListProductsDocument = new TypedDocumentString(\`
+    query ListProducts($filter: ProductFilter) {
+  products(filter: $filter) {
+    ...ProductFields
+  }
+}
+    fragment ProductFields on Product {
+  id
+  name
+  ...ProductPrice
+}
+fragment ProductPrice on Product {
+  price
+}\`) as unknown as TypedDocumentString<ListProductsQuery, ListProductsQueryVariables>;
+export const AddToCartDocument = new TypedDocumentString(\`
+    mutation AddToCart($productId: ID!, $quantity: Int!) {
+  addToCart(productId: $productId, quantity: $quantity) {
+    id
+    totalItems
+  }
+}
+    \`) as unknown as TypedDocumentString<AddToCartMutation, AddToCartMutationVariables>;
+export const CartUpdatedDocument = new TypedDocumentString(\`
+    subscription CartUpdated($cartId: ID!) {
+  cartUpdated(cartId: $cartId) {
+    id
+  }
+}
+    \`) as unknown as TypedDocumentString<CartUpdatedSubscription, CartUpdatedSubscriptionVariables>;
+
+    export type Requester<C = {}, E = unknown> = <R, V>(doc: TypedDocumentString<R, V>, vars?: V, options?: C) => RefinedResponse<ResponseType>
+
+    export function getSdk<C, E>(requester: Requester<C, E>) {
+      return {
+            GetProduct(variables: GetProductQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<GetProductQuery, GetProductQueryVariables>(GetProductDocument, variables, options);
+            },
+    ListProducts(variables?: ListProductsQueryVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<ListProductsQuery, ListProductsQueryVariables>(ListProductsDocument, variables, options);
+            },
+    AddToCart(variables: AddToCartMutationVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<AddToCartMutation, AddToCartMutationVariables>(AddToCartDocument, variables, options);
+            },
+    CartUpdated(variables: CartUpdatedSubscriptionVariables, options?: C): RefinedResponse<ResponseType> {
+              return requester<CartUpdatedSubscription, CartUpdatedSubscriptionVariables>(CartUpdatedDocument, variables, options);
+            }
+      };
+    }
+    export type Sdk = ReturnType<typeof getSdk>;"
+`;

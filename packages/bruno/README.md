@@ -35,8 +35,12 @@ const config: CodegenConfig = {
 		"api-collection/generated/index.json": {
 			plugins: ["@labdigital/graphql-codegen-bruno"],
 			config: {
-				// Empty the output directory before generating
+				// Remove previously generated requests before generating
 				clean: true,
+				// URL of the requests (default: "{{graphql-gateway}}/graphql")
+				url: "{{baseUrl}}/graphql",
+				// Use the auth of the collection (default: "none")
+				auth: "inherit",
 				// Headers added to every request
 				headers: {
 					Authorization: "Bearer {{token}}",
@@ -68,20 +72,24 @@ api-collection/
     ├── index.json
     ├── mutations/
     │   └── AddToCart.bru
-    └── queries/
-        ├── GetProduct.bru
-        └── ListProducts.bru
+    ├── queries/
+    │   ├── GetProduct.bru
+    │   └── ListProducts.bru
+    └── subscriptions/
+        └── CartUpdated.bru
 ```
 
-The requests are sent to `{{graphql-gateway}}/graphql`, so define a
+By default the requests are sent to `{{graphql-gateway}}/graphql`, so define a
 `graphql-gateway` variable (for example `http://localhost:4000`) in your Bruno
-environment.
+environment, or set `url` to match your environment variables.
 
 ## Configuration
 
 | Option | Type | Default | Description |
 | ------ | ---- | ------- | ----------- |
-| `clean` | `boolean` | `false` | Remove everything in the output directory (the directory of the output file) before generating. |
+| `clean` | `boolean` | `false` | Remove the previously generated requests before generating: the `.bru` files in the `queries/`, `mutations/` and `subscriptions/` folders of the output directory (except `folder.bru`), and those folders when they are empty afterwards. Other files, such as `bruno.json`, `collection.bru` or environments, are never removed. |
+| `url` | `string` | `"{{graphql-gateway}}/graphql"` | URL of every request. May use Bruno variables. |
+| `auth` | `string` | `"none"` | Auth mode of every request. Use `inherit` to use the auth configured on the collection or folder. |
 | `headers` | `Record<string, string>` | `{}` | Headers added to the `headers` block of every request. Values may use Bruno variables, such as `{{token}}`. |
 | `defaults` | `Record<string, unknown>` | `{}` | Values for operation variables, by variable name. A default replaces the generated example value of a top-level variable with the same name; variables that the operation does not declare are ignored. |
 
@@ -119,9 +127,9 @@ meta {
 }
 
 post {
-  url: {{graphql-gateway}}/graphql
+  url: {{baseUrl}}/graphql
   body: graphql
-  auth: none
+  auth: inherit
 }
 
 headers {
@@ -134,12 +142,12 @@ body:graphql {
       ...ProductFields
     }
   }
+  
   fragment ProductFields on Product {
     id
     name
     price
   }
-
 }
 
 body:graphql:vars {
@@ -189,18 +197,15 @@ Variables get an example value based on their type:
 
 - Codegen requires a file as output, so the plugin needs an output *file* even
   though it generates a directory. The file is used for the JSON index.
-- `clean: true` removes **everything** in the directory of the output file.
-  Point the output to a dedicated directory inside your collection, not to the
-  collection root, or it removes your `bruno.json` and environments as well.
-- Queries are written to `queries/`; mutations (and subscriptions) to
-  `mutations/`. Files are named after the operation, so operation names must be
-  unique.
+- Queries are written to `queries/`, mutations to `mutations/` and
+  subscriptions to `subscriptions/`. Files are named after the operation, so
+  operation names must be unique.
 - Unnamed operations are skipped.
-- The request body contains the complete source document of the operation
-  (one `.graphql` file, or one `gql` template literal in TypeScript), followed
-  by the fragments the operation uses. Put one operation per document;
-  otherwise every request contains all operations of that document, and
-  fragments defined in the same document are included twice.
-- The URL (`{{graphql-gateway}}/graphql`) and `auth: none` are fixed.
+- The request body contains the operation, followed by the fragments it uses
+  (also fragments used by those fragments, and fragments defined in other
+  documents), each fragment once. The GraphQL is printed with `graphql`'s
+  `print`, so comments in the source documents are not included.
+- Without `clean`, requests of operations that were removed or renamed stay in
+  the output directory.
 - `defaults` only applies to top-level variables; it replaces the whole value,
   it does not merge into input objects.

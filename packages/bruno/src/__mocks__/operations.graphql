@@ -1,0 +1,42 @@
+# Several operations in one document
+
+query GetProduct($id: ID!) {
+	product(id: $id) {
+		...ProductFields
+	}
+}
+
+mutation UpdateCustomer($id: ID!, $firstName: String) {
+	updateCustomer(id: $id, firstName: $firstName) {
+		id
+		...CustomerDetails
+	}
+}
+
+subscription CustomerUpdated($id: ID!) {
+	customerUpdated(id: $id) {
+		id
+		... on Customer {
+			...CustomerDetails
+		}
+	}
+}
+
+# Unnamed operations are skipped
+# biome-ignore lint/correctness/useLoneAnonymousOperation: tests unnamed operations
+# biome-ignore lint/correctness/useGraphqlNamedOperations: tests unnamed operations
+query {
+	product(id: "1") {
+		id
+	}
+}
+
+fragment ProductFields on Product {
+	id
+	name
+	price
+}
+
+fragment UnusedFields on Product {
+	id
+}

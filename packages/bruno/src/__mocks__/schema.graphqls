@@ -3,6 +3,14 @@ type Query {
 	product(id: ID!): Product
 }
 
+type Mutation {
+	updateCustomer(id: ID!, firstName: String): Customer
+}
+
+type Subscription {
+	customerUpdated(id: ID!): Customer
+}
+
 input CustomerInfo {
 	credentials: Credentials!
 	authMethod: AuthMethod!

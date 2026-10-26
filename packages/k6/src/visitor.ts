@@ -2,8 +2,8 @@ import {
 	type ClientSideBasePluginConfig,
 	ClientSideBaseVisitor,
 	DocumentMode,
-	type LoadedFragment,
 	indentMultiline,
+	type LoadedFragment,
 } from "@graphql-codegen/visitor-plugin-common";
 import autoBind from "auto-bind";
 import {

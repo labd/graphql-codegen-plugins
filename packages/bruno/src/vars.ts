@@ -7,16 +7,16 @@ import {
 	GraphQLScalarType,
 	type GraphQLSchema,
 	type GraphQLType,
-	Kind,
-	type NamedTypeNode,
-	type OperationDefinitionNode,
-	type TypeNode,
 	isEnumType,
 	isInputObjectType,
 	isListType,
 	isNonNullType,
 	isObjectType,
 	isScalarType,
+	Kind,
+	type NamedTypeNode,
+	type OperationDefinitionNode,
+	type TypeNode,
 } from "graphql";
 
 export const generateExampleVariables = (

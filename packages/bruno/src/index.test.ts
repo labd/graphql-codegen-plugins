@@ -1,6 +1,5 @@
 import * as fs from "node:fs";
 import path from "node:path";
-import { afterEach } from "node:test";
 import type { Types } from "@graphql-codegen/plugin-helpers";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadDocumentsSync, loadSchemaSync } from "@graphql-tools/load";
@@ -12,10 +11,6 @@ const mockOutputDir = path.join(__dirname, "__output__");
 const snapshotDir = path.join(__dirname, "__snapshots__");
 const mockSchemaPath = path.join(__dirname, "__mocks__", "schema.graphqls");
 const mockDocumentsPath = path.join(__dirname, "__mocks__", "query.graphql");
-
-afterEach(() => {
-	fs.rmSync(mockOutputDir, { recursive: true });
-});
 
 describe("Bruno Plugin", () => {
 	it("should generate the expected output", async () => {
@@ -30,7 +25,7 @@ describe("Bruno Plugin", () => {
 		}) as Types.DocumentFile[];
 
 		// Clear the output directory before running the test
-		fs.rmSync(mockOutputDir, { recursive: true });
+		fs.rmSync(mockOutputDir, { recursive: true, force: true });
 
 		// Run the plugin
 		const outputFile = path.join(mockOutputDir, "output.json");

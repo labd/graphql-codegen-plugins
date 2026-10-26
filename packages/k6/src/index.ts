@@ -1,17 +1,17 @@
 import {
+	oldVisit,
 	type PluginFunction,
 	type Types,
-	oldVisit,
 } from "@graphql-codegen/plugin-helpers";
 import type {
 	LoadedFragment,
 	RawClientSideBasePluginConfig,
 } from "@graphql-codegen/visitor-plugin-common";
 import {
+	concatAST,
 	type FragmentDefinitionNode,
 	type GraphQLSchema,
 	Kind,
-	concatAST,
 } from "graphql";
 import type { RawK6PluginConfig } from "./config";
 import { GenericSdkVisitor } from "./visitor";
@@ -43,14 +43,12 @@ export const plugin: PluginFunction<RawK6PluginConfig> = (
 	];
 	const visitor = new GenericSdkVisitor(schema, allFragments, config);
 
-	// @ts-expect-error
 	const visitorResult = oldVisit(allAst, { leave: visitor });
 
 	return {
 		prepend: visitor.getImports(),
 		content: [
 			visitor.fragments,
-			// @ts-expect-error
 			...visitorResult.definitions.filter((t) => typeof t === "string"),
 			visitor.sdkContent,
 		].join("\n"),

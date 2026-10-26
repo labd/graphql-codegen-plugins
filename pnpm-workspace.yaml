@@ -1,5 +1,5 @@
 packages:
-  - 'packages/**'
+  - 'packages/*'
 
 # Require packages to be at least 14 days old before being allowed to be installed
 minimumReleaseAge: 20160
@@ -52,9 +52,6 @@ minimumReleaseAgeExclude:
   - "rolldown-plugin-dts@0.28.8"
   - "rolldown@1.2.15"
   - "rollup@4.65.0"
-
-overrides:
-  graphql: ^16.9.0
 
 allowBuilds:
   "@biomejs/biome": false # postinstall only verifies the platform binary

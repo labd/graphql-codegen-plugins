@@ -26,7 +26,6 @@
 	],
 	"scripts": {
 		"build": "tsdown",
-		"lint:package": "publint --strict",
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"test": "vitest run",
 		"test:ci": "vitest run",

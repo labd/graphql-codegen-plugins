@@ -14,7 +14,6 @@
 		"deps:fix": "syncpack fix --dependency-types prod,dev && pnpm dedupe && pnpm install",
 		"format": "biome check --write",
 		"lint": "biome check",
-		"lint:package": "pnpm -r lint:package",
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"publish:version": "pnpm changeset version && pnpm format",
 		"test": "vitest run",

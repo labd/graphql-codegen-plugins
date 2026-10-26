@@ -29,7 +29,6 @@
 	"scripts": {
 		"build": "tsdown",
 		"clean": "rm -rf dist",
-		"lint:package": "publint --strict",
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",

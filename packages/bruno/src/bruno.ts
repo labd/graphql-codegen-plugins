@@ -1,23 +1,43 @@
 import type { FileContent } from "./operations";
 
+export const DEFAULT_URL = "{{graphql-gateway}}/graphql";
+export const DEFAULT_AUTH = "none";
+
 export interface BrunoPluginConfig {
-	defaults: Record<string, unknown>;
-	headers: Record<string, string>;
-	clean: boolean;
+	/**
+	 * Values for operation variables, by variable name. Replaces the generated
+	 * example value of a top-level variable with the same name.
+	 */
+	defaults?: Record<string, unknown>;
+	/** Headers added to every request. */
+	headers?: Record<string, string>;
+	/**
+	 * Remove the previously generated requests (the `.bru` files in the
+	 * `queries/`, `mutations/` and `subscriptions/` folders of the output
+	 * directory) before generating.
+	 */
+	clean?: boolean;
+	/** URL of the requests. Defaults to `{{graphql-gateway}}/graphql`. */
+	url?: string;
+	/**
+	 * Auth mode of the requests, for example `inherit` to use the auth of the
+	 * collection. Defaults to `none`.
+	 */
+	auth?: string;
 }
 
 export const asBruno = (
 	operation: FileContent,
 	config: BrunoPluginConfig,
 ): string => {
-	const vars = mergeDefaults(operation.vars, config.defaults);
+	const vars = mergeDefaults(operation.vars, config.defaults ?? {});
 
 	const file = new FileCreator();
 	file.addElement("meta", [`name: ${operation.name}`, "type: graphql"]);
 	file.addElement("post", [
-		"url: {{graphql-gateway}}/graphql",
+		`url: ${config.url ?? DEFAULT_URL}`,
 		"body: graphql",
-		"auth: none",
+		`auth: ${config.auth ?? DEFAULT_AUTH}`,
 	]);
 	file.addElement(
 		"headers",

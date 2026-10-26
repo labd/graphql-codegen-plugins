@@ -83,3 +83,5 @@ function outputFileSync(filePath: string, content: string): void {
 	}
 	nodeFs.writeFileSync(filePath, content);
 }
+
+export type { BrunoPluginConfig };

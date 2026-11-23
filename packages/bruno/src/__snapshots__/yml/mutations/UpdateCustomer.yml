@@ -1,0 +1,34 @@
+info:
+  name: "UpdateCustomer"
+  type: graphql
+  seq: 1
+
+graphql:
+  method: POST
+  url: "{{graphql-gateway}}/graphql"
+  body:
+    query: |-
+      mutation UpdateCustomer($id: ID!, $firstName: String) {
+        updateCustomer(id: $id, firstName: $firstName) {
+          id
+          ...CustomerDetails
+        }
+      }
+
+      fragment CustomerDetails on Customer {
+        firstName
+        email
+        addresses {
+          ...AddressDetails
+        }
+      }
+
+      fragment AddressDetails on Address {
+        id
+        city
+      }
+    variables: |-
+      {
+        "id": "example-id",
+        "firstName": "example"
+      }

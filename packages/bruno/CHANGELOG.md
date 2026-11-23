@@ -1,5 +1,11 @@
 # @labdigital/graphql-codegen-bruno
 
+## 1.5.0
+
+### Minor Changes
+
+- 088c755: Add the `format` option: `yml` writes the requests in the OpenCollection (YAML) format, for a Bruno collection with an `opencollection.yml`, which does not load `.bru` files. The default stays `bru`. `clean` now also removes previously generated `.yml` requests (except `folder.yml`).
+
 ## 1.4.0
 
 ### Minor Changes

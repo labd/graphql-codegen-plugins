@@ -24,6 +24,11 @@ export interface BrunoPluginConfig {
 	 * collection. Defaults to `none`.
 	 */
 	auth?: string;
+	/**
+	 * File format of the requests: `bru` for a collection with a `bruno.json`,
+	 * `yml` for a collection with an `opencollection.yml`. Defaults to `bru`.
+	 */
+	format?: "bru" | "yml";
 }
 
 export const asBruno = (
@@ -56,7 +61,7 @@ export const asBruno = (
 	return file.toString();
 };
 
-const mergeDefaults = (
+export const mergeDefaults = (
 	vars: Record<string, unknown>,
 	defaults: Record<string, unknown>,
 ) => {

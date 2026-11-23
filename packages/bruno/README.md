@@ -87,11 +87,12 @@ environment, or set `url` to match your environment variables.
 
 | Option | Type | Default | Description |
 | ------ | ---- | ------- | ----------- |
-| `clean` | `boolean` | `false` | Remove the previously generated requests before generating: the `.bru` files in the `queries/`, `mutations/` and `subscriptions/` folders of the output directory (except `folder.bru`), and those folders when they are empty afterwards. Other files, such as `bruno.json`, `collection.bru` or environments, are never removed. |
+| `clean` | `boolean` | `false` | Remove the previously generated requests before generating: the `.bru` and `.yml` files in the `queries/`, `mutations/` and `subscriptions/` folders of the output directory (except `folder.bru` and `folder.yml`), and those folders when they are empty afterwards. Other files, such as `bruno.json`, `collection.bru` or environments, are never removed. |
 | `url` | `string` | `"{{graphql-gateway}}/graphql"` | URL of every request. May use Bruno variables. |
 | `auth` | `string` | `"none"` | Auth mode of every request. Use `inherit` to use the auth configured on the collection or folder. |
 | `headers` | `Record<string, string>` | `{}` | Headers added to the `headers` block of every request. Values may use Bruno variables, such as `{{token}}`. |
 | `defaults` | `Record<string, unknown>` | `{}` | Values for operation variables, by variable name. A default replaces the generated example value of a top-level variable with the same name; variables that the operation does not declare are ignored. |
+| `format` | `"bru" \| "yml"` | `"bru"` | File format of the requests. Use `yml` for a collection in the OpenCollection format (an `opencollection.yml` in its root), which does not load `.bru` files. `clean` removes generated requests of both formats, so switching format leaves no old requests behind. |
 
 ## Example output
 

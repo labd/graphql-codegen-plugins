@@ -1,0 +1,35 @@
+info:
+  name: "CustomerUpdated"
+  type: graphql
+  seq: 1
+
+graphql:
+  method: POST
+  url: "{{graphql-gateway}}/graphql"
+  body:
+    query: |-
+      subscription CustomerUpdated($id: ID!) {
+        customerUpdated(id: $id) {
+          id
+          ... on Customer {
+            ...CustomerDetails
+          }
+        }
+      }
+
+      fragment CustomerDetails on Customer {
+        firstName
+        email
+        addresses {
+          ...AddressDetails
+        }
+      }
+
+      fragment AddressDetails on Address {
+        id
+        city
+      }
+    variables: |-
+      {
+        "id": "example-id"
+      }

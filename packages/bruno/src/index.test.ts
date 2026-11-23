@@ -5,6 +5,7 @@ import type { Types } from "@graphql-codegen/plugin-helpers";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadDocumentsSync, loadSchemaSync } from "@graphql-tools/load";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { parse as parseYaml } from "yaml";
 import type { BrunoPluginConfig } from "./bruno";
 import { plugin } from "./index";
 
@@ -152,7 +153,100 @@ describe("Bruno Plugin", () => {
 		expect(getProduct).toContain('"id": "product-1"');
 	});
 
+	describe("format: yml", () => {
+		const ymlConfig: BrunoPluginConfig = { ...defaultConfig, format: "yml" };
+
+		it("writes OpenCollection requests", async () => {
+			const data = await plugin(schema, documents, ymlConfig, { outputFile });
+
+			expect(JSON.parse(data as string).GetProduct.filename).toBe(
+				"GetProduct.yml",
+			);
+			expect(listFiles(outputDir)).toEqual([
+				path.join("mutations", "UpdateCustomer.yml"),
+				path.join("queries", "GetCustomer.yml"),
+				path.join("queries", "GetProduct.yml"),
+				path.join("subscriptions", "CustomerUpdated.yml"),
+			]);
+			for (const file of listFiles(outputDir)) {
+				await expect(read(file)).toMatchFileSnapshot(
+					path.join(snapshotDir, "yml", file),
+				);
+			}
+		});
+
+		it("parses to the operation, its fragments and variables", async () => {
+			await plugin(
+				schema,
+				documents,
+				{
+					...ymlConfig,
+					url: "{{baseUrl}}/api/graphql",
+					auth: "inherit",
+					headers: { Authorization: "Bearer {{token}}", "X-Note": 'a: "b"' },
+					defaults: { id: "product-1" },
+				},
+				{ outputFile },
+			);
+
+			const request = parseYaml(read(path.join("queries", "GetProduct.yml")));
+			expect(request.info).toEqual({
+				name: "GetProduct",
+				type: "graphql",
+				seq: 2,
+			});
+			expect(request.graphql.url).toBe("{{baseUrl}}/api/graphql");
+			expect(request.graphql.auth).toBe("inherit");
+			expect(request.graphql.headers).toEqual([
+				{ name: "Authorization", value: "Bearer {{token}}" },
+				{ name: "X-Note", value: 'a: "b"' },
+			]);
+			expect(request.graphql.body.query).toContain("query GetProduct");
+			expect(request.graphql.body.query).toContain("fragment ProductFields");
+			expect(JSON.parse(request.graphql.body.variables)).toEqual({
+				id: "product-1",
+			});
+		});
+
+		it("leaves auth out for none, and writes another mode as its type", async () => {
+			await plugin(schema, documents, ymlConfig, { outputFile });
+			const none = parseYaml(read(path.join("queries", "GetProduct.yml")));
+			expect(none.graphql.auth).toBeUndefined();
+
+			await plugin(
+				schema,
+				documents,
+				{ ...ymlConfig, auth: "bearer" },
+				{ outputFile },
+			);
+			const bearer = parseYaml(read(path.join("queries", "GetProduct.yml")));
+			expect(bearer.graphql.auth).toEqual({ type: "bearer" });
+		});
+	});
+
 	describe("clean", () => {
+		it("removes requests generated in the other format", async () => {
+			const writeFile = (file: string) => {
+				fs.mkdirSync(path.dirname(file), { recursive: true });
+				fs.writeFileSync(file, "");
+			};
+			writeFile(path.join(outputDir, "queries", "Removed.yml"));
+			writeFile(path.join(outputDir, "queries", "folder.yml"));
+
+			await plugin(
+				schema,
+				documents,
+				{ ...defaultConfig, clean: true },
+				{ outputFile },
+			);
+
+			expect(listFiles(path.join(outputDir, "queries"))).toEqual([
+				"GetCustomer.bru",
+				"GetProduct.bru",
+				"folder.yml",
+			]);
+		});
+
 		const writeFile = (file: string, content = "") => {
 			fs.mkdirSync(path.dirname(file), { recursive: true });
 			fs.writeFileSync(file, content);
